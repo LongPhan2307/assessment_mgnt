@@ -7,15 +7,18 @@ import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import uit.thesis.assessment_mgnt.utils.DateUtils;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @MappedSuperclass
+@EntityListeners(AuditingEntityListener.class)
 @Getter
 @Setter
-public class AbstractEntity {
+public class AbstractEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     protected long id;
@@ -35,9 +38,9 @@ public class AbstractEntity {
 
     @CreatedBy
     @Column(name = "created_by")
-    private String createdBy;
+    protected String createdBy;
 
     @LastModifiedBy
     @Column(name = "modified_by")
-    private String lastModifiedBy;
+    protected String lastModifiedBy;
 }
