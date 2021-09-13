@@ -3,10 +3,9 @@ package uit.thesis.assessment_mgnt.model.human_resource;
 import lombok.Getter;
 import lombok.Setter;
 import uit.thesis.assessment_mgnt.common.AbstractEntity;
+import uit.thesis.assessment_mgnt.utils.SalaryStatus;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.math.BigDecimal;
 
 @Entity
@@ -29,4 +28,7 @@ public class Salary extends AbstractEntity {
 
     @Column(name = "penalty_pay_description")
     private String penaltyPayDescription;
+
+    @Enumerated(EnumType.STRING)
+    private SalaryStatus status;
 }

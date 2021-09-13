@@ -3,10 +3,9 @@ package uit.thesis.assessment_mgnt.model.human_resource;
 import lombok.Getter;
 import lombok.Setter;
 import uit.thesis.assessment_mgnt.common.AbstractEntity;
+import uit.thesis.assessment_mgnt.utils.EmployeeDegree;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.math.BigDecimal;
 
 @Entity
@@ -29,5 +28,8 @@ public class Employee extends AbstractEntity {
 
     @Column(name = "base_salary")
     private BigDecimal baseSalary;
+
+    @Enumerated(EnumType.STRING)
+    private EmployeeDegree degree;
 
 }
