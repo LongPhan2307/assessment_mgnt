@@ -1,5 +1,6 @@
 package uit.thesis.assessment_mgnt.model.system;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 import uit.thesis.assessment_mgnt.common.AbstractEntity;
@@ -19,5 +20,6 @@ public class Role extends AbstractEntity {
     private String description;
 
     @OneToMany(mappedBy = "role", cascade = CascadeType.ALL)
+    @JsonIgnore
     private Set<User> users = new HashSet<>();
 }
