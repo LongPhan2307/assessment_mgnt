@@ -11,12 +11,14 @@ import uit.thesis.assessment_mgnt.dto.system.CreateCompanyDto;
 import uit.thesis.assessment_mgnt.dto.system.UpdateCompanyDto;
 import uit.thesis.assessment_mgnt.model.system.Company;
 import uit.thesis.assessment_mgnt.service.system.CompanyService;
+import uit.thesis.assessment_mgnt.utils.ResponseMessage;
+import uit.thesis.assessment_mgnt.utils.domain.CompanyDomain;
 
 import javax.validation.Valid;
 import java.util.List;
 
 @Controller
-@RequestMapping("/api/company")
+@RequestMapping(CompanyDomain.COMPANY_DOMAIN)
 @AllArgsConstructor
 public class CompanyController {
     private CompanyService companyService;
@@ -25,7 +27,7 @@ public class CompanyController {
     public ResponseEntity<Object> getAllCompany(){
         List<Company> list = companyService.findAll();
         if(list.isEmpty())
-            return ResponseObject.getResponse("There is no data", HttpStatus.OK);
+            return ResponseObject.getResponse(ResponseMessage.NO_DATA, HttpStatus.OK);
         return ResponseObject.getResponse(list, HttpStatus.OK);
     }
 
@@ -43,15 +45,27 @@ public class CompanyController {
                                                 BindingResult errors,
                                                 @PathVariable("code") String code){
         if(code == null || code.equals("")){
-            return ResponseObject.getResponse("Code is not blank", HttpStatus.BAD_REQUEST);
+            return ResponseObject.getResponse( ResponseMessage.NOT_BLANK("Code Company"), HttpStatus.BAD_REQUEST);
         }
         if(errors.hasErrors())
             return ResponseObject.getResponse(errors, HttpStatus.BAD_REQUEST);
         Company company = companyService.update(dto, code);
         if(company == null)
-            return ResponseObject.getResponse("Code Company is not found", HttpStatus.BAD_REQUEST);
+            return ResponseObject.getResponse(ResponseMessage.UN_KNOWN("Company"), HttpStatus.BAD_REQUEST);
         return ResponseObject.getResponse(company, HttpStatus.OK);
     }
 
+    @DeleteMapping("/{code}")
+    public ResponseEntity<Object> deleteCompany(
+                                                @PathVariable("code") String code){
+        if(code == null || code.equals("")){
+            return ResponseObject.getResponse(ResponseMessage.NOT_BLANK("Company Code"), HttpStatus.BAD_REQUEST);
+        }
+
+        boolean res = companyService.deleteByCode(code);
+        if(!res)
+            return ResponseObject.getResponse(ResponseMessage.UN_KNOWN("Company"), HttpStatus.BAD_REQUEST);
+        return ResponseObject.getResponse(ResponseMessage.DELETE_SUCCESSFULLY, HttpStatus.OK);
+    }
 
 }

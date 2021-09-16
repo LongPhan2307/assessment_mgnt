@@ -9,8 +9,11 @@ import uit.thesis.assessment_mgnt.dto.system.UpdateCompanyDto;
 import uit.thesis.assessment_mgnt.model.system.Company;
 import uit.thesis.assessment_mgnt.repository.system.CompanyRepository;
 
+import javax.transaction.Transactional;
+
 @Service
 @AllArgsConstructor
+@Transactional
 public class CompanyServiceImpl extends GenericServiceImpl<Company, Long> implements CompanyService {
     private CompanyRepository companyRepository;
     private ModelMapper modelMapper;
@@ -26,9 +29,18 @@ public class CompanyServiceImpl extends GenericServiceImpl<Company, Long> implem
         Company company = companyRepository.findByCode(code);
         if(company == null)
             return null;
-        //company.setName(dto.getName());
-        //company.setAddress(dto.getAddress());
+        company.setName(dto.getName());
+        company.setAddress(dto.getAddress());
         return companyRepository.save(company);
+    }
+
+    @Override
+    public boolean deleteByCode(String code) {
+        Company company = companyRepository.findByCode(code);
+        if(company == null)
+            return false;
+        companyRepository.deleteByCode(code);
+        return true;
     }
 
     private Company convertDtoToEntity(CreateCompanyDto dto){

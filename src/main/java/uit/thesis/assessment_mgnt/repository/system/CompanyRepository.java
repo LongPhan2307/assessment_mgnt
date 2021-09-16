@@ -7,5 +7,7 @@ import uit.thesis.assessment_mgnt.model.system.Company;
 
 @Repository
 public interface CompanyRepository extends JpaRepository<Company, Long> {
-    Company findByCode(String code);
+    public Company findByCode(String code);
+
+    public void deleteByCode(String code);
 }
