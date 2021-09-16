@@ -1,12 +1,11 @@
 package uit.thesis.assessment_mgnt.model.human_resource;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 import uit.thesis.assessment_mgnt.common.AbstractEntity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "assessment_days_working")
@@ -15,4 +14,9 @@ import javax.persistence.Table;
 public class DaysWorking extends AbstractEntity {
     @Column(name = "work_day")
     private int workDay;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(referencedColumnName = "employeeId")
+    @JsonIgnore
+    private Employee employee;
 }

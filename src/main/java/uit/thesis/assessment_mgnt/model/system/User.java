@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 import uit.thesis.assessment_mgnt.common.AbstractEntity;
+import uit.thesis.assessment_mgnt.model.human_resource.Employee;
 import uit.thesis.assessment_mgnt.utils.UserStatus;
 
 import javax.persistence.*;
@@ -40,4 +41,8 @@ public class User extends AbstractEntity {
     @JsonIgnore
     @NotNull
     private Role role;
+
+    @OneToOne(mappedBy = "user",cascade = CascadeType.ALL)
+    @JsonIgnore
+    private Employee employeeProfile;
 }

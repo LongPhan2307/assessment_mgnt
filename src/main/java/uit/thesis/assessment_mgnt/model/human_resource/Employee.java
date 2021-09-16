@@ -1,12 +1,16 @@
 package uit.thesis.assessment_mgnt.model.human_resource;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 import uit.thesis.assessment_mgnt.common.AbstractEntity;
+import uit.thesis.assessment_mgnt.model.system.User;
 import uit.thesis.assessment_mgnt.utils.EmployeeDegree;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "assessment_employee")
@@ -31,5 +35,18 @@ public class Employee extends AbstractEntity {
 
     @Enumerated(EnumType.STRING)
     private EmployeeDegree degree;
+
+    @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL)
+    @JsonIgnore
+    private Set<Salary> listSalary = new HashSet<>();
+
+    @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL)
+    @JsonIgnore
+    private Set<DaysWorking> daysWorking = new HashSet<>();
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(referencedColumnName = "username")
+    @JsonIgnore
+    private User user;
 
 }
