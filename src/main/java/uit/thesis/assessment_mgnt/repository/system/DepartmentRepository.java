@@ -6,5 +6,5 @@ import uit.thesis.assessment_mgnt.model.system.Department;
 
 @Repository
 public interface DepartmentRepository extends JpaRepository<Department, Long> {
-
+    Department findByName(String name);
 }

@@ -7,6 +7,7 @@ import uit.thesis.assessment_mgnt.common.AbstractEntity;
 import uit.thesis.assessment_mgnt.utils.UserStatus;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,9 +22,12 @@ public class User extends AbstractEntity {
 
     private String password;
 
+    @Column(unique = true)
+    @Email
     private String email;
 
     @Enumerated(EnumType.STRING)
+    @NotNull
     private UserStatus status;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -34,5 +38,6 @@ public class User extends AbstractEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(referencedColumnName = "name")
     @JsonIgnore
+    @NotNull
     private Role role;
 }
