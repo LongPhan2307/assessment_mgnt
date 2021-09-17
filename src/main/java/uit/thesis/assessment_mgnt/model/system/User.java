@@ -42,7 +42,8 @@ public class User extends AbstractEntity {
     @NotNull
     private Role role;
 
-    @OneToOne(mappedBy = "user",cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "user",cascade = CascadeType.ALL,
+                fetch = FetchType.LAZY, optional = false)
     @JsonIgnore
     private Employee employeeProfile;
 }

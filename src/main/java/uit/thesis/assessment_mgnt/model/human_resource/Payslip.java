@@ -12,10 +12,10 @@ import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 
 @Entity
-@Table(name = "assessment_salary")
+@Table(name = "assessment_payslip")
 @Getter
 @Setter
-public class Salary extends AbstractEntity {
+public class Payslip extends AbstractEntity {
     @Column(name = "total_salary")
     private BigDecimal totalSalary;
     @Column(name = "salary_description")

@@ -38,14 +38,14 @@ public class Employee extends AbstractEntity {
 
     @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL)
     @JsonIgnore
-    private Set<Salary> listSalary = new HashSet<>();
+    private Set<Payslip> listSalary = new HashSet<>();
 
     @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL)
     @JsonIgnore
     private Set<DaysWorking> daysWorking = new HashSet<>();
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(referencedColumnName = "username")
+    @JoinColumn(name = "user_id")
     @JsonIgnore
     private User user;
 
