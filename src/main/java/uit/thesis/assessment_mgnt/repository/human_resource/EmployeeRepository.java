@@ -7,4 +7,6 @@ import uit.thesis.assessment_mgnt.model.human_resource.Employee;
 @Repository
 public interface EmployeeRepository extends JpaRepository<Employee, Long> {
     Employee findByEmployeeId(String employeeId);
+
+
 }

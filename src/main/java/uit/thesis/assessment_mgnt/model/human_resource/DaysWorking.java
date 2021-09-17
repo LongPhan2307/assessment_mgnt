@@ -12,11 +12,14 @@ import javax.persistence.*;
 @Getter
 @Setter
 public class DaysWorking extends AbstractEntity {
+
+    @Column(unique = true)
+    private String code;
+
     @Column(name = "work_day")
     private int workDay;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(referencedColumnName = "employeeId")
-    @JsonIgnore
     private Employee employee;
 }
