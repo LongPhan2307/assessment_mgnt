@@ -43,7 +43,8 @@ public class DaysWorkingServiceImpl extends GenericServiceImpl<DaysWorking, Long
         Employee employee = employeeRepository.findByEmployeeId(dto.getEmployeeId());
         if(employee == null)
             throw new Exception(ResponseMessage.UN_KNOWN("EmployeeID"));
-        daysWorking = modelMapper.map(dto, DaysWorking.class);
+        //daysWorking = modelMapper.map(dto, DaysWorking.class);
+        daysWorking.setWorkDay(dto.getWorkDay());
         daysWorking.setEmployee(employee);
         return daysWorkingRepository.save(daysWorking);
     }

@@ -6,4 +6,5 @@ import uit.thesis.assessment_mgnt.model.human_resource.Payslip;
 
 @Repository
 public interface PayslipRepository extends JpaRepository<Payslip, Long> {
+    Payslip findByCode(String code);
 }

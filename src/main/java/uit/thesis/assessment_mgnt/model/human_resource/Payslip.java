@@ -16,6 +16,9 @@ import java.math.BigDecimal;
 @Getter
 @Setter
 public class Payslip extends AbstractEntity {
+    @Column(unique = true)
+    private String code;
+
     @Column(name = "total_salary")
     private BigDecimal totalSalary;
     @Column(name = "salary_description")
