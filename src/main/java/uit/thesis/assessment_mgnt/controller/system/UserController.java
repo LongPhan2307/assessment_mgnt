@@ -5,10 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import uit.thesis.assessment_mgnt.common.ResponseObject;
 import uit.thesis.assessment_mgnt.dto.system.CreateRoleDto;
 import uit.thesis.assessment_mgnt.dto.system.CreateUserDto;
@@ -44,6 +41,22 @@ public class UserController {
         try {
             user = userService.save(dto);
             return ResponseObject.getResponse(user, HttpStatus.CREATED);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseObject.getResponse(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PutMapping("{username}/{role_name}")
+    public ResponseEntity<Object> addRole(@PathVariable("role_name") String roleName,
+                                          @PathVariable("username") String username){
+        if(roleName == null || roleName.equals(""))
+            return ResponseObject.getResponse(ResponseMessage.NOT_BLANK("Role Name"), HttpStatus.BAD_REQUEST);
+        if(username.equals("") || username == null)
+            return ResponseObject.getResponse(ResponseMessage.NOT_BLANK("Username"), HttpStatus.BAD_REQUEST);
+        try {
+            User user = userService.addRole(roleName, username);
+            return ResponseObject.getResponse(user, HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseObject.getResponse(e.getMessage(), HttpStatus.BAD_REQUEST);

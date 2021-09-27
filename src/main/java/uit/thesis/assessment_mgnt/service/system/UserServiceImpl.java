@@ -13,6 +13,7 @@ import uit.thesis.assessment_mgnt.repository.system.RoleRepository;
 import uit.thesis.assessment_mgnt.repository.system.UserRepository;
 import uit.thesis.assessment_mgnt.utils.ResponseMessage;
 import uit.thesis.assessment_mgnt.utils.UserStatus;
+import uit.thesis.assessment_mgnt.utils.role.RoleName;
 
 import javax.transaction.Transactional;
 
@@ -29,15 +30,28 @@ public class UserServiceImpl extends GenericServiceImpl<User, Long> implements U
     public User save(CreateUserDto dto) throws Exception {
         User user = new User();
         Department department = departmentRepository.findByName(dto.getDepartmentName());
-        Role role = roleRepository.findByName(dto.getRoleName());
-        if(role == null)
-            throw new Exception(ResponseMessage.UN_KNOWN("role Name"));
+//        Role role = roleRepository.findByName(dto.getRoleName());
+//        if(role == null)
+//            throw new Exception(ResponseMessage.UN_KNOWN("role Name"));
         if(department == null)
             throw new Exception(ResponseMessage.UN_KNOWN("Department Name"));
         user = modelMapper.map(dto, User.class);
         user.setStatus(UserStatus.ACTIVE);
         user.setDepartment(department);
-        user.setRole(role);
+//        user.setRole(role);
+        return userRepository.save(user);
+    }
+
+    @Override
+    public User addRole(String roleName, String username) throws Exception {
+        User user = userRepository.findByUsername(username);
+        if(user == null)
+            throw new Exception(ResponseMessage.UN_KNOWN("Username"));
+        Role role = roleRepository.findByName(roleName);
+        if(role == null)
+            throw new Exception(ResponseMessage.UN_KNOWN("Role Name"));
+        user.addRole(role);
+
         return userRepository.save(user);
     }
 }

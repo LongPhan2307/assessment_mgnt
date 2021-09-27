@@ -11,7 +11,9 @@ import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "assessment_user")
@@ -36,14 +38,23 @@ public class User extends AbstractEntity {
     @NotNull
     private Department department;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(referencedColumnName = "name")
-    @JsonIgnore
-    @NotNull
-    private Role role;
+    @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @JoinTable(name = "assessment_user_role_link"
+            , joinColumns = @JoinColumn(name = "user_id")
+            , inverseJoinColumns = @JoinColumn(name = "role_id")
+    )
+//    @JsonIgnore
+    private Set<Role> roles = new HashSet<>();
 
     @OneToOne(mappedBy = "user",cascade = CascadeType.ALL,
                 fetch = FetchType.LAZY, optional = false)
     @JsonIgnore
     private Employee employeeProfile;
+
+    public User addRole(Role role){
+        this.roles.add(role);
+        role.getUsers().add(this);
+        return this;
+    }
+
 }

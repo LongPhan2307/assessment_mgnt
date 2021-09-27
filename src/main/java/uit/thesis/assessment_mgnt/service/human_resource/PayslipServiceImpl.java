@@ -58,6 +58,7 @@ public class PayslipServiceImpl extends GenericServiceImpl<Payslip, Long> implem
         payslip.setBonus(dto.getBonus());
         payslip.setBonusDescription(dto.getBonusDescription());
         payslip.setSalaryDescription(dto.getSalaryDescription());
+        //payslip = modelMapper.map(dto, Payslip.class);
         BigDecimal total = new BigDecimal(0);
         total = employee.getBaseSalary()
                 .add(dto.getBonus())

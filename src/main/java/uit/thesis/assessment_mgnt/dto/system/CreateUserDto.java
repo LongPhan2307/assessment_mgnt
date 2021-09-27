@@ -20,7 +20,4 @@ public class CreateUserDto {
     @NotBlank
     private String departmentName;
 
-    @NotBlank
-    private String roleName;
-
 }
