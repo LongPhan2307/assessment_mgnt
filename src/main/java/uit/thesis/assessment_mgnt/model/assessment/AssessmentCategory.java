@@ -1,12 +1,13 @@
 package uit.thesis.assessment_mgnt.model.assessment;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 import uit.thesis.assessment_mgnt.common.AbstractEntity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -19,4 +20,8 @@ public class AssessmentCategory extends AbstractEntity {
     private String name;
 
     private String description;
+
+    @OneToMany(mappedBy = "assessmentCategory", cascade = CascadeType.ALL)
+    @JsonIgnore
+    private Set<Survey> surveys = new HashSet<>();
 }

@@ -1,19 +1,19 @@
 package uit.thesis.assessment_mgnt.model.assessment;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 import uit.thesis.assessment_mgnt.common.AbstractEntity;
 
 import javax.persistence.*;
-import java.util.HashSet;
-import java.util.Set;
+import javax.validation.constraints.NotNull;
+import java.util.List;
 
 @Getter
 @Setter
 @Entity
-@Table(name = "assessment_document")
-public class Document extends AbstractEntity {
+@Table(name = "assessment_survey_phase")
+public class SurveyPhase extends AbstractEntity {
+    @Column(unique = true)
     private String name;
 
     private String description;
@@ -22,7 +22,7 @@ public class Document extends AbstractEntity {
     @JoinColumn(referencedColumnName = "code")
     private Survey survey;
 
-    @OneToMany(mappedBy = "document", cascade = CascadeType.ALL)
-    @JsonIgnore
-    private Set<FileDB> files = new HashSet<>();
+    @Enumerated(EnumType.STRING)
+    @NotNull
+    private SurveyStatus status;
 }
