@@ -11,9 +11,8 @@ import javax.validation.constraints.NotBlank;
 @Getter
 @Setter
 public class CreateRoleDto {
-    @Enumerated(EnumType.STRING)
     @NotBlank
-    private RoleName name;
+    private String name;
 
     private String description;
 }

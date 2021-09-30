@@ -2,6 +2,7 @@ package uit.thesis.assessment_mgnt.service.system;
 
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import uit.thesis.assessment_mgnt.common.GenericServiceImpl;
 import uit.thesis.assessment_mgnt.dto.system.CreateUserDto;
@@ -25,6 +26,7 @@ public class UserServiceImpl extends GenericServiceImpl<User, Long> implements U
     private DepartmentRepository departmentRepository;
     private RoleRepository roleRepository;
     private ModelMapper modelMapper;
+    private PasswordEncoder passwordEncoder;
 
     @Override
     public User save(CreateUserDto dto) throws Exception {
@@ -36,6 +38,7 @@ public class UserServiceImpl extends GenericServiceImpl<User, Long> implements U
         if(department == null)
             throw new Exception(ResponseMessage.UN_KNOWN("Department Name"));
         user = modelMapper.map(dto, User.class);
+        user.setPassword(passwordEncoder.encode(dto.getPassword()));
         user.setStatus(UserStatus.ACTIVE);
         user.setDepartment(department);
 //        user.setRole(role);

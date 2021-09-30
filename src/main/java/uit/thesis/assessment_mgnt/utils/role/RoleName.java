@@ -2,7 +2,7 @@ package uit.thesis.assessment_mgnt.utils.role;
 
 public enum RoleName {
     MEMBER,
-    IT,
+    ADMIN,
     DIRECTOR,
     MANAGER,
     ACCOUNTANT
