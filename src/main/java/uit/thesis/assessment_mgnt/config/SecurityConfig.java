@@ -42,7 +42,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         // configure authentication for apis
         http.antMatcher("/api/**").authorizeRequests()
                 .antMatchers("/swagger-ui.html").permitAll()
-//                .antMatchers("/api/**").permitAll()
+                .antMatchers("/api/**").permitAll()
                 .antMatchers("/login").permitAll()
                 .anyRequest().authenticated();
         // make server stateless

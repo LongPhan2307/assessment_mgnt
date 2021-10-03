@@ -12,8 +12,8 @@ public class JpaConfig {
     public ModelMapper modelMapper(){
         ModelMapper modelMapper = new ModelMapper();
         //modelMapper.getConfiguration().setPropertyCondition(Conditions.isNotNull());
-        modelMapper.getConfiguration().isSkipNullEnabled();
-        //modelMapper.getConfiguration().setSkipNullEnabled(false);
+//        modelMapper.getConfiguration().isSkipNullEnabled();
+        modelMapper.getConfiguration().setSkipNullEnabled(true);
         return modelMapper;
     }
 

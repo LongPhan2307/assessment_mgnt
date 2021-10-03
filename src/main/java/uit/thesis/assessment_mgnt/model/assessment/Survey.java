@@ -4,8 +4,10 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 import uit.thesis.assessment_mgnt.common.AbstractEntity;
+import uit.thesis.assessment_mgnt.utils.survey.StatusForm;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -20,22 +22,29 @@ public class Survey extends AbstractEntity {
     @Column(unique = true)
     private String code;
 
-    private String nameVN;
+    private String name;
 
-    private String nameIT;
+    @Column(name = "status_form")
+    @Enumerated(EnumType.STRING)
+    private StatusForm statusForm;
+
+    private String custNameVN;
+
+    private String custNameIT;
 
     private String scene;
 
     private BigDecimal expenses;
 
-    private String addressScene;
+    private String address;
 
     private String phoneCompany;
 
-    @Column(unique = true)
     private String taxCode;
 
     private String contactPhone;
+
+    private String contact;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(referencedColumnName = "code")
