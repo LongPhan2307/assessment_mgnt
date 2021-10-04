@@ -60,6 +60,7 @@ public class Survey extends AbstractEntity {
 
     @OneToOne(mappedBy = "survey", cascade = CascadeType.ALL
             , fetch = FetchType.LAZY, optional = false)
+    @JsonIgnore
     private ServiceReqForm serviceReqForm;
 
     @OneToMany(mappedBy = "survey", cascade = CascadeType.ALL)

@@ -21,6 +21,7 @@ import java.util.List;
 public class SurveyServiceImpl extends GenericServiceImpl<Survey, Long> implements SurveyService {
     private SurveyRepository surveyRepository;
     private ModelMapper modelMapper;
+    private CertificateService certificateService;
 
 
     @Override
@@ -29,6 +30,7 @@ public class SurveyServiceImpl extends GenericServiceImpl<Survey, Long> implemen
         survey = modelMapper.map(dto, Survey.class);
         survey.setCode(RandomStringUtils.randomAlphanumeric(10));
         survey.setStatusForm(StatusForm.PENDING);
+        certificateService.generateCertificateCode();
         return surveyRepository.save(survey);
     }
 

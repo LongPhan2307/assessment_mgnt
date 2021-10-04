@@ -1,5 +1,6 @@
 package uit.thesis.assessment_mgnt.model.assessment;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 import uit.thesis.assessment_mgnt.common.AbstractEntity;
@@ -19,9 +20,11 @@ public class Certificate extends AbstractEntity {
 
     @OneToOne(mappedBy = "certificate", cascade = CascadeType.ALL
             ,fetch = FetchType.LAZY, optional = false)
+    @JsonIgnore
     private Survey survey;
 
     @OneToOne(mappedBy = "certificate", cascade = CascadeType.ALL
             ,fetch = FetchType.LAZY, optional = false)
+    @JsonIgnore
     private FileDB file;
 }

@@ -16,9 +16,11 @@ import java.util.Set;
 public class ServiceReqForm extends AbstractEntity {
     private String name;
 
+    @Column(unique = true)
+    private String code;
+
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "survey_id")
-    @JsonIgnore
     private Survey survey;
 
     @OneToMany(mappedBy = "serviceReqForm", cascade = CascadeType.ALL)
