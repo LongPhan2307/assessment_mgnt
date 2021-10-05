@@ -4,14 +4,12 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 import uit.thesis.assessment_mgnt.common.AbstractEntity;
+import uit.thesis.assessment_mgnt.model.workflow.Workflow;
 import uit.thesis.assessment_mgnt.utils.survey.StatusForm;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -54,8 +52,8 @@ public class Survey extends AbstractEntity {
     @JsonIgnore
     private Set<Document> documents = new HashSet<>();
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "certificate_id")
+    @OneToOne(mappedBy = "survey", cascade = CascadeType.ALL
+            ,fetch = FetchType.LAZY, optional = false)
     private Certificate certificate;
 
     @OneToOne(mappedBy = "survey", cascade = CascadeType.ALL
@@ -63,7 +61,7 @@ public class Survey extends AbstractEntity {
     @JsonIgnore
     private ServiceReqForm serviceReqForm;
 
-    @OneToMany(mappedBy = "survey", cascade = CascadeType.ALL)
+    @ManyToMany(mappedBy = "surveys")
     @JsonIgnore
-    private List<SurveyPhase> phases = new ArrayList<>();
+    private Set<Workflow> workflows = new HashSet<>();
 }

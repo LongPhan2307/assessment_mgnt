@@ -18,8 +18,8 @@ public class Certificate extends AbstractEntity {
 
     private String description;
 
-    @OneToOne(mappedBy = "certificate", cascade = CascadeType.ALL
-            ,fetch = FetchType.LAZY, optional = false)
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(referencedColumnName = "code")
     @JsonIgnore
     private Survey survey;
 
