@@ -22,11 +22,8 @@ public class Workflow extends AbstractEntity {
     private String description;
 
 
-    @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST}, fetch = FetchType.EAGER)
-    @JoinTable(name = "assessment_workflow_survey_link"
-            , joinColumns = @JoinColumn(name = "workflow_id")
-            , inverseJoinColumns = @JoinColumn(name = "survey_id")
-    )
+    @OneToMany(mappedBy = "workflow", cascade = CascadeType.ALL)
+    @JsonIgnore
     private Set<Survey> surveys = new HashSet<>();
 
 

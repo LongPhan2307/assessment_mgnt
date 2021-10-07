@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 import uit.thesis.assessment_mgnt.common.AbstractEntity;
+import uit.thesis.assessment_mgnt.model.workflow.Phase;
 import uit.thesis.assessment_mgnt.model.workflow.Workflow;
 import uit.thesis.assessment_mgnt.utils.survey.StatusForm;
 
@@ -61,7 +62,11 @@ public class Survey extends AbstractEntity {
     @JsonIgnore
     private ServiceReqForm serviceReqForm;
 
-    @ManyToMany(mappedBy = "surveys")
-    @JsonIgnore
-    private Set<Workflow> workflows = new HashSet<>();
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(referencedColumnName = "name", name = "workflow_name")
+    private Workflow workflow;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(referencedColumnName = "name", name = "phase_name")
+    private Phase phase;
 }
