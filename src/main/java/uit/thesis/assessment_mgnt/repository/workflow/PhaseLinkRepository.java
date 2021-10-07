@@ -2,9 +2,8 @@ package uit.thesis.assessment_mgnt.repository.workflow;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-import uit.thesis.assessment_mgnt.model.workflow.Workflow;
+import uit.thesis.assessment_mgnt.model.workflow.PhaseLink;
 
 @Repository
-public interface WorkflowRepository extends JpaRepository<Workflow, Long> {
-    Workflow findByName(String name);
+public interface PhaseLinkRepository extends JpaRepository<PhaseLink, Long> {
 }

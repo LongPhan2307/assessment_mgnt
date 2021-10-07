@@ -28,10 +28,12 @@ public class Phase extends AbstractEntity {
 
     @OneToOne(mappedBy = "linkBy", cascade = CascadeType.ALL
             , fetch = FetchType.LAZY, optional = false)
+    @JsonIgnore
     private PhaseLink phaseBy;
 
     @OneToOne(mappedBy = "linkTo", cascade = CascadeType.ALL
             , fetch = FetchType.LAZY, optional = false)
+    @JsonIgnore
     private PhaseLink phaseTo;
 
     @OneToMany(mappedBy = "phase", cascade = CascadeType.ALL)
