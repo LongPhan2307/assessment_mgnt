@@ -6,4 +6,6 @@ import uit.thesis.assessment_mgnt.model.workflow.Workflow;
 
 public interface WorkflowService extends GenericService<Workflow, Long> {
     Workflow addNewWorkflow(CreateWorkflowDto dto);
+
+    Workflow generateBasicWorkflow();
 }

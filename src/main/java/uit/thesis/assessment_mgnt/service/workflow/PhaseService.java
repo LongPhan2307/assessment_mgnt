@@ -7,4 +7,6 @@ import uit.thesis.assessment_mgnt.model.workflow.Phase;
 
 public interface PhaseService extends GenericService<Phase, Long> {
     Phase addPhase(CreatePhaseDto dto) throws NotFoundException;
+
+    Phase generateStartPhase();
 }

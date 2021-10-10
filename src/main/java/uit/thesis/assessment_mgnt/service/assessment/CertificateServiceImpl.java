@@ -18,10 +18,10 @@ public class CertificateServiceImpl extends GenericServiceImpl<Certificate, Long
 
 
     @Override
-    public void generateCertificateCode() {
+    public Certificate generateCertificateCode() {
         Certificate certificate = new Certificate();
         certificate.setCode(RandomStringUtils.randomAlphanumeric(10));
-        this.certificateRepository.save(certificate);
+        return this.certificateRepository.save(certificate);
     }
 
     @Override

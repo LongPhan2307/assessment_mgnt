@@ -6,7 +6,7 @@ import uit.thesis.assessment_mgnt.model.assessment.Certificate;
 
 public interface CertificateService extends GenericService<Certificate, Long> {
 
-    public void generateCertificateCode();
+    public Certificate generateCertificateCode();
 
     public Certificate updateCertiface(UpdatedCertificate dto, String code) throws Exception;
 }

@@ -37,4 +37,12 @@ public class WorkflowController {
         Workflow workflow = workflowService.addNewWorkflow(dto);
         return ResponseObject.getResponse(workflow, HttpStatus.CREATED);
     }
+
+    @PostMapping("/generateBasicWorkflow")
+    public ResponseEntity<Object> generateBasicWorkflow(){
+        Workflow workflow = workflowService.generateBasicWorkflow();
+        if(workflow != null)
+            return ResponseObject.getResponse(workflow, HttpStatus.CREATED);
+        return ResponseObject.getResponse("Generating is failure", HttpStatus.BAD_GATEWAY);
+    }
 }

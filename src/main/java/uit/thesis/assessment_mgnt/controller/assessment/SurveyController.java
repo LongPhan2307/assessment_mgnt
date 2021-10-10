@@ -1,6 +1,7 @@
 package uit.thesis.assessment_mgnt.controller.assessment;
 
 //import io.swagger.models.Response;
+import javassist.NotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -48,8 +49,14 @@ public class SurveyController {
                                                BindingResult error){
         if(error.hasErrors())
             return ResponseObject.getResponse(error, HttpStatus.BAD_REQUEST);
-        Survey survey= surveyService.addNewSurvey(dto);
-        return ResponseObject.getResponse(survey, HttpStatus.CREATED);
+        Survey survey= null;
+        try {
+            survey = surveyService.addNewSurvey(dto);
+            return ResponseObject.getResponse(survey, HttpStatus.CREATED);
+        } catch (NotFoundException e) {
+            e.printStackTrace();
+            return ResponseObject.getResponse(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
     }
 
     @PutMapping("/update")

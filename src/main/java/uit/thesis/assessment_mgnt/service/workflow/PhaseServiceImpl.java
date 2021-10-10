@@ -11,6 +11,7 @@ import uit.thesis.assessment_mgnt.model.workflow.Workflow;
 import uit.thesis.assessment_mgnt.repository.workflow.PhaseRepository;
 import uit.thesis.assessment_mgnt.repository.workflow.WorkflowRepository;
 import uit.thesis.assessment_mgnt.utils.ResponseMessage;
+import uit.thesis.assessment_mgnt.utils.survey.Const;
 
 @Service
 @AllArgsConstructor
@@ -18,6 +19,7 @@ public class PhaseServiceImpl extends GenericServiceImpl<Phase, Long> implements
     private PhaseRepository phaseRepository;
     private WorkflowRepository workflowRepository;
     private ModelMapper modelMapper;
+    private WorkflowService workflowService;
 
     @Override
     public Phase addPhase(CreatePhaseDto dto) throws NotFoundException {
@@ -28,5 +30,15 @@ public class PhaseServiceImpl extends GenericServiceImpl<Phase, Long> implements
         phase = modelMapper.map(dto, Phase.class);
         phase.setWorkflow(workflow);
         return phaseRepository.save(phase);
+    }
+
+    @Override
+    public Phase generateStartPhase() {
+        Phase newPhase = new Phase();
+        newPhase.setName(Const.PHASE_START);
+        newPhase.setNodeOrder(Const.INITAL_NODE_ORDER);
+        Workflow workflow = workflowService.generateBasicWorkflow();
+        newPhase.setWorkflow(workflow);
+        return phaseRepository.save(newPhase);
     }
 }

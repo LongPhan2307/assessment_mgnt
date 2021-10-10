@@ -19,4 +19,8 @@ public class CreateSurveyDto {
 
     @NotBlank
     private String contactPhone;
+
+    private String assessmentCategory;
+
+    private String workflowName;
 }
