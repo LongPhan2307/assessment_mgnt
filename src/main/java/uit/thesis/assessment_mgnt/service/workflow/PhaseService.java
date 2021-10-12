@@ -9,4 +9,6 @@ public interface PhaseService extends GenericService<Phase, Long> {
     Phase addPhase(CreatePhaseDto dto) throws NotFoundException;
 
     Phase generateStartPhase();
+
+    String submitPhase(String sourceName, String surveyCode) throws NotFoundException, Exception;
 }

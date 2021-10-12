@@ -45,6 +45,18 @@ public class PhaseController {
         }
     }
 
+    @PutMapping("/submit-phase")
+    public ResponseEntity<Object> submitPhase(@RequestParam( name = "surveyCode") String surveyCode,
+                                              @RequestParam( name = "source") String sourceName){
+        try {
+            String res = phaseService.submitPhase(sourceName, surveyCode);
+            return ResponseObject.getResponse(res, HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseObject.getResponse(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+
+    }
 
 
 }
