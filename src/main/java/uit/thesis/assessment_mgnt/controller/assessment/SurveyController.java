@@ -10,6 +10,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import uit.thesis.assessment_mgnt.common.ResponseObject;
 import uit.thesis.assessment_mgnt.dto.assessment.survey.CreateSurveyDto;
+import uit.thesis.assessment_mgnt.dto.assessment.survey.ResponseSurvey;
 import uit.thesis.assessment_mgnt.dto.assessment.survey.UpdateSurveyDto;
 import uit.thesis.assessment_mgnt.model.assessment.Survey;
 import uit.thesis.assessment_mgnt.repository.assessment.SurveyRepository;
@@ -34,6 +35,13 @@ public class SurveyController {
             return ResponseObject.getResponse(ResponseMessage.NO_DATA, HttpStatus.OK);
         return ResponseObject.getResponse(list, HttpStatus.OK);
     }
+//        @GetMapping("")
+//        public ResponseEntity<Object> findAll(){
+//            List<ResponseSurvey> list =  surveyService.getAllSurveyCode();
+//            if(list.isEmpty())
+//                return ResponseObject.getResponse(ResponseMessage.NO_DATA, HttpStatus.OK);
+//            return ResponseObject.getResponse(list, HttpStatus.OK);
+//        }
 
 
     @GetMapping("/status-form")
@@ -57,6 +65,14 @@ public class SurveyController {
             e.printStackTrace();
             return ResponseObject.getResponse(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<Object> findByCode(@RequestParam(value = "surveyCode") String code){
+        Survey survey = surveyService.findByCode(code);
+        if(survey == null)
+            return ResponseObject.getResponse(ResponseMessage.UN_KNOWN("Survey "), HttpStatus.BAD_REQUEST);
+        return ResponseObject.getResponse(survey, HttpStatus.OK);
     }
 
     @PutMapping("/update")

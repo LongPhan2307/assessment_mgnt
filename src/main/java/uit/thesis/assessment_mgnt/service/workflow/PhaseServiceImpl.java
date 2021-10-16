@@ -46,31 +46,31 @@ public class PhaseServiceImpl extends GenericServiceImpl<Phase, Long> implements
         newPhase.setName(Const.PHASE_START);
         newPhase.setNodeOrder(Const.INITAL_NODE_ORDER);
         Workflow workflow = workflowService.generateBasicWorkflow();
-        newPhase.setWorkflow(workflow);
+//        newPhase.setWorkflow(workflow);
         return phaseRepository.save(newPhase);
     }
 
     @Override
     public String submitPhase(String sourceName, String surveyCode) throws Exception {
-        Phase source = phaseRepository.findByName(sourceName);
-        Survey survey = surveyRepository.findByCode(surveyCode);
-        if(survey == null)
-            throw new NotFoundException(ResponseMessage.UN_KNOWN("Phase "));
-        if(source == null)
-            throw new NotFoundException(ResponseMessage.UN_KNOWN("Phase "));
-        Set<PhaseLink> links = source.getWorkflow().getPhaseLinks();
-        Iterator<PhaseLink> iterator = links.iterator();
-        while (iterator.hasNext()){
-            PhaseLink newLink = iterator.next();
-            if(newLink.getLinkBy().getName() == sourceName){
-                if(newLink.getLinkTo() == null)
-                    throw new Exception("Link To Phase is not exists");
-                Phase updatedPhase = newLink.getLinkTo();
-                survey.setPhase(updatedPhase);
-                this.surveyRepository.save(survey);
-                return "updated sucessfully";
-            }
-        }
+//        Phase source = phaseRepository.findByName(sourceName);
+//        Survey survey = surveyRepository.findByCode(surveyCode);
+//        if(survey == null)
+//            throw new NotFoundException(ResponseMessage.UN_KNOWN("Phase "));
+//        if(source == null)
+//            throw new NotFoundException(ResponseMessage.UN_KNOWN("Phase "));
+////        Set<PhaseLink> links = source.getWorkflow().getPhaseLinks();
+//        Iterator<PhaseLink> iterator = links.iterator();
+//        while (iterator.hasNext()){
+//            PhaseLink newLink = iterator.next();
+//            if(newLink.getLinkBy().getName() == sourceName){
+//                if(newLink.getLinkTo() == null)
+//                    throw new Exception("Link To Phase is not exists");
+//                Phase updatedPhase = newLink.getLinkTo();
+////                survey.setPhase(updatedPhase);
+//                this.surveyRepository.save(survey);
+//                return "updated sucessfully";
+//            }
+//        }
         return "Phase is not exists in Workflow";
     }
 }

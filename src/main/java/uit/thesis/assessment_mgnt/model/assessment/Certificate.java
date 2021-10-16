@@ -18,7 +18,12 @@ public class Certificate extends AbstractEntity {
 
     private String description;
 
-    @OneToOne(fetch = FetchType.LAZY)
+//    @OneToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "survey_id", referencedColumnName = "id")
+//    @JsonIgnore
+//    private Survey survey;
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(referencedColumnName = "code")
     @JsonIgnore
     private Survey survey;

@@ -47,26 +47,32 @@ public class Survey extends AbstractEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(referencedColumnName = "code")
+    @JsonIgnore
     private AssessmentCategory assessmentCategory;
-
+//
     @OneToMany(mappedBy = "survey", cascade = CascadeType.ALL)
     @JsonIgnore
     private Set<Document> documents = new HashSet<>();
+//
+//    @OneToOne(mappedBy = "survey", cascade = CascadeType.ALL
+//            )
+//    private Certificate certificate;
 
-    @OneToOne(mappedBy = "survey", cascade = CascadeType.ALL
-            ,fetch = FetchType.LAZY, optional = false)
-    private Certificate certificate;
+    @OneToMany(mappedBy = "survey", cascade = CascadeType.ALL)
+    private Set<Certificate> certificates = new HashSet<>();
+//
+//    @OneToOne(mappedBy = "survey", cascade = CascadeType.ALL
+//            , fetch = FetchType.LAZY, optional = false)
+//    @JsonIgnore
+//    private ServiceReqForm serviceReqForm;
+//
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(referencedColumnName = "name")
+//    @JsonIgnore
+//    private Workflow workflow;
 
-    @OneToOne(mappedBy = "survey", cascade = CascadeType.ALL
-            , fetch = FetchType.LAZY, optional = false)
-    @JsonIgnore
-    private ServiceReqForm serviceReqForm;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(referencedColumnName = "name", name = "workflow_name")
-    private Workflow workflow;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(referencedColumnName = "name", name = "phase_name")
-    private Phase phase;
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(referencedColumnName = "name")
+//    @JsonIgnore
+//    private Phase phase;
 }

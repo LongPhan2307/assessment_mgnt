@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.ui.ModelMap;
 import uit.thesis.assessment_mgnt.common.GenericServiceImpl;
 import uit.thesis.assessment_mgnt.dto.assessment.survey.CreateSurveyDto;
+import uit.thesis.assessment_mgnt.dto.assessment.survey.ResponseSurvey;
 import uit.thesis.assessment_mgnt.dto.assessment.survey.UpdateSurveyDto;
 import uit.thesis.assessment_mgnt.model.assessment.AssessmentCategory;
 import uit.thesis.assessment_mgnt.model.assessment.Certificate;
@@ -22,11 +23,14 @@ import uit.thesis.assessment_mgnt.utils.ResponseMessage;
 import uit.thesis.assessment_mgnt.utils.survey.Const;
 import uit.thesis.assessment_mgnt.utils.survey.StatusForm;
 
+import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 @AllArgsConstructor
 @Service
+@Transactional
 public class SurveyServiceImpl extends GenericServiceImpl<Survey, Long> implements SurveyService {
     private SurveyRepository surveyRepository;
     private ModelMapper modelMapper;
@@ -39,29 +43,42 @@ public class SurveyServiceImpl extends GenericServiceImpl<Survey, Long> implemen
     public Survey addNewSurvey(CreateSurveyDto dto) throws NotFoundException {
         Survey survey = new Survey();
         AssessmentCategory assessmentCategory = assessmentCategoryRepository.findByName(dto.getAssessmentCategory());
-        Workflow workflow = workflowRepository.findByName(dto.getName());
-        if(workflow == null)
-            throw new NotFoundException(ResponseMessage.UN_KNOWN("Workflow "));
+//        Workflow workflow = workflowRepository.findByName(dto.getWorkflowName());
+//        if(workflow == null)
+//            throw new NotFoundException(ResponseMessage.UN_KNOWN("Workflow "));
         if(assessmentCategory == null)
             throw new NotFoundException(ResponseMessage.UN_KNOWN("Assessment Category Name"));
-        Phase phase = phaseRepository.findByName(Const.PHASE_START);
-        if(phase == null){
-            throw new NotFoundException("Phase Start");
-        }
+//        Phase phase = phaseRepository.findByName(Const.PHASE_START);
+//        if(phase == null){
+//            throw new NotFoundException("Phase Start");
+//        }
         survey = modelMapper.map(dto, Survey.class);
         survey.setCode(RandomStringUtils.randomAlphanumeric(10));
         survey.setStatusForm(StatusForm.PENDING);
         survey.setAssessmentCategory(assessmentCategory);
-        survey.setPhase(phase);
-        Certificate certificate = certificateService.generateCertificateCode();
-        survey.setCertificate(certificate);
-        return surveyRepository.save(survey);
+//        survey.setPhase(phase);
+//        survey.setWorkflow(workflow);
+        Survey createdSurvey = surveyRepository.save(survey);
+        Certificate certificate = certificateService.generateCertificateCode(createdSurvey);
+//        survey.setCertificate(certificate);
+        return createdSurvey;
     }
 
     @Override
     public List<StatusForm> getAllStatusForm() {
         List<StatusForm> list = Arrays.asList(StatusForm.values());
         return list;
+    }
+
+    @Override
+    public Survey findByCode(String code) {
+        return surveyRepository.findByCode(code);
+    }
+
+
+    @Override
+    public List<ResponseSurvey> getAllSurveyCode() {
+        return surveyRepository.getAll();
     }
 
     @Override

@@ -6,5 +6,5 @@ import uit.thesis.assessment_mgnt.dto.workflow.CreatePhaseLinkDto;
 import uit.thesis.assessment_mgnt.model.workflow.PhaseLink;
 
 public interface PhaseLinkService extends GenericService<PhaseLink, Long> {
-    PhaseLink addPhaseLink(CreatePhaseLinkDto dto) throws NotFoundException;
+    PhaseLink addPhaseLink(CreatePhaseLinkDto dto) throws Exception;
 }

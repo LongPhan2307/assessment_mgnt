@@ -18,15 +18,17 @@ public class PhaseLinkServiceImpl extends GenericServiceImpl<PhaseLink, Long> im
     private PhaseRepository phaseRepository;
 
     @Override
-    public PhaseLink addPhaseLink(CreatePhaseLinkDto dto) throws NotFoundException {
+    public PhaseLink addPhaseLink(CreatePhaseLinkDto dto) throws Exception {
         PhaseLink phaseLink = new PhaseLink();
         Phase linkBy = phaseRepository.findByName(dto.getLinkBy());
         Phase linkTo = phaseRepository.findByName(dto.getLinkTo());
         if(linkBy == null || linkTo == null)
             throw new NotFoundException(ResponseMessage.UN_KNOWN("Link By or Link To"));
+        if(linkBy.getName().equals(linkTo.getName()))
+            throw new Exception("link By and link To must be different");
         phaseLink.setTransition(dto.getTransition());
-        phaseLink.setLinkBy(linkBy);
-        phaseLink.setLinkTo(linkTo);
+//        phaseLink.setLinkBy(linkBy);
+//        phaseLink.setLinkTo(linkTo);
         return phaseLinkRepository.save(phaseLink);
     }
 }

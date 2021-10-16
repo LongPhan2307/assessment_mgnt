@@ -19,9 +19,9 @@ public class ServiceReqForm extends AbstractEntity {
     @Column(unique = true)
     private String code;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "survey_id")
-    private Survey survey;
+//    @OneToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "survey_id")
+//    private Survey survey;
 
     @OneToMany(mappedBy = "serviceReqForm", cascade = CascadeType.ALL)
     @JsonIgnore

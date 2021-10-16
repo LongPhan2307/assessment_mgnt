@@ -42,7 +42,10 @@ public class PhaseLinkController {
             return ResponseObject.getResponse(phaseLink, HttpStatus.CREATED);
         } catch (NotFoundException e) {
             e.printStackTrace();
-            return ResponseObject.getResponse(e.getMessage(), HttpStatus.CREATED);
+            return ResponseObject.getResponse(e.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseObject.getResponse(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 }

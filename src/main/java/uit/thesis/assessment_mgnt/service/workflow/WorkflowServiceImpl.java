@@ -34,7 +34,7 @@ public class WorkflowServiceImpl extends GenericServiceImpl<Workflow, Long> impl
         Phase newPhase = new Phase();
         newPhase.setName(Const.PHASE_START);
         newPhase.setNodeOrder(Const.INITAL_NODE_ORDER);
-        newPhase.setWorkflow(workflow);
+//        newPhase.setWorkflow(workflow);
         workflowRepository.save(workflow);
         this.phaseRepository.save(newPhase);
         return workflow;

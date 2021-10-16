@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import uit.thesis.assessment_mgnt.common.GenericServiceImpl;
 import uit.thesis.assessment_mgnt.dto.assessment.certificate.UpdatedCertificate;
 import uit.thesis.assessment_mgnt.model.assessment.Certificate;
+import uit.thesis.assessment_mgnt.model.assessment.Survey;
 import uit.thesis.assessment_mgnt.repository.assessment.CertificateRepository;
 import uit.thesis.assessment_mgnt.utils.ResponseMessage;
 
@@ -18,9 +19,10 @@ public class CertificateServiceImpl extends GenericServiceImpl<Certificate, Long
 
 
     @Override
-    public Certificate generateCertificateCode() {
+    public Certificate generateCertificateCode(Survey survey) {
         Certificate certificate = new Certificate();
         certificate.setCode(RandomStringUtils.randomAlphanumeric(10));
+        certificate.setSurvey(survey);
         return this.certificateRepository.save(certificate);
     }
 
