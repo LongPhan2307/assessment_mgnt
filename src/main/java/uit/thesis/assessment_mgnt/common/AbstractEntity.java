@@ -21,7 +21,7 @@ import java.time.LocalDateTime;
 public class AbstractEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    protected long id;
+    protected Long id;
 
     @Version
     protected int version;

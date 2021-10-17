@@ -16,13 +16,14 @@ import uit.thesis.assessment_mgnt.utils.survey.Const;
 public class WorkflowServiceImpl extends GenericServiceImpl<Workflow, Long> implements WorkflowService{
     private WorkflowRepository workflowRepository;
     private PhaseRepository phaseRepository;
+    private PhaseService phaseService;
     private ModelMapper modelMapper;
 
     @Override
     public Workflow addNewWorkflow(CreateWorkflowDto dto) {
         Workflow workflow = new Workflow();
         workflow = modelMapper.map(dto, Workflow.class);
-
+        Phase phase = new Phase();
         return workflowRepository.save(workflow);
     }
 
@@ -31,12 +32,6 @@ public class WorkflowServiceImpl extends GenericServiceImpl<Workflow, Long> impl
         Workflow workflow = new Workflow();
         workflow.setName(Const.BASIC_WORKFLOW_NAME);
         workflow.setDescription(Const.BASIC_WORKFLOW_DESC);
-        Phase newPhase = new Phase();
-        newPhase.setName(Const.PHASE_START);
-        newPhase.setNodeOrder(Const.INITAL_NODE_ORDER);
-//        newPhase.setWorkflow(workflow);
-        workflowRepository.save(workflow);
-        this.phaseRepository.save(newPhase);
-        return workflow;
+        return workflowRepository.save(workflow);
     }
 }

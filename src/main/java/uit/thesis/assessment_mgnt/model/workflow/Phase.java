@@ -24,20 +24,19 @@ public class Phase extends AbstractEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(referencedColumnName = "name")
-    @JsonIgnore
     private Workflow workflow;
 
-//    @OneToOne(mappedBy = "linkBy", cascade = CascadeType.ALL
-//            )
-//    @JsonIgnore
-//    private PhaseLink phaseBy;
-//
-//    @OneToOne(mappedBy = "linkTo", cascade = CascadeType.ALL
-//            )
-//    @JsonIgnore
-//    private PhaseLink phaseTo;
+    @OneToOne(mappedBy = "linkBy"
+            )
+    @JsonIgnore
+    private PhaseLink phaseBy;
 
-//    @OneToMany(mappedBy = "phase", cascade = CascadeType.ALL)
-//    @JsonIgnore
-//    private Set<Survey> surveys = new HashSet<>();
+    @OneToOne(mappedBy = "linkTo"
+            )
+    @JsonIgnore
+    private PhaseLink phaseTo;
+
+    @OneToMany(mappedBy = "phase", cascade = CascadeType.ALL)
+    @JsonIgnore
+    private Set<Survey> surveys = new HashSet<>();
 }

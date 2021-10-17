@@ -54,12 +54,12 @@ public class Survey extends AbstractEntity {
     @JsonIgnore
     private Set<Document> documents = new HashSet<>();
 //
-//    @OneToOne(mappedBy = "survey", cascade = CascadeType.ALL
-//            )
-//    private Certificate certificate;
+    @OneToOne(mappedBy = "survey"
+            )
+    private Certificate certificate;
 
-    @OneToMany(mappedBy = "survey", cascade = CascadeType.ALL)
-    private Set<Certificate> certificates = new HashSet<>();
+//    @OneToMany(mappedBy = "survey", cascade = CascadeType.ALL)
+//    private Set<Certificate> certificates = new HashSet<>();
 //
 //    @OneToOne(mappedBy = "survey", cascade = CascadeType.ALL
 //            , fetch = FetchType.LAZY, optional = false)
@@ -71,8 +71,7 @@ public class Survey extends AbstractEntity {
 //    @JsonIgnore
 //    private Workflow workflow;
 
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(referencedColumnName = "name")
-//    @JsonIgnore
-//    private Phase phase;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(referencedColumnName = "name")
+    private Phase phase;
 }

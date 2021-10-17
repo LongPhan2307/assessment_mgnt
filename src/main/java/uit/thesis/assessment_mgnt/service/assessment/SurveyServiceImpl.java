@@ -48,19 +48,19 @@ public class SurveyServiceImpl extends GenericServiceImpl<Survey, Long> implemen
 //            throw new NotFoundException(ResponseMessage.UN_KNOWN("Workflow "));
         if(assessmentCategory == null)
             throw new NotFoundException(ResponseMessage.UN_KNOWN("Assessment Category Name"));
-//        Phase phase = phaseRepository.findByName(Const.PHASE_START);
-//        if(phase == null){
-//            throw new NotFoundException("Phase Start");
-//        }
+        Phase phase = phaseRepository.findByName(Const.PHASE_START);
+        if(phase == null){
+            throw new NotFoundException("Phase Start");
+        }
         survey = modelMapper.map(dto, Survey.class);
         survey.setCode(RandomStringUtils.randomAlphanumeric(10));
         survey.setStatusForm(StatusForm.PENDING);
         survey.setAssessmentCategory(assessmentCategory);
-//        survey.setPhase(phase);
+        survey.setPhase(phase);
 //        survey.setWorkflow(workflow);
         Survey createdSurvey = surveyRepository.save(survey);
         Certificate certificate = certificateService.generateCertificateCode(createdSurvey);
-//        survey.setCertificate(certificate);
+        survey.setCertificate(certificate);
         return createdSurvey;
     }
 
