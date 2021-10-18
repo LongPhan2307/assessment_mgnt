@@ -32,6 +32,14 @@ public class PhaseController {
         return ResponseObject.getResponse(list, HttpStatus.OK);
     }
 
+    @GetMapping("/search")
+    public ResponseEntity<Object> findByNodeOrder(@RequestParam(name = "nodeOrder") int nodeOrder){
+        Phase phase = phaseService.findByNodeOrder(nodeOrder);
+        if(phase == null)
+            return ResponseObject.getResponse(ResponseMessage.NO_DATA, HttpStatus.OK);
+        return ResponseObject.getResponse(phase, HttpStatus.OK);
+    }
+
     @PostMapping("")
     public ResponseEntity<Object> addPhase(@Valid @RequestBody CreatePhaseDto dto,
                                            BindingResult errors){
@@ -71,5 +79,17 @@ public class PhaseController {
 
     }
 
+    @PutMapping("/return-phase")
+    public ResponseEntity<Object> returnPhase(@RequestParam( name = "surveyCode") String surveyCode,
+                                              @RequestParam( name = "destination") String destinationName){
+        try {
+            Survey res = phaseService.returnPhase(destinationName, surveyCode);
+            return ResponseObject.getResponse(res, HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseObject.getResponse(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+
+    }
 
 }

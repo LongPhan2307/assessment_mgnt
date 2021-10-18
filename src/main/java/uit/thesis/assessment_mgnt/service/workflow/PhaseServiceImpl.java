@@ -11,22 +11,25 @@ import uit.thesis.assessment_mgnt.model.workflow.Phase;
 import uit.thesis.assessment_mgnt.model.workflow.PhaseLink;
 import uit.thesis.assessment_mgnt.model.workflow.Workflow;
 import uit.thesis.assessment_mgnt.repository.assessment.SurveyRepository;
+import uit.thesis.assessment_mgnt.repository.workflow.PhaseLinkRepository;
 import uit.thesis.assessment_mgnt.repository.workflow.PhaseRepository;
 import uit.thesis.assessment_mgnt.repository.workflow.WorkflowRepository;
 import uit.thesis.assessment_mgnt.utils.ResponseMessage;
 import uit.thesis.assessment_mgnt.utils.survey.Const;
 
+import javax.transaction.Transactional;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Set;
 
 @Service
 @AllArgsConstructor
+@Transactional
 public class PhaseServiceImpl extends GenericServiceImpl<Phase, Long> implements PhaseService {
     private PhaseRepository phaseRepository;
     private WorkflowRepository workflowRepository;
     private ModelMapper modelMapper;
     private SurveyRepository surveyRepository;
+    private PhaseLinkRepository phaseLinkRepository;
 
     @Override
     public Phase addPhase(CreatePhaseDto dto) throws NotFoundException {
@@ -59,19 +62,37 @@ public class PhaseServiceImpl extends GenericServiceImpl<Phase, Long> implements
             throw new NotFoundException(ResponseMessage.UN_KNOWN("Phase "));
         if(source == null)
             throw new NotFoundException(ResponseMessage.UN_KNOWN("Phase "));
-        Set<PhaseLink> links = source.getWorkflow().getPhaseLinks();
-        Iterator<PhaseLink> iterator = links.iterator();
-        while (iterator.hasNext()){
-            PhaseLink newLink = iterator.next();
-            if(newLink.getLinkBy().getName().equals(sourceName)){
-                if(newLink.getLinkTo() == null)
-                    throw new Exception("Phase Destination is not exists");
-                Phase updatedPhase = newLink.getLinkTo();
-                survey.setPhase(updatedPhase);
-
-                return surveyRepository.save(survey);
-            }
-        }
         throw new Exception("Phase is not exists in Workflow");
+    }
+
+    @Override
+    public Survey returnPhase(String destinationName, String surveyCode) throws Exception {
+        Phase destination = phaseRepository.findByName(destinationName);
+        Phase source = phaseRepository.findByNodeOrder(destination.getNodeOrder() - 1);
+        Survey survey = surveyRepository.findByCode(surveyCode);
+        if(destination == null)
+            throw new NotFoundException(ResponseMessage.UN_KNOWN(" Destination "));
+        if( survey == null)
+            throw new NotFoundException(ResponseMessage.UN_KNOWN("Survey "));
+        if(source == null)
+            throw new NotFoundException(ResponseMessage.UN_KNOWN("Source "));
+        survey.setPhase(source);
+        return surveyRepository.save(survey);
+//        Iterator<PhaseLink> iterator = links.iterator();
+//        while (iterator.hasNext()){
+//            PhaseLink newLink = iterator.next();
+//            if(newLink.getLinkTo().getName().equals(destinationName)){
+//                if(newLink.getLinkBy() == null)
+//                    throw new Exception("Phase Source is not exists");
+//                survey.setPhase(source);
+//                return surveyRepository.save(survey);
+//            }
+//        }
+//        throw new Exception("Phase is not exists in Workflow");
+    }
+
+    @Override
+    public Phase findByNodeOrder(int nodeOrder) {
+        return phaseRepository.findByNodeOrder(nodeOrder);
     }
 }

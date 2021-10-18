@@ -35,6 +35,7 @@ public class SurveyController {
             return ResponseObject.getResponse(ResponseMessage.NO_DATA, HttpStatus.OK);
         return ResponseObject.getResponse(list, HttpStatus.OK);
     }
+
 //        @GetMapping("")
 //        public ResponseEntity<Object> findAll(){
 //            List<ResponseSurvey> list =  surveyService.getAllSurveyCode();

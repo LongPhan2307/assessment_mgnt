@@ -13,4 +13,8 @@ public interface PhaseService extends GenericService<Phase, Long> {
     Phase generateStartPhase(String workflowName) throws NotFoundException;
 
     Survey submitPhase(String sourceName, String surveyCode) throws NotFoundException, Exception;
+
+    Survey returnPhase(String destinationName, String surveyCode) throws Exception;
+
+    Phase findByNodeOrder(int nodeOrder);
 }

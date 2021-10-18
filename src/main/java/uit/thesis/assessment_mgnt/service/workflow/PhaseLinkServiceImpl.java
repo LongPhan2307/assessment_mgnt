@@ -33,9 +33,9 @@ public class PhaseLinkServiceImpl extends GenericServiceImpl<PhaseLink, Long> im
         if(linkBy.getName().equals(linkTo.getName()))
             throw new Exception("link By and link To must be different");
         phaseLink.setTransition(dto.getTransition());
-        phaseLink.setLinkBy(linkBy);
-        phaseLink.setWorkflow(workflow);
-        phaseLink.setLinkTo(linkTo);
+//        phaseLink.setLinkBy(linkBy);
+//        phaseLink.setWorkflow(workflow);
+//        phaseLink.setLinkTo(linkTo);
         return phaseLinkRepository.save(phaseLink);
     }
 }

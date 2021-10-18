@@ -15,15 +15,15 @@ public class PhaseLink extends AbstractEntity {
 
     private String transition;
 //
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(referencedColumnName = "name")
-    private Workflow workflow;
-
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, optional = false)
-    @JoinColumn(name = "source_id", referencedColumnName = "id")
-    private Phase linkBy;
-
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, optional = false)
-    @JoinColumn(name = "destination_id", referencedColumnName = "id")
-    private Phase linkTo;
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(referencedColumnName = "name")
+//    private Workflow workflow;
+//
+//    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, optional = false)
+//    @JoinColumn(name = "source_id", referencedColumnName = "id")
+//    private Phase linkBy;
+//
+//    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, optional = false)
+//    @JoinColumn(name = "destination_id", referencedColumnName = "id")
+//    private Phase linkTo;
 }

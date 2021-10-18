@@ -26,15 +26,15 @@ public class Phase extends AbstractEntity {
     @JoinColumn(referencedColumnName = "name")
     private Workflow workflow;
 
-    @OneToOne(mappedBy = "linkBy"
-            )
-    @JsonIgnore
-    private PhaseLink phaseBy;
-
-    @OneToOne(mappedBy = "linkTo"
-            )
-    @JsonIgnore
-    private PhaseLink phaseTo;
+//    @OneToOne(mappedBy = "linkBy"
+//            )
+//    @JsonIgnore
+//    private PhaseLink phaseBy;
+//
+//    @OneToOne(mappedBy = "linkTo"
+//            )
+//    @JsonIgnore
+//    private PhaseLink phaseTo;
 
     @OneToMany(mappedBy = "phase", cascade = CascadeType.ALL)
     @JsonIgnore
