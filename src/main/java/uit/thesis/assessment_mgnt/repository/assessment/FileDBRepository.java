@@ -5,5 +5,5 @@ import org.springframework.stereotype.Repository;
 import uit.thesis.assessment_mgnt.model.assessment.FileDB;
 
 @Repository
-public interface FileDBRepository extends JpaRepository<FileDB, Long> {
+public interface FileDBRepository extends JpaRepository<FileDB, String> {
 }

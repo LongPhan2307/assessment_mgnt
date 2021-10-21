@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 import uit.thesis.assessment_mgnt.common.AbstractEntity;
+import uit.thesis.assessment_mgnt.model.workflow.Phase;
 import uit.thesis.assessment_mgnt.utils.role.RoleName;
 
 import javax.persistence.*;
@@ -23,4 +24,8 @@ public class Role extends AbstractEntity {
     @ManyToMany(mappedBy = "roles")
     @JsonIgnore
     private Set<User> users = new HashSet<>();
+
+    @OneToMany(mappedBy = "role", cascade = CascadeType.ALL)
+    @JsonIgnore
+    private Set<Phase> phases = new HashSet<>();
 }

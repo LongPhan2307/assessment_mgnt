@@ -7,10 +7,12 @@ import org.springframework.stereotype.Service;
 import uit.thesis.assessment_mgnt.common.GenericServiceImpl;
 import uit.thesis.assessment_mgnt.dto.workflow.CreatePhaseDto;
 import uit.thesis.assessment_mgnt.model.assessment.Survey;
+import uit.thesis.assessment_mgnt.model.system.Role;
 import uit.thesis.assessment_mgnt.model.workflow.Phase;
 import uit.thesis.assessment_mgnt.model.workflow.PhaseLink;
 import uit.thesis.assessment_mgnt.model.workflow.Workflow;
 import uit.thesis.assessment_mgnt.repository.assessment.SurveyRepository;
+import uit.thesis.assessment_mgnt.repository.system.RoleRepository;
 import uit.thesis.assessment_mgnt.repository.workflow.PhaseLinkRepository;
 import uit.thesis.assessment_mgnt.repository.workflow.PhaseRepository;
 import uit.thesis.assessment_mgnt.repository.workflow.WorkflowRepository;
@@ -29,7 +31,7 @@ public class PhaseServiceImpl extends GenericServiceImpl<Phase, Long> implements
     private WorkflowRepository workflowRepository;
     private ModelMapper modelMapper;
     private SurveyRepository surveyRepository;
-    private PhaseLinkRepository phaseLinkRepository;
+    private RoleRepository roleRepository;
 
     @Override
     public Phase addPhase(CreatePhaseDto dto) throws NotFoundException {
@@ -94,5 +96,17 @@ public class PhaseServiceImpl extends GenericServiceImpl<Phase, Long> implements
     @Override
     public Phase findByNodeOrder(int nodeOrder) {
         return phaseRepository.findByNodeOrder(nodeOrder);
+    }
+
+    @Override
+    public Phase updatePhaseRole(String phaseName, String roleName) throws NotFoundException {
+        Phase phase = phaseRepository.findByName(phaseName);
+        Role role = roleRepository.findByName(roleName);
+        if(role == null)
+            throw new NotFoundException(ResponseMessage.UN_KNOWN("Role "));
+        if(phase == null)
+            throw new NotFoundException(ResponseMessage.UN_KNOWN("Updated Phase "));
+        phase.setRole(role);
+        return phaseRepository.save(phase);
     }
 }

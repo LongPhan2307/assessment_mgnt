@@ -10,6 +10,7 @@ import uit.thesis.assessment_mgnt.repository.assessment.FileDBRepository;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 @Service
@@ -43,8 +44,11 @@ public class FileDBServiceImpl implements FileDBService {
     }
 
     @Override
-    public FileDB getFileByName(String name) {
-        return null;
+    public FileDB getFileById(String id) {
+        Optional<FileDB> fileDB = fileDBRepository.findById(id);
+        if(fileDB.isEmpty())
+            return null;
+        return fileDB.get();
     }
 
     @Override

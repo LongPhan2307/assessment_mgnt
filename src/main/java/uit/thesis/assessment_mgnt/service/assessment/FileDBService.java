@@ -15,7 +15,7 @@ public interface FileDBService{
 
     List<FileDB> storeFiles(List<MultipartFile> files) throws IOException;
 
-    public FileDB getFileByName(String name);
+    public FileDB getFileById(String id);
 
     public Stream<FileDB> getAllFiles();
 }

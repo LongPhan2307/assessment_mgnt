@@ -4,13 +4,15 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 import uit.thesis.assessment_mgnt.common.AbstractEntity;
+import uit.thesis.assessment_mgnt.model.system.User;
 import uit.thesis.assessment_mgnt.model.workflow.Phase;
-import uit.thesis.assessment_mgnt.model.workflow.Workflow;
 import uit.thesis.assessment_mgnt.utils.survey.StatusForm;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -57,6 +59,9 @@ public class Survey extends AbstractEntity {
     @OneToOne(mappedBy = "survey"
             )
     private Certificate certificate;
+
+    @OneToMany(mappedBy = "survey", cascade = CascadeType.ALL)
+    private List<User> users = new LinkedList<>();
 
 //    @OneToMany(mappedBy = "survey", cascade = CascadeType.ALL)
 //    private Set<Certificate> certificates = new HashSet<>();

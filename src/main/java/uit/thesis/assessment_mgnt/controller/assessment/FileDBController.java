@@ -119,6 +119,13 @@ public class FileDBController implements ServletContextAware {
         return ResponseObject.getResponse(list, HttpStatus.OK);
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<Object> getFile(@PathVariable("id") String id){
+        FileDB fileDB = fileDBService.getFileById(id);
+        if(fileDB == null)
+            return ResponseObject.getResponse(ResponseMessage.UN_KNOWN("FileDB "), HttpStatus.BAD_REQUEST);
+        return ResponseObject.getResponse(fileDB.getData(), HttpStatus.OK);
+    }
 
     @Override
     public void setServletContext(ServletContext servletContext) {

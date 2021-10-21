@@ -13,10 +13,12 @@ import uit.thesis.assessment_mgnt.dto.assessment.survey.UpdateSurveyDto;
 import uit.thesis.assessment_mgnt.model.assessment.AssessmentCategory;
 import uit.thesis.assessment_mgnt.model.assessment.Certificate;
 import uit.thesis.assessment_mgnt.model.assessment.Survey;
+import uit.thesis.assessment_mgnt.model.system.User;
 import uit.thesis.assessment_mgnt.model.workflow.Phase;
 import uit.thesis.assessment_mgnt.model.workflow.Workflow;
 import uit.thesis.assessment_mgnt.repository.assessment.AssessmentCategoryRepository;
 import uit.thesis.assessment_mgnt.repository.assessment.SurveyRepository;
+import uit.thesis.assessment_mgnt.repository.system.UserRepository;
 import uit.thesis.assessment_mgnt.repository.workflow.PhaseRepository;
 import uit.thesis.assessment_mgnt.repository.workflow.WorkflowRepository;
 import uit.thesis.assessment_mgnt.utils.ResponseMessage;
@@ -26,6 +28,7 @@ import uit.thesis.assessment_mgnt.utils.survey.StatusForm;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 
 @AllArgsConstructor
@@ -37,7 +40,7 @@ public class SurveyServiceImpl extends GenericServiceImpl<Survey, Long> implemen
     private CertificateService certificateService;
     private AssessmentCategoryRepository assessmentCategoryRepository;
     private PhaseRepository phaseRepository;
-    private WorkflowRepository workflowRepository;
+    private UserRepository userRepository;
 
     @Override
     public Survey addNewSurvey(CreateSurveyDto dto) throws NotFoundException {
@@ -79,6 +82,21 @@ public class SurveyServiceImpl extends GenericServiceImpl<Survey, Long> implemen
     @Override
     public List<ResponseSurvey> getAllSurveyCode() {
         return surveyRepository.getAll();
+    }
+
+    @Override
+    public Survey assignInspectors(String[] arrUsername, String surveyCode) throws NotFoundException {
+        Survey survey = surveyRepository.findByCode(surveyCode);
+        List<User> users = new LinkedList<>();
+        if(survey == null)
+            throw new NotFoundException(ResponseMessage.UN_KNOWN("Survey "));
+        for(int i =0; i< arrUsername.length; i++){
+            User user = userRepository.findByUsername(arrUsername[i]);
+            if( user != null)
+                users.add(user);
+        }
+        survey.setUsers(users);
+        return surveyRepository.save(survey);
     }
 
     @Override

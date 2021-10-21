@@ -76,6 +76,18 @@ public class SurveyController {
         return ResponseObject.getResponse(survey, HttpStatus.OK);
     }
 
+    @PutMapping("/assign")
+    public ResponseEntity<Object> assignInspectors(@RequestParam("username") String[] arrUsername,
+                                                   @RequestParam("surveyCode") String surveyCode){
+        try {
+            Survey survey = surveyService.assignInspectors(arrUsername, surveyCode);
+            return ResponseObject.getResponse(survey, HttpStatus.OK);
+        } catch (NotFoundException e) {
+            e.printStackTrace();
+            return ResponseObject.getResponse(e.getMessage(), HttpStatus.OK);
+        }
+    }
+
     @PutMapping("/update")
     public ResponseEntity<Object> updateSurveyInfo(@Valid @RequestBody UpdateSurveyDto dto,
                                                    BindingResult errors,

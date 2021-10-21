@@ -66,6 +66,18 @@ public class PhaseController {
         }
     }
 
+    @PutMapping("/updateRole")
+    public ResponseEntity<Object> updatePhaseRole(@RequestParam("role") String roleName,
+                                                  @RequestParam("phase") String phaseName){
+        try {
+            Phase phase = phaseService.updatePhaseRole(phaseName, roleName);
+            return ResponseObject.getResponse(phase, HttpStatus.OK);
+        } catch (NotFoundException e) {
+            e.printStackTrace();
+            return ResponseObject.getResponse(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
     @PutMapping("/submit-phase")
     public ResponseEntity<Object> submitPhase(@RequestParam( name = "surveyCode") String surveyCode,
                                               @RequestParam( name = "source") String sourceName){

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 import uit.thesis.assessment_mgnt.common.AbstractEntity;
+import uit.thesis.assessment_mgnt.model.assessment.Survey;
 import uit.thesis.assessment_mgnt.model.human_resource.Employee;
 import uit.thesis.assessment_mgnt.utils.UserStatus;
 
@@ -50,6 +51,11 @@ public class User extends AbstractEntity {
                 fetch = FetchType.LAZY, optional = false)
     @JsonIgnore
     private Employee employeeProfile;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(referencedColumnName = "code")
+    @JsonIgnore
+    private Survey survey;
 
     public User addRole(Role role){
         this.roles.add(role);
