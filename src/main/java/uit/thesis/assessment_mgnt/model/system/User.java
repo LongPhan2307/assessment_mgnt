@@ -52,10 +52,21 @@ public class User extends AbstractEntity {
     @JsonIgnore
     private Employee employeeProfile;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(referencedColumnName = "code")
+    @ManyToMany(mappedBy = "inspectors")
     @JsonIgnore
-    private Survey survey;
+    private Set<Survey> surveys = new HashSet<>();
+
+    @OneToMany(mappedBy = "director", cascade = CascadeType.ALL)
+    @JsonIgnore
+    private Set<Survey> suveysOfDirector = new HashSet<>();
+
+    @OneToMany(mappedBy = "accountant", cascade = CascadeType.ALL)
+    @JsonIgnore
+    private Set<Survey> surveysOfAccountant = new HashSet<>();
+
+    @OneToMany(mappedBy = "manager", cascade = CascadeType.ALL)
+    @JsonIgnore
+    private Set<Survey> surveysOfManager = new HashSet<>();
 
     public User addRole(Role role){
         this.roles.add(role);

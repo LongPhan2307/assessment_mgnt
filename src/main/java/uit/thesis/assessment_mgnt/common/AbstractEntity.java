@@ -36,11 +36,11 @@ public class AbstractEntity implements Serializable {
     @JsonFormat(pattern = DateUtils.DATE_FORMAT)
     protected LocalDateTime updateAt;
 
-//    @CreatedBy
-//    @Column(name = "created_by")
-//    protected String createdBy;
-//
-//    @LastModifiedBy
-//    @Column(name = "modified_by")
-//    protected String lastModifiedBy;
+    @CreatedBy
+    @Column(name = "created_by")
+    protected String createdBy;
+
+    @LastModifiedBy
+    @Column(name = "modified_by")
+    protected String lastModifiedBy;
 }

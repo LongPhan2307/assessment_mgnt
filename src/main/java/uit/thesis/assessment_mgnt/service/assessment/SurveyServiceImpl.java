@@ -4,6 +4,8 @@ import javassist.NotFoundException;
 import lombok.AllArgsConstructor;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.modelmapper.ModelMapper;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.ModelMap;
 import uit.thesis.assessment_mgnt.common.GenericServiceImpl;
@@ -45,10 +47,11 @@ public class SurveyServiceImpl extends GenericServiceImpl<Survey, Long> implemen
     @Override
     public Survey addNewSurvey(CreateSurveyDto dto) throws NotFoundException {
         Survey survey = new Survey();
+        String currentUsername = SecurityContextHolder.getContext().getAuthentication().getName();
+        User accountant = userRepository.findByUsername(currentUsername);
+        if(accountant == null)
+            throw new NotFoundException("Anonymous is using service ");
         AssessmentCategory assessmentCategory = assessmentCategoryRepository.findByName(dto.getAssessmentCategory());
-//        Workflow workflow = workflowRepository.findByName(dto.getWorkflowName());
-//        if(workflow == null)
-//            throw new NotFoundException(ResponseMessage.UN_KNOWN("Workflow "));
         if(assessmentCategory == null)
             throw new NotFoundException(ResponseMessage.UN_KNOWN("Assessment Category Name"));
         Phase phase = phaseRepository.findByName(Const.PHASE_START);
@@ -60,7 +63,7 @@ public class SurveyServiceImpl extends GenericServiceImpl<Survey, Long> implemen
         survey.setStatusForm(StatusForm.PENDING);
         survey.setAssessmentCategory(assessmentCategory);
         survey.setPhase(phase);
-//        survey.setWorkflow(workflow);
+        survey.setAccountant(accountant);
         Survey createdSurvey = surveyRepository.save(survey);
         Certificate certificate = certificateService.generateCertificateCode(createdSurvey);
         survey.setCertificate(certificate);
@@ -87,15 +90,13 @@ public class SurveyServiceImpl extends GenericServiceImpl<Survey, Long> implemen
     @Override
     public Survey assignInspectors(String[] arrUsername, String surveyCode) throws NotFoundException {
         Survey survey = surveyRepository.findByCode(surveyCode);
-        List<User> users = new LinkedList<>();
         if(survey == null)
             throw new NotFoundException(ResponseMessage.UN_KNOWN("Survey "));
         for(int i =0; i< arrUsername.length; i++){
             User user = userRepository.findByUsername(arrUsername[i]);
             if( user != null)
-                users.add(user);
+                survey.addInspector(user);
         }
-        survey.setUsers(users);
         return surveyRepository.save(survey);
     }
 

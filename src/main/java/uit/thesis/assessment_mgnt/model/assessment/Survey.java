@@ -60,8 +60,24 @@ public class Survey extends AbstractEntity {
             )
     private Certificate certificate;
 
-    @OneToMany(mappedBy = "survey", cascade = CascadeType.ALL)
-    private List<User> users = new LinkedList<>();
+    @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST}, fetch = FetchType.EAGER)
+    @JoinTable(name = "assessment_survey_inspector_link"
+            , joinColumns = @JoinColumn(name = "survey_id")
+            , inverseJoinColumns = @JoinColumn(name = "user_id")
+    )
+    private List<User> inspectors = new LinkedList<>();
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(referencedColumnName = "username")
+    private User director;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(referencedColumnName = "username")
+    private User accountant;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(referencedColumnName = "username")
+    private User manager;
 
 //    @OneToMany(mappedBy = "survey", cascade = CascadeType.ALL)
 //    private Set<Certificate> certificates = new HashSet<>();
@@ -79,4 +95,16 @@ public class Survey extends AbstractEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(referencedColumnName = "name")
     private Phase phase;
+
+    public Survey addInspector(User user){
+        this.getInspectors().add(user);
+        user.getSurveys().add(this);
+        return this;
+    }
+
+    public Survey removeInspector(User user){
+        this.getInspectors().remove(user);
+        user.getSurveys().remove(this);
+        return this;
+    }
 }
