@@ -28,10 +28,7 @@ import uit.thesis.assessment_mgnt.utils.survey.Const;
 import uit.thesis.assessment_mgnt.utils.survey.StatusForm;
 
 import javax.transaction.Transactional;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 @AllArgsConstructor
 @Service
@@ -85,6 +82,43 @@ public class SurveyServiceImpl extends GenericServiceImpl<Survey, Long> implemen
     @Override
     public List<ResponseSurvey> getAllSurveyCode() {
         return surveyRepository.getAll();
+    }
+
+    @Override
+    public Survey changeUserOfSurvey(String username, String surveyCode) throws Exception {
+        Survey survey = surveyRepository.findByCode(surveyCode);
+        if(survey == null)
+            throw new NotFoundException(ResponseMessage.UN_KNOWN("Survey "));
+        User currentUser = userRepository.findByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
+        if(currentUser == null)
+            throw new NotFoundException(ResponseMessage.ANONYMOUS_USER);
+        if(currentUser.getUsername().equals(survey.getAccountant().getUsername())){
+
+            User userChanged = userRepository.findByUsername(username);
+            if(userChanged == null)
+                throw new NotFoundException(ResponseMessage.UN_KNOWN("User "));
+
+            survey.setAccountant(userChanged);
+            return surveyRepository.save(survey);
+        } else if(currentUser.getUsername().equals(survey.getDirector().getUsername())){
+
+            User userChanged = userRepository.findByUsername(username);
+            if(userChanged == null)
+                throw new NotFoundException(ResponseMessage.UN_KNOWN("User "));
+
+            survey.setDirector(userChanged);
+            return surveyRepository.save(survey);
+        } else if(currentUser.getUsername().equals(survey.getManager().getUsername())){
+
+            User userChanged = userRepository.findByUsername(username);
+            if(userChanged == null)
+                throw new NotFoundException(ResponseMessage.UN_KNOWN("User "));
+
+            survey.setManager(userChanged);
+            return surveyRepository.save(survey);
+        }
+
+        throw new Exception("You can not change User of this Survey ");
     }
 
     @Override

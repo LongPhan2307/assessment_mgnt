@@ -19,6 +19,8 @@ public interface SurveyService extends GenericService<Survey, Long> {
 
     public List<ResponseSurvey> getAllSurveyCode();
 
+    public Survey changeUserOfSurvey(String username, String surveyCode) throws Exception;
+
     public Survey assignInspectors(String[] arrUsername, String surveyCode) throws NotFoundException;
 
     public Survey updateSurvey(UpdateSurveyDto dto, String code) throws Exception;

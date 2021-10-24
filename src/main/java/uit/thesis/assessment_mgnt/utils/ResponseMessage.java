@@ -6,6 +6,7 @@ public class ResponseMessage {
     }
     public static final String DELETE_SUCCESSFULLY = "Delete successfully";
     public static final String NO_DATA = "There is no data";
+    public static final String ANONYMOUS_USER = "Anonymous User is using service ";
     public static final String NOT_BLANK(String param){
         return param + " Could not be blank";
     };

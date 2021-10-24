@@ -1,6 +1,8 @@
 package uit.thesis.assessment_mgnt.controller.assessment;
 
 import lombok.AllArgsConstructor;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -124,7 +126,10 @@ public class FileDBController implements ServletContextAware {
         FileDB fileDB = fileDBService.getFileById(id);
         if(fileDB == null)
             return ResponseObject.getResponse(ResponseMessage.UN_KNOWN("FileDB "), HttpStatus.BAD_REQUEST);
-        return ResponseObject.getResponse(fileDB.getData(), HttpStatus.OK);
+        return ResponseEntity.ok()
+                .contentType(MediaType.parseMediaType(fileDB.getType()))
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fileDB.getName() + "\"")
+                .body(new ByteArrayResource(fileDB.getData()));
     }
 
     @Override

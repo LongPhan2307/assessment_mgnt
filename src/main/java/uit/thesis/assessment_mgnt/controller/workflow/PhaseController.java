@@ -5,6 +5,7 @@ import javassist.NotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import uit.thesis.assessment_mgnt.common.ResponseObject;
@@ -76,6 +77,18 @@ public class PhaseController {
             e.printStackTrace();
             return ResponseObject.getResponse(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
+    }
+
+    @PutMapping("/decline-assign")
+    public ResponseEntity<Object> declineAssignment(@RequestParam("survey") String surveyCode){
+        try {
+            Survey survey = phaseService.declineAssignInspector(surveyCode);
+            return ResponseObject.getResponse(survey, HttpStatus.OK);
+        } catch (NotFoundException e) {
+            e.printStackTrace();
+            return ResponseObject.getResponse(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+
     }
 
     @PutMapping("/submit-phase")

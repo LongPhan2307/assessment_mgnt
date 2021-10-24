@@ -76,6 +76,18 @@ public class SurveyController {
         return ResponseObject.getResponse(survey, HttpStatus.OK);
     }
 
+    @PutMapping("/change")
+    public ResponseEntity<Object> changeUserOfSurvey(@RequestParam(name = "accountant") String username,
+                                                   @RequestParam("surveyCode") String surveyCode){
+        try {
+            Survey survey = surveyService.changeUserOfSurvey(username, surveyCode);
+            return ResponseObject.getResponse(survey, HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseObject.getResponse(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
     @PutMapping("/assign")
     public ResponseEntity<Object> assignInspectors(@RequestParam("username") String[] arrUsername,
                                                    @RequestParam("surveyCode") String surveyCode){

@@ -16,6 +16,8 @@ public interface PhaseService extends GenericService<Phase, Long> {
 
     Survey returnPhase(String destinationName, String surveyCode) throws Exception;
 
+    Survey declineAssignInspector(String surveyCode) throws NotFoundException;
+
     Phase findByNodeOrder(int nodeOrder);
 
     Phase updatePhaseRole(String phaseName, String roleName) throws NotFoundException;
