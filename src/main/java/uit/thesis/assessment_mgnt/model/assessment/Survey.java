@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 import uit.thesis.assessment_mgnt.common.AbstractEntity;
 import uit.thesis.assessment_mgnt.model.system.User;
+import uit.thesis.assessment_mgnt.model.workflow.Comment;
 import uit.thesis.assessment_mgnt.model.workflow.Phase;
 import uit.thesis.assessment_mgnt.utils.survey.StatusForm;
 
@@ -78,6 +79,10 @@ public class Survey extends AbstractEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(referencedColumnName = "username")
     private User manager;
+
+    @OneToMany(mappedBy = "survey", cascade = CascadeType.ALL)
+    @JsonIgnore
+    private Set<Comment> comments = new HashSet<>();
 
 //    @OneToMany(mappedBy = "survey", cascade = CascadeType.ALL)
 //    private Set<Certificate> certificates = new HashSet<>();
