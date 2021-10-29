@@ -7,15 +7,18 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import uit.thesis.assessment_mgnt.common.GenericServiceImpl;
 import uit.thesis.assessment_mgnt.dto.workflow.CreatePhaseDto;
+import uit.thesis.assessment_mgnt.dto.workflow.UpdatePhaseDto;
 import uit.thesis.assessment_mgnt.model.assessment.Survey;
 import uit.thesis.assessment_mgnt.model.system.Role;
 import uit.thesis.assessment_mgnt.model.system.User;
+import uit.thesis.assessment_mgnt.model.workflow.Comment;
 import uit.thesis.assessment_mgnt.model.workflow.Phase;
 import uit.thesis.assessment_mgnt.model.workflow.PhaseLink;
 import uit.thesis.assessment_mgnt.model.workflow.Workflow;
 import uit.thesis.assessment_mgnt.repository.assessment.SurveyRepository;
 import uit.thesis.assessment_mgnt.repository.system.RoleRepository;
 import uit.thesis.assessment_mgnt.repository.system.UserRepository;
+import uit.thesis.assessment_mgnt.repository.workflow.CommentRepository;
 import uit.thesis.assessment_mgnt.repository.workflow.PhaseLinkRepository;
 import uit.thesis.assessment_mgnt.repository.workflow.PhaseRepository;
 import uit.thesis.assessment_mgnt.repository.workflow.WorkflowRepository;
@@ -37,6 +40,7 @@ public class PhaseServiceImpl extends GenericServiceImpl<Phase, Long> implements
     private SurveyRepository surveyRepository;
     private RoleRepository roleRepository;
     private UserRepository userRepository;
+    private CommentRepository commentRepository;
 
     @Override
     public Phase addPhase(CreatePhaseDto dto) throws NotFoundException {
@@ -62,7 +66,7 @@ public class PhaseServiceImpl extends GenericServiceImpl<Phase, Long> implements
     }
 
     @Override
-    public Survey submitPhase(String sourceName, String surveyCode) throws Exception {
+    public Survey submitPhase(UpdatePhaseDto dto) throws Exception {
         User currentUser = userRepository.findByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
         if(currentUser == null)
             throw new NotFoundException(ResponseMessage.ANONYMOUS_USER);
@@ -70,22 +74,31 @@ public class PhaseServiceImpl extends GenericServiceImpl<Phase, Long> implements
         while (iterator.hasNext()){
             Object ele = iterator.next();
         }
-        Phase source = phaseRepository.findByName(sourceName);
+        Phase source = phaseRepository.findByName(dto.getPhaseName());
         Phase destination = phaseRepository.findByNodeOrder(source.getNodeOrder() + 1);
-        Survey survey = surveyRepository.findByCode(surveyCode);
+        Survey survey = surveyRepository.findByCode(dto.getSurveyCode());
         if(survey == null)
             throw new NotFoundException(ResponseMessage.UN_KNOWN("Phase "));
         if(source == null)
             throw new NotFoundException(ResponseMessage.UN_KNOWN("Phase "));
-         survey.setPhase(destination);
+        survey.setPhase(destination);
+        Comment comment = new Comment();
+        comment.setTitle(Const.SUBMITTED_PHASE);
+        comment.setContent(dto.getContent());
+        comment.setUser(currentUser);
+        comment.setSurvey(survey);
+        commentRepository.save(comment);
          return surveyRepository.save(survey);
     }
 
     @Override
-    public Survey returnPhase(String destinationName, String surveyCode) throws Exception {
-        Phase destination = phaseRepository.findByName(destinationName);
+    public Survey returnPhase(UpdatePhaseDto dto) throws Exception {
+        User currentUser = userRepository.findByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
+        if(currentUser == null)
+            throw new NotFoundException(ResponseMessage.ANONYMOUS_USER);
+        Phase destination = phaseRepository.findByName(dto.getPhaseName());
         Phase source = phaseRepository.findByNodeOrder(destination.getNodeOrder() - 1);
-        Survey survey = surveyRepository.findByCode(surveyCode);
+        Survey survey = surveyRepository.findByCode(dto.getSurveyCode());
         if(destination == null)
             throw new NotFoundException(ResponseMessage.UN_KNOWN(" Destination "));
         if( survey == null)
@@ -93,6 +106,12 @@ public class PhaseServiceImpl extends GenericServiceImpl<Phase, Long> implements
         if(source == null)
             throw new NotFoundException(ResponseMessage.UN_KNOWN("Source "));
         survey.setPhase(source);
+        Comment comment = new Comment();
+        comment.setTitle(Const.RETURNED_PHASE);
+        comment.setContent(dto.getContent());
+        comment.setUser(currentUser);
+        comment.setSurvey(survey);
+        commentRepository.save(comment);
         return surveyRepository.save(survey);
     }
 

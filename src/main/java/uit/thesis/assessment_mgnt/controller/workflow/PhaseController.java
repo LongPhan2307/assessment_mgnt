@@ -10,6 +10,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import uit.thesis.assessment_mgnt.common.ResponseObject;
 import uit.thesis.assessment_mgnt.dto.workflow.CreatePhaseDto;
+import uit.thesis.assessment_mgnt.dto.workflow.UpdatePhaseDto;
 import uit.thesis.assessment_mgnt.model.assessment.Survey;
 import uit.thesis.assessment_mgnt.model.workflow.Phase;
 import uit.thesis.assessment_mgnt.service.workflow.PhaseService;
@@ -92,10 +93,12 @@ public class PhaseController {
     }
 
     @PutMapping("/submit-phase")
-    public ResponseEntity<Object> submitPhase(@RequestParam( name = "surveyCode") String surveyCode,
-                                              @RequestParam( name = "source") String sourceName){
+    public ResponseEntity<Object> submitPhase(@RequestBody UpdatePhaseDto dto,
+                                              BindingResult errors){
+        if(errors.hasErrors())
+            return ResponseObject.getResponse(errors, HttpStatus.BAD_REQUEST);
         try {
-            Survey res = phaseService.submitPhase(sourceName, surveyCode);
+            Survey res = phaseService.submitPhase(dto);
             return ResponseObject.getResponse(res, HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
@@ -105,10 +108,12 @@ public class PhaseController {
     }
 
     @PutMapping("/return-phase")
-    public ResponseEntity<Object> returnPhase(@RequestParam( name = "surveyCode") String surveyCode,
-                                              @RequestParam( name = "destination") String destinationName){
+    public ResponseEntity<Object> returnPhase(@RequestBody UpdatePhaseDto dto,
+                                              BindingResult errors){
+        if(errors.hasErrors())
+            return ResponseObject.getResponse(errors, HttpStatus.BAD_REQUEST);
         try {
-            Survey res = phaseService.returnPhase(destinationName, surveyCode);
+            Survey res = phaseService.returnPhase(dto);
             return ResponseObject.getResponse(res, HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
