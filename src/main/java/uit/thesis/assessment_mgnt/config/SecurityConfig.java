@@ -45,6 +45,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/**").permitAll()
                 .antMatchers("/login").permitAll()
                 .anyRequest().authenticated();
+//            .anyRequest().permitAll();
+
         // make server stateless
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         // add jwt filter

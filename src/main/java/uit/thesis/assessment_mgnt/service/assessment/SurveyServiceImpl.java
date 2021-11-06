@@ -14,6 +14,7 @@ import uit.thesis.assessment_mgnt.dto.assessment.survey.ResponseSurvey;
 import uit.thesis.assessment_mgnt.dto.assessment.survey.UpdateSurveyDto;
 import uit.thesis.assessment_mgnt.model.assessment.AssessmentCategory;
 import uit.thesis.assessment_mgnt.model.assessment.Certificate;
+import uit.thesis.assessment_mgnt.model.assessment.Customer;
 import uit.thesis.assessment_mgnt.model.assessment.Survey;
 import uit.thesis.assessment_mgnt.model.system.User;
 import uit.thesis.assessment_mgnt.model.workflow.Phase;
@@ -57,7 +58,6 @@ public class SurveyServiceImpl extends GenericServiceImpl<Survey, Long> implemen
         }
         survey = modelMapper.map(dto, Survey.class);
         survey.setCode(RandomStringUtils.randomAlphanumeric(10));
-        survey.setStatusForm(StatusForm.PENDING);
         survey.setAssessmentCategory(assessmentCategory);
         survey.setPhase(phase);
         survey.setAccountant(accountant);

@@ -67,9 +67,9 @@ public class FileDB {
     @Column(name = "service_req_form_id", insertable = false, updatable = false)
     private Long serviceReqFormId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "service_req_form_id")
-    private ServiceReqForm serviceReqForm;
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "service_req_form_id")
+//    private ServiceReqForm serviceReqForm;
 
 
     public FileDB(String name, String type, byte[] data) {

@@ -15,12 +15,12 @@ public class CreateSurveyDto {
     private String scene;
 
     @NotBlank
-    private String contact;
-
-    @NotBlank
     private String contactPhone;
 
+    @NotBlank
     private String assessmentCategory;
 
-    private String workflowName;
+    @NotBlank
+    private String customerName;
+
 }

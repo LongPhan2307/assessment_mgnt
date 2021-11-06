@@ -7,6 +7,7 @@ import uit.thesis.assessment_mgnt.common.AbstractEntity;
 import uit.thesis.assessment_mgnt.model.assessment.Survey;
 import uit.thesis.assessment_mgnt.model.human_resource.Employee;
 import uit.thesis.assessment_mgnt.model.workflow.Comment;
+import uit.thesis.assessment_mgnt.model.workflow.Confirmation;
 import uit.thesis.assessment_mgnt.utils.UserStatus;
 
 import javax.persistence.*;
@@ -72,6 +73,10 @@ public class User extends AbstractEntity {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     @JsonIgnore
     private Set<Comment> comments = new HashSet<>();
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @JsonIgnore
+    private Set<Confirmation> confirmations = new HashSet<>();
 
     public User addRole(Role role){
         this.roles.add(role);

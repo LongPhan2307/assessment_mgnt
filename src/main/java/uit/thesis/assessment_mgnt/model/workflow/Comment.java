@@ -1,5 +1,6 @@
 package uit.thesis.assessment_mgnt.model.workflow;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 import uit.thesis.assessment_mgnt.common.AbstractEntity;
@@ -8,6 +9,8 @@ import uit.thesis.assessment_mgnt.model.system.User;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "assessment_comment")
@@ -27,4 +30,9 @@ public class Comment extends AbstractEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(referencedColumnName = "code")
     private Survey survey;
+
+    @OneToMany(mappedBy = "comment", cascade = CascadeType.ALL)
+    @JsonIgnore
+    private Set<Confirmation> confirmations = new HashSet<>();
+
 }
