@@ -4,6 +4,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.validation.constraints.NotBlank;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -22,5 +24,7 @@ public class CreateSurveyDto {
 
     @NotBlank
     private String customerName;
+
+    private LocalDateTime dueDate;
 
 }
