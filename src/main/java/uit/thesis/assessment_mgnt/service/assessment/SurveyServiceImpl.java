@@ -20,6 +20,7 @@ import uit.thesis.assessment_mgnt.model.system.User;
 import uit.thesis.assessment_mgnt.model.workflow.Phase;
 import uit.thesis.assessment_mgnt.model.workflow.Workflow;
 import uit.thesis.assessment_mgnt.repository.assessment.AssessmentCategoryRepository;
+import uit.thesis.assessment_mgnt.repository.assessment.CustomerRepository;
 import uit.thesis.assessment_mgnt.repository.assessment.SurveyRepository;
 import uit.thesis.assessment_mgnt.repository.system.UserRepository;
 import uit.thesis.assessment_mgnt.repository.workflow.PhaseRepository;
@@ -29,6 +30,7 @@ import uit.thesis.assessment_mgnt.utils.survey.Const;
 import uit.thesis.assessment_mgnt.utils.survey.StatusForm;
 
 import javax.transaction.Transactional;
+import java.time.LocalDateTime;
 import java.util.*;
 
 @AllArgsConstructor
@@ -41,24 +43,36 @@ public class SurveyServiceImpl extends GenericServiceImpl<Survey, Long> implemen
     private AssessmentCategoryRepository assessmentCategoryRepository;
     private PhaseRepository phaseRepository;
     private UserRepository userRepository;
+    private CustomerRepository customerRepository;
 
     @Override
     public Survey addNewSurvey(CreateSurveyDto dto) throws NotFoundException {
         Survey survey = new Survey();
         String currentUsername = SecurityContextHolder.getContext().getAuthentication().getName();
         User accountant = userRepository.findByUsername(currentUsername);
+        User director = userRepository.findByUsername("director");
+        User manager = userRepository.findByUsername("manager");
+        Customer customer = customerRepository.findByCode(dto.getCustomerCode());
+        if(customer == null)
+            throw new NotFoundException(ResponseMessage.UN_KNOWN("Customer "));
         if(accountant == null)
             throw new NotFoundException("Anonymous is using service ");
-        AssessmentCategory assessmentCategory = assessmentCategoryRepository.findByName(dto.getAssessmentCategory());
+        AssessmentCategory assessmentCategory = assessmentCategoryRepository.findByCode(dto.getAssessmentCategoryCode());
         if(assessmentCategory == null)
             throw new NotFoundException(ResponseMessage.UN_KNOWN("Assessment Category Name"));
         Phase phase = phaseRepository.findByName(Const.PHASE_START);
         if(phase == null){
             throw new NotFoundException("Phase Start");
         }
+        LocalDateTime today = LocalDateTime.now();
+        LocalDateTime dueDate = today.plusDays(dto.getDuration());
         survey = modelMapper.map(dto, Survey.class);
         survey.setCode(RandomStringUtils.randomAlphanumeric(10));
         survey.setAssessmentCategory(assessmentCategory);
+        survey.setCustomer(customer);
+        survey.setDirector(director);
+        survey.setManager(manager);
+        survey.setDueDate(dueDate);
         survey.setPhase(phase);
         survey.setAccountant(accountant);
         Survey createdSurvey = surveyRepository.save(survey);
@@ -76,6 +90,12 @@ public class SurveyServiceImpl extends GenericServiceImpl<Survey, Long> implemen
     @Override
     public Survey findByCode(String code) {
         return surveyRepository.findByCode(code);
+    }
+
+    @Override
+    public List<Survey> getSurveysByDirector(String directorName) {
+        List<Survey> list = surveyRepository.findByDirectorName(directorName);
+        return list;
     }
 
 

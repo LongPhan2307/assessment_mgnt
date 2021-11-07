@@ -6,4 +6,5 @@ import uit.thesis.assessment_mgnt.model.assessment.Customer;
 
 @Repository
 public interface CustomerRepository extends JpaRepository<Customer, Long> {
+    Customer findByCode(String code);
 }

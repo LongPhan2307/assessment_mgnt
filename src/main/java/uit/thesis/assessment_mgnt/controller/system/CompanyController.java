@@ -13,17 +13,19 @@ import uit.thesis.assessment_mgnt.model.system.Company;
 import uit.thesis.assessment_mgnt.service.system.CompanyService;
 import uit.thesis.assessment_mgnt.utils.ResponseMessage;
 import uit.thesis.assessment_mgnt.utils.domain.CompanyDomain;
+import uit.thesis.assessment_mgnt.utils.domain.Domain;
+import uit.thesis.assessment_mgnt.utils.role.RoleName;
 
 import javax.validation.Valid;
 import java.util.List;
 
 @Controller
-@RequestMapping(CompanyDomain.COMPANY_DOMAIN)
+@RequestMapping(Domain.API)
 @AllArgsConstructor
 public class CompanyController {
     private CompanyService companyService;
 
-    @GetMapping("")
+    @GetMapping(CompanyDomain.COMPANY_DOMAIN)
     public ResponseEntity<Object> getAllCompany(){
         List<Company> list = companyService.findAll();
         if(list.isEmpty())
@@ -33,7 +35,7 @@ public class CompanyController {
 
 
 
-    @PostMapping("")
+    @PostMapping(Domain.API_ADMIN + CompanyDomain.COMPANY_DOMAIN)
     public ResponseEntity<Object> addCompany(@Valid @RequestBody CreateCompanyDto dto,
                                              BindingResult errors){
         if(errors.hasErrors())
@@ -42,7 +44,7 @@ public class CompanyController {
         return ResponseObject.getResponse(company, HttpStatus.CREATED);
     }
 
-    @PutMapping("/{code}")
+    @PutMapping(Domain.API_ADMIN + CompanyDomain.COMPANY_DOMAIN)
     public ResponseEntity<Object> updateCompany(@Valid @RequestBody UpdateCompanyDto dto,
                                                 BindingResult errors,
                                                 @PathVariable("code") String code){
@@ -57,7 +59,7 @@ public class CompanyController {
         return ResponseObject.getResponse(company, HttpStatus.OK);
     }
 
-    @DeleteMapping("/{code}")
+    @DeleteMapping(Domain.API_ADMIN + CompanyDomain.COMPANY_DOMAIN)
     public ResponseEntity<Object> deleteCompany(
                                                 @PathVariable("code") String code){
         if(code == null || code.equals("")){

@@ -15,4 +15,8 @@ public interface SurveyRepository extends JpaRepository<Survey, Long> {
     @Query(value = "select code, name, status_form, phase_name" +
             " from public.assessment_survey", nativeQuery = true)
     public List<ResponseSurvey> getAll();
+
+    @Query("SELECT s FROM Survey s WHERE s.director.username = ?1")
+    List<Survey> findByDirectorName(String directorName);
+
 }

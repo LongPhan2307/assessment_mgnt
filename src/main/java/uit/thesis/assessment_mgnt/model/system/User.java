@@ -86,10 +86,10 @@ public class User extends AbstractEntity {
         return this;
     }
 
-    public User(String username, String email, Department department,Role role){
+    public User(String username, String email,String password, Department department,Role role){
         this.username = username;
         this.email = email;
-        this.password = "123";
+        this.password = password;
         this.status = UserStatus.ACTIVE;
         this.department = department;
         this.roles.add(role);

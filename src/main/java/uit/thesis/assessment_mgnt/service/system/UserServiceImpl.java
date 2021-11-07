@@ -68,15 +68,15 @@ public class UserServiceImpl extends GenericServiceImpl<User, Long> implements U
         Department directorDepartment = departmentRepository.findByName(RoleName.DIRECTOR.toString());
         Department accountantDepartment = departmentRepository.findByName(RoleName.ACCOUNTANT.toString());
         Department assessmentDepartment = departmentRepository.findByName("ASSESSMENT");
-        list.add(new User("director", "director@gmail.com", directorDepartment, roles.get(0)));
-        list.add(new User("admin", "admin@gmail.com", itDepartment,roles.get(1)));
-        list.add(new User("accountant", "accountant@gmail.com", accountantDepartment,roles.get(2)));
-        list.add(new User("accountant1", "accountant1@gmail.com", accountantDepartment, roles.get(2)));
-        list.add(new User("manager", "manager@gmail.com", assessmentDepartment, roles.get(3)));
-        list.add(new User("anh", "anh@gmail.com", assessmentDepartment, roles.get(4)));
-        list.add(new User("anh1", "anh1@gmail.com", assessmentDepartment, roles.get(4)));
-        list.add(new User("boi", "boi@gmail.com", assessmentDepartment, roles.get(4)));
-        list.add(new User("boi1", "boi1@gmail.com", assessmentDepartment, roles.get(4)));
+        list.add(new User("director", "director@gmail.com",passwordEncoder.encode("123"), directorDepartment, roles.get(0)));
+        list.add(new User("admin", "admin@gmail.com",passwordEncoder.encode("123"), itDepartment,roles.get(1)));
+        list.add(new User("accountant", "accountant@gmail.com",passwordEncoder.encode("123"), accountantDepartment,roles.get(2)));
+        list.add(new User("accountant1", "accountant1@gmail.com",passwordEncoder.encode("123"), accountantDepartment, roles.get(2)));
+        list.add(new User("manager", "manager@gmail.com",passwordEncoder.encode("123"), assessmentDepartment, roles.get(3)));
+        list.add(new User("anh", "anh@gmail.com",passwordEncoder.encode("123"), assessmentDepartment, roles.get(4)));
+        list.add(new User("anh1", "anh1@gmail.com",passwordEncoder.encode("123"), assessmentDepartment, roles.get(4)));
+        list.add(new User("boi", "boi@gmail.com",passwordEncoder.encode("123"), assessmentDepartment, roles.get(4)));
+        list.add(new User("boi1", "boi1@gmail.com",passwordEncoder.encode("123"), assessmentDepartment, roles.get(4)));
         return userRepository.saveAll(list);
     }
 }

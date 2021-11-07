@@ -14,6 +14,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import uit.thesis.assessment_mgnt.security.jwt.JwtAuthorizationFilter;
+import uit.thesis.assessment_mgnt.utils.domain.Domain;
+import uit.thesis.assessment_mgnt.utils.role.RoleName;
 
 @Configuration
 @EnableWebSecurity
@@ -42,11 +44,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         // configure authentication for apis
         http.antMatcher("/api/**").authorizeRequests()
                 .antMatchers("/swagger-ui.html").permitAll()
-                .antMatchers("/api/**").permitAll()
-//                .antMatchers("/mockup/**").permitAll()
+//                .antMatchers("/api/**").permitAll()
+                .antMatchers(Domain.API + Domain.API_ADMIN + Domain.ALL).hasAuthority(RoleName.ADMIN.toString())
+                .antMatchers(Domain.API + Domain.API_DIRECTOR + Domain.ALL).hasAuthority(RoleName.DIRECTOR.toString())
+                .antMatchers(Domain.API + Domain.API_MANAGER + Domain.ALL).hasAuthority(RoleName.MANAGER.toString())
+                .antMatchers(Domain.API + Domain.API_ACCOUNTANT + Domain.ALL).hasAuthority(RoleName.ACCOUNTANT.toString())
+                .antMatchers(Domain.API + Domain.API_INSPECTOR + Domain.ALL).hasAuthority(RoleName.INSPECTOR.toString())
+                .antMatchers("/api/mockup/**").permitAll()
                 .antMatchers("/login").permitAll()
-//                .anyRequest().authenticated();
-            .anyRequest().permitAll();
+                .anyRequest().authenticated();
+//            .anyRequest().permitAll();
 
         // make server stateless
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);

@@ -3,8 +3,8 @@ package uit.thesis.assessment_mgnt.dto.assessment.survey;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Getter
@@ -20,11 +20,12 @@ public class CreateSurveyDto {
     private String contactPhone;
 
     @NotBlank
-    private String assessmentCategory;
+    private String assessmentCategoryCode;
 
     @NotBlank
-    private String customerName;
+    private String customerCode;
 
-    private LocalDateTime dueDate;
+    @Min(value = 3)
+    private long duration;
 
 }
