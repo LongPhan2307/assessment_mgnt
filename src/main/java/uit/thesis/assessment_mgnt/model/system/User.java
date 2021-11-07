@@ -2,6 +2,7 @@ package uit.thesis.assessment_mgnt.model.system;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import uit.thesis.assessment_mgnt.common.AbstractEntity;
 import uit.thesis.assessment_mgnt.model.assessment.Survey;
@@ -20,6 +21,7 @@ import java.util.Set;
 
 @Entity
 @Table(name = "assessment_user")
+@NoArgsConstructor
 @Getter
 @Setter
 public class User extends AbstractEntity {
@@ -82,6 +84,16 @@ public class User extends AbstractEntity {
         this.roles.add(role);
         role.getUsers().add(this);
         return this;
+    }
+
+    public User(String username, String email, Department department,Role role){
+        this.username = username;
+        this.email = email;
+        this.password = "123";
+        this.status = UserStatus.ACTIVE;
+        this.department = department;
+        this.roles.add(role);
+        role.getUsers().add(this);
     }
 
 }

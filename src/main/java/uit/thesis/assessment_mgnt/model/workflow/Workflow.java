@@ -27,9 +27,9 @@ public class Workflow extends AbstractEntity {
 //    private Set<Survey> surveys = new HashSet<>();
 
 
-    @OneToMany(mappedBy = "workflow", cascade = CascadeType.ALL)
-    @JsonIgnore
-    private Set<Phase> phases = new HashSet<>();
+//    @OneToMany(mappedBy = "workflow", cascade = CascadeType.ALL)
+//    @JsonIgnore
+//    private Set<Phase> phases = new HashSet<>();
 
 //    @OneToMany(mappedBy = "workflow", cascade = CascadeType.ALL)
 //    @JsonIgnore

@@ -24,10 +24,13 @@ import uit.thesis.assessment_mgnt.repository.workflow.PhaseRepository;
 import uit.thesis.assessment_mgnt.repository.workflow.WorkflowRepository;
 import uit.thesis.assessment_mgnt.utils.ResponseMessage;
 import uit.thesis.assessment_mgnt.utils.role.PhaseConst;
+import uit.thesis.assessment_mgnt.utils.role.RoleName;
 import uit.thesis.assessment_mgnt.utils.survey.Const;
 
 import javax.transaction.Transactional;
 import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Set;
 
 @Service
@@ -45,11 +48,11 @@ public class PhaseServiceImpl extends GenericServiceImpl<Phase, Long> implements
     @Override
     public Phase addPhase(CreatePhaseDto dto) throws NotFoundException {
         Phase phase = new Phase();
-        Workflow workflow = workflowRepository.findByName(dto.getWorkflowName());
-        if(workflow == null)
-            throw new NotFoundException(ResponseMessage.UN_KNOWN("Workflow "));
+//        Workflow workflow = workflowRepository.findByName(dto.getWorkflowName());
+//        if(workflow == null)
+//            throw new NotFoundException(ResponseMessage.UN_KNOWN("Workflow "));
         phase = modelMapper.map(dto, Phase.class);
-        phase.setWorkflow(workflow);
+//        phase.setWorkflow(workflow);
         return phaseRepository.save(phase);
     }
 
@@ -61,7 +64,7 @@ public class PhaseServiceImpl extends GenericServiceImpl<Phase, Long> implements
             throw new NotFoundException(ResponseMessage.UN_KNOWN("Workflow "));
         newPhase.setName(Const.PHASE_START);
         newPhase.setNodeOrder(Const.INITAL_NODE_ORDER);
-        newPhase.setWorkflow(workflow);
+//        newPhase.setWorkflow(workflow);
         return phaseRepository.save(newPhase);
     }
 
@@ -134,6 +137,20 @@ public class PhaseServiceImpl extends GenericServiceImpl<Phase, Long> implements
     @Override
     public Phase findByNodeOrder(int nodeOrder) {
         return phaseRepository.findByNodeOrder(nodeOrder);
+    }
+
+    @Override
+    public List<Phase> mockupData() {
+        List<Phase> list = new LinkedList<>();
+        List<Role> roles = roleRepository.findAll();
+        list.add(new Phase("REGISTER", 1, roles.get(2)));
+        list.add(new Phase("SURVEY CANCELLATION", 99, roles.get(0)));
+        list.add(new Phase("ASSIGN INSPECTORS", 2, roles.get(3)));
+        list.add(new Phase("IMPLEMENTS", 3, roles.get(3)));
+        list.add(new Phase("CONCLUDE SURVEY", 4, roles.get(3)));
+        list.add(new Phase("MANAGE PAYMENT", 5, roles.get(2)));
+        list.add(new Phase("FINISH", 6, roles.get(0)));
+        return phaseRepository.saveAll(list);
     }
 
     @Override

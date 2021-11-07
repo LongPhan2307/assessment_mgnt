@@ -8,6 +8,8 @@ import uit.thesis.assessment_mgnt.model.assessment.Survey;
 import uit.thesis.assessment_mgnt.model.workflow.Phase;
 import uit.thesis.assessment_mgnt.model.workflow.Workflow;
 
+import java.util.List;
+
 public interface PhaseService extends GenericService<Phase, Long> {
     Phase addPhase(CreatePhaseDto dto) throws NotFoundException;
 
@@ -20,6 +22,8 @@ public interface PhaseService extends GenericService<Phase, Long> {
     Survey declineAssignInspector(String surveyCode) throws NotFoundException;
 
     Phase findByNodeOrder(int nodeOrder);
+
+    List<Phase> mockupData();
 
     Phase updatePhaseRole(String phaseName, String roleName) throws NotFoundException;
 }

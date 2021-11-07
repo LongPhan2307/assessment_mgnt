@@ -2,6 +2,7 @@ package uit.thesis.assessment_mgnt.model.system;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import uit.thesis.assessment_mgnt.common.AbstractEntity;
 import uit.thesis.assessment_mgnt.model.workflow.Phase;
@@ -12,6 +13,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
+@NoArgsConstructor
 @Table(name = "assessment_role")
 @Getter
 @Setter
@@ -28,4 +30,9 @@ public class Role extends AbstractEntity {
     @OneToMany(mappedBy = "role", cascade = CascadeType.ALL)
     @JsonIgnore
     private Set<Phase> phases = new HashSet<>();
+
+    public Role(String name){
+        this.name = name;
+        this.description = "";
+    }
 }

@@ -17,6 +17,8 @@ import uit.thesis.assessment_mgnt.utils.UserStatus;
 import uit.thesis.assessment_mgnt.utils.role.RoleName;
 
 import javax.transaction.Transactional;
+import java.util.LinkedList;
+import java.util.List;
 
 @AllArgsConstructor
 @Transactional
@@ -56,5 +58,25 @@ public class UserServiceImpl extends GenericServiceImpl<User, Long> implements U
         user.addRole(role);
 
         return userRepository.save(user);
+    }
+
+    @Override
+    public List<User> mockupData() {
+        List<User> list = new LinkedList<>();
+        List<Role> roles = roleRepository.findAll();
+        Department itDepartment = departmentRepository.findByName("IT");
+        Department directorDepartment = departmentRepository.findByName(RoleName.DIRECTOR.toString());
+        Department accountantDepartment = departmentRepository.findByName(RoleName.ACCOUNTANT.toString());
+        Department assessmentDepartment = departmentRepository.findByName("ASSESSMENT");
+        list.add(new User("director", "director@gmail.com", directorDepartment, roles.get(0)));
+        list.add(new User("admin", "admin@gmail.com", itDepartment,roles.get(1)));
+        list.add(new User("accountant", "accountant@gmail.com", accountantDepartment,roles.get(2)));
+        list.add(new User("accountant1", "accountant1@gmail.com", accountantDepartment, roles.get(2)));
+        list.add(new User("manager", "manager@gmail.com", assessmentDepartment, roles.get(3)));
+        list.add(new User("anh", "anh@gmail.com", assessmentDepartment, roles.get(4)));
+        list.add(new User("anh1", "anh1@gmail.com", assessmentDepartment, roles.get(4)));
+        list.add(new User("boi", "boi@gmail.com", assessmentDepartment, roles.get(4)));
+        list.add(new User("boi1", "boi1@gmail.com", assessmentDepartment, roles.get(4)));
+        return userRepository.saveAll(list);
     }
 }

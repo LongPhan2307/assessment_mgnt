@@ -1,5 +1,6 @@
 package uit.thesis.assessment_mgnt.controller.system;
 
+import javassist.NotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -46,5 +47,7 @@ public class DepartmentController {
             return ResponseObject.getResponse(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
+
+
 
 }

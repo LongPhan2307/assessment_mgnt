@@ -11,6 +11,9 @@ import uit.thesis.assessment_mgnt.model.assessment.AssessmentCategory;
 import uit.thesis.assessment_mgnt.repository.assessment.AssessmentCategoryRepository;
 import uit.thesis.assessment_mgnt.utils.ResponseMessage;
 
+import java.util.LinkedList;
+import java.util.List;
+
 @Service
 @AllArgsConstructor
 public class AssessmentCategoryServiceImpl extends GenericServiceImpl<AssessmentCategory, Long>
@@ -34,5 +37,14 @@ public class AssessmentCategoryServiceImpl extends GenericServiceImpl<Assessment
             throw new Exception(ResponseMessage.UN_KNOWN("Name"));
 
         return assessmentCategory;
+    }
+
+    @Override
+    public List<AssessmentCategory> mockupData() {
+        List<AssessmentCategory> list = new LinkedList<>();
+        list.add(new AssessmentCategory("Giám định hàng lỏng"));
+        list.add(new AssessmentCategory("Giám định tình trạng hầm hàng"));
+        list.add(new AssessmentCategory("Giám định tổn thất"));
+        return assessmentCategoryRepository.saveAll(list);
     }
 }

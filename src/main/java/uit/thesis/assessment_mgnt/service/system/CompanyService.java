@@ -10,5 +10,7 @@ public interface CompanyService extends GenericService<Company, Long> {
 
     Company update(UpdateCompanyDto dto, String code);
 
+    Company mockupCompanyData();
+
     public boolean deleteByCode(String code);
 }

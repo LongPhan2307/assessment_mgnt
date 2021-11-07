@@ -2,6 +2,7 @@ package uit.thesis.assessment_mgnt.model.system;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import uit.thesis.assessment_mgnt.common.AbstractEntity;
 
@@ -11,6 +12,7 @@ import java.util.Set;
 
 @Getter
 @Setter
+@NoArgsConstructor
 @Entity
 @Table(name = "assessment_company")
 public class Company extends AbstractEntity {
@@ -33,4 +35,12 @@ public class Company extends AbstractEntity {
     private Set<Department> departments = new HashSet<>();
 
     private String address;
+
+//    public Company(){}
+
+    public Company(String name, String code, String address){
+        this.name = name;
+        this.code = code;
+        this.address = address;
+    }
 }

@@ -35,6 +35,14 @@ public class CompanyServiceImpl extends GenericServiceImpl<Company, Long> implem
     }
 
     @Override
+    public Company mockupCompanyData() {
+        Company company = new Company("Công ty TNHH giám định Bảo Định (BADINCO)"
+                , "172020"
+                , "P.14 T.2 Tòa Thành Đạt, 03 Lê Thánh Tông, Ngô Quyền,Hải Phòng");
+        return companyRepository.save(company);
+    }
+
+    @Override
     public boolean deleteByCode(String code) {
         Company company = companyRepository.findByCode(code);
         if(company == null)

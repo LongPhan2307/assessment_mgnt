@@ -31,6 +31,8 @@ public class CompanyController {
         return ResponseObject.getResponse(list, HttpStatus.OK);
     }
 
+
+
     @PostMapping("")
     public ResponseEntity<Object> addCompany(@Valid @RequestBody CreateCompanyDto dto,
                                              BindingResult errors){

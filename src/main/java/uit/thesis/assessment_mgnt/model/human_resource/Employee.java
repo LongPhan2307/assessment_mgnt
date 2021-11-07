@@ -45,7 +45,7 @@ public class Employee extends AbstractEntity {
     private Set<DaysWorking> daysWorking = new HashSet<>();
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
+    @JoinColumn(referencedColumnName = "id")
     @JsonIgnore
     private User user;
 

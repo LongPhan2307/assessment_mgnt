@@ -3,6 +3,7 @@ package uit.thesis.assessment_mgnt.common;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,6 +24,11 @@ public class GenericServiceImpl<T extends AbstractEntity, ID> implements Generic
     @Override
     public T save(T entity) {
         return jpaRepository.save(entity);
+    }
+
+    @Override
+    public List<T> saveAll(List<T> list) {
+        return jpaRepository.saveAll(list);
     }
 
     @Override
