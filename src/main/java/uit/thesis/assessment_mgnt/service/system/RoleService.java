@@ -10,4 +10,6 @@ public interface RoleService extends GenericService<Role, Long> {
     Role save(CreateRoleDto dto);
 
     List<Role> mockupData();
+
+    Role findUsersByRole(String roleName);
 }

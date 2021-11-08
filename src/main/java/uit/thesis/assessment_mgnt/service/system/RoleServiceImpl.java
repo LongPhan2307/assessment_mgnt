@@ -37,4 +37,9 @@ public class RoleServiceImpl extends GenericServiceImpl<Role, Long> implements R
         list.add(new Role(RoleName.INSPECTOR.toString()));
         return roleRepository.saveAll(list);
     }
+
+    @Override
+    public Role findUsersByRole(String roleName) {
+        return roleRepository.findUsersByRole(roleName);
+    }
 }
