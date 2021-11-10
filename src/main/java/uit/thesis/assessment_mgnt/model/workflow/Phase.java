@@ -31,6 +31,7 @@ public class Phase extends AbstractEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(referencedColumnName = "name")
+    @JsonIgnore
     private Role role;
 
 //    @OneToOne(mappedBy = "linkBy"

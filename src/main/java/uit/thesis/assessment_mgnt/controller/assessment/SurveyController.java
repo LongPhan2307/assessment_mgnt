@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import uit.thesis.assessment_mgnt.common.ResponseObject;
 import uit.thesis.assessment_mgnt.dto.assessment.survey.CreateSurveyDto;
 import uit.thesis.assessment_mgnt.dto.assessment.survey.ResponseSurvey;
+import uit.thesis.assessment_mgnt.dto.assessment.survey.SurveyWithUsers;
 import uit.thesis.assessment_mgnt.dto.assessment.survey.UpdateSurveyDto;
 import uit.thesis.assessment_mgnt.model.assessment.Survey;
 import uit.thesis.assessment_mgnt.repository.assessment.SurveyRepository;
@@ -36,6 +37,16 @@ public class SurveyController {
             return ResponseObject.getResponse(ResponseMessage.NO_DATA, HttpStatus.OK);
         return ResponseObject.getResponse(list, HttpStatus.OK);
     }
+
+    @GetMapping("/fetch-survey-user")
+    public ResponseEntity<Object> getSurveyWithUsers(){
+        List<SurveyWithUsers> list =  surveyService.getAll();
+        if(list.isEmpty())
+            return ResponseObject.getResponse(ResponseMessage.NO_DATA, HttpStatus.OK);
+        return ResponseObject.getResponse(list, HttpStatus.OK);
+    }
+
+
 
     @GetMapping("/search")
     public ResponseEntity<Object> searchSurveysByDirectorName(@RequestParam("director") String directorName){

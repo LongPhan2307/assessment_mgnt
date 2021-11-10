@@ -11,6 +11,7 @@ public class Const {
     public static final String ADDING_EXPENSE = "ADDING EXPENSE";
     public static final String ADDING_FOLDER = "ADDING FOLDER";
     public static final String ADDING_FILES = "ADDING FILES";
+    public static final String CHANGE_ASSIGNEE = "CHANGE ASSIGNEE";
     public static final String RETURNED_PHASE = "FEEDBACK";
 
 //    public static final String PHASE_END_DESC = "finish and close survey";

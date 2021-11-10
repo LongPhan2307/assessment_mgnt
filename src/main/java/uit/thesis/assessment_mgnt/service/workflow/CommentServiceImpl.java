@@ -43,24 +43,38 @@ public class CommentServiceImpl extends GenericServiceImpl<Comment,Long> impleme
     public Comment generateComment(Object obj, Survey survey, User user) {
         Comment comment = new Comment();
         if(obj instanceof Expense){
-            String content = user.getUsername() + "has added new expense: " + ((Expense) obj).getCost();
+            String content = user.getUsername() + " has added new expense: " + ((Expense) obj).getCost();
             comment.setSurvey(survey);
             comment.setUser(user);
             comment.setTitle(Const.ADDING_EXPENSE);
             comment.setContent(content);
         }
         if(obj instanceof Document){
-            String content = user.getUsername() + "has added new folder: " + ((Document) obj).getName();
+            String content = user.getUsername() + " has added new folder: " + ((Document) obj).getName();
             comment.setSurvey(survey);
             comment.setUser(user);
             comment.setTitle(Const.ADDING_FOLDER);
             comment.setContent(content);
         }
         if(obj instanceof FileDB){
-            String content = user.getUsername() + "has added new files: " + ((FileDB) obj).getName();
+            if(((FileDB) obj).getDocument() != null){
+                String content = user.getUsername() + " has added new files: " + ((FileDB) obj).getName()
+                        + " in folder " + ((FileDB) obj).getDocument().getName();
+                comment.setContent(content);
+            } else {
+                String content = user.getUsername() + " has added new files: " + ((FileDB) obj).getName()
+                        + " to certified ";
+                comment.setContent(content);
+            }
             comment.setSurvey(survey);
             comment.setUser(user);
-            comment.setTitle(Const.ADDING_FOLDER);
+            comment.setTitle(Const.ADDING_FILES);
+        }
+        if(obj instanceof User){
+            String content = user.getUsername() + " has transfer to " + ((User) obj).getUsername();
+            comment.setSurvey(survey);
+            comment.setUser(user);
+            comment.setTitle(Const.CHANGE_ASSIGNEE);
             comment.setContent(content);
         }
         return commentRepository.save(comment);

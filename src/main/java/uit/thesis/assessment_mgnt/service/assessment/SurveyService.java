@@ -4,6 +4,7 @@ import javassist.NotFoundException;
 import uit.thesis.assessment_mgnt.common.GenericService;
 import uit.thesis.assessment_mgnt.dto.assessment.survey.CreateSurveyDto;
 import uit.thesis.assessment_mgnt.dto.assessment.survey.ResponseSurvey;
+import uit.thesis.assessment_mgnt.dto.assessment.survey.SurveyWithUsers;
 import uit.thesis.assessment_mgnt.dto.assessment.survey.UpdateSurveyDto;
 import uit.thesis.assessment_mgnt.model.assessment.Survey;
 import uit.thesis.assessment_mgnt.utils.survey.StatusForm;
@@ -20,6 +21,8 @@ public interface SurveyService extends GenericService<Survey, Long> {
     List<Survey> getSurveysByDirector(String directorName);
 
     public List<ResponseSurvey> getAllSurveyCode();
+
+    public List<SurveyWithUsers> getAll();
 
     public Survey changeUserOfSurvey(String username, String surveyCode) throws Exception;
 

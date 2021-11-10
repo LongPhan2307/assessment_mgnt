@@ -11,12 +11,14 @@ import org.springframework.ui.ModelMap;
 import uit.thesis.assessment_mgnt.common.GenericServiceImpl;
 import uit.thesis.assessment_mgnt.dto.assessment.survey.CreateSurveyDto;
 import uit.thesis.assessment_mgnt.dto.assessment.survey.ResponseSurvey;
+import uit.thesis.assessment_mgnt.dto.assessment.survey.SurveyWithUsers;
 import uit.thesis.assessment_mgnt.dto.assessment.survey.UpdateSurveyDto;
 import uit.thesis.assessment_mgnt.model.assessment.AssessmentCategory;
 import uit.thesis.assessment_mgnt.model.assessment.Certificate;
 import uit.thesis.assessment_mgnt.model.assessment.Customer;
 import uit.thesis.assessment_mgnt.model.assessment.Survey;
 import uit.thesis.assessment_mgnt.model.system.User;
+import uit.thesis.assessment_mgnt.model.workflow.Comment;
 import uit.thesis.assessment_mgnt.model.workflow.Phase;
 import uit.thesis.assessment_mgnt.model.workflow.Workflow;
 import uit.thesis.assessment_mgnt.repository.assessment.AssessmentCategoryRepository;
@@ -25,11 +27,14 @@ import uit.thesis.assessment_mgnt.repository.assessment.SurveyRepository;
 import uit.thesis.assessment_mgnt.repository.system.UserRepository;
 import uit.thesis.assessment_mgnt.repository.workflow.PhaseRepository;
 import uit.thesis.assessment_mgnt.repository.workflow.WorkflowRepository;
+import uit.thesis.assessment_mgnt.service.workflow.CommentService;
+import uit.thesis.assessment_mgnt.utils.MapDtoToModel;
 import uit.thesis.assessment_mgnt.utils.ResponseMessage;
 import uit.thesis.assessment_mgnt.utils.survey.Const;
 import uit.thesis.assessment_mgnt.utils.survey.StatusForm;
 
 import javax.transaction.Transactional;
+import java.lang.reflect.Type;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -44,6 +49,7 @@ public class SurveyServiceImpl extends GenericServiceImpl<Survey, Long> implemen
     private PhaseRepository phaseRepository;
     private UserRepository userRepository;
     private CustomerRepository customerRepository;
+    private CommentService commentService;
 
     @Override
     public Survey addNewSurvey(CreateSurveyDto dto) throws NotFoundException {
@@ -105,6 +111,21 @@ public class SurveyServiceImpl extends GenericServiceImpl<Survey, Long> implemen
     }
 
     @Override
+    public List<SurveyWithUsers> getAll() {
+        List<Survey> list = surveyRepository.findAll();
+        List<SurveyWithUsers> surveys = new LinkedList<>();
+        for (int i = 0; i < list.size(); i++) {
+            SurveyWithUsers survey = mapSurveyToSurveyWithUsers(list.get(i));
+            survey.setAccountant(list.get(i).getAccountant());
+            survey.setManager(list.get(i).getManager());
+            survey.setDirector(list.get(i).getDirector());
+            survey.setInspectors(list.get(i).getInspectors());
+            surveys.add(survey);
+        }
+        return surveys;
+    }
+
+    @Override
     public Survey changeUserOfSurvey(String username, String surveyCode) throws Exception {
         Survey survey = surveyRepository.findByCode(surveyCode);
         if(survey == null)
@@ -119,6 +140,7 @@ public class SurveyServiceImpl extends GenericServiceImpl<Survey, Long> implemen
                 throw new NotFoundException(ResponseMessage.UN_KNOWN("User "));
 
             survey.setAccountant(userChanged);
+            commentService.generateComment(userChanged, survey, currentUser);
             return surveyRepository.save(survey);
         } else if(currentUser.getUsername().equals(survey.getDirector().getUsername())){
 
@@ -127,6 +149,7 @@ public class SurveyServiceImpl extends GenericServiceImpl<Survey, Long> implemen
                 throw new NotFoundException(ResponseMessage.UN_KNOWN("User "));
 
             survey.setDirector(userChanged);
+            commentService.generateComment(userChanged, survey, currentUser);
             return surveyRepository.save(survey);
         } else if(currentUser.getUsername().equals(survey.getManager().getUsername())){
 
@@ -135,11 +158,33 @@ public class SurveyServiceImpl extends GenericServiceImpl<Survey, Long> implemen
                 throw new NotFoundException(ResponseMessage.UN_KNOWN("User "));
 
             survey.setManager(userChanged);
+            commentService.generateComment(userChanged, survey, currentUser);
             return surveyRepository.save(survey);
         }
 
         throw new Exception("You can not change User of this Survey ");
     }
+
+    private SurveyWithUsers mapSurveyToSurveyWithUsers(Survey survey){
+        SurveyWithUsers surveyWithUsers = new SurveyWithUsers();
+        surveyWithUsers.setId(survey.getId());
+        surveyWithUsers.setCode(survey.getCode());
+        surveyWithUsers.setCreateAt(survey.getCreateAt());
+        surveyWithUsers.setCreatedBy(survey.getCreatedBy());
+        surveyWithUsers.setCreatedBy(survey.getCreatedBy());
+        surveyWithUsers.setLastModifiedBy(survey.getLastModifiedBy());
+        surveyWithUsers.setManager(survey.getManager());
+        surveyWithUsers.setInspectors(survey.getInspectors());
+        surveyWithUsers.setDirector(survey.getDirector());
+        surveyWithUsers.setAccountant(survey.getAccountant());
+        surveyWithUsers.setDueDate(survey.getDueDate());
+        surveyWithUsers.setName(survey.getName());
+        surveyWithUsers.setUpdateAt(survey.getUpdateAt());
+        surveyWithUsers.setScene(survey.getScene());
+        surveyWithUsers.setContactPhone(survey.getContactPhone());
+        return surveyWithUsers;
+    }
+
 
     @Override
     public Survey assignInspectors(String[] arrUsername, String surveyCode) throws NotFoundException {

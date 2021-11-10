@@ -11,10 +11,8 @@ import uit.thesis.assessment_mgnt.model.workflow.Expense;
 import uit.thesis.assessment_mgnt.model.workflow.Payment;
 import uit.thesis.assessment_mgnt.model.workflow.Phase;
 import uit.thesis.assessment_mgnt.utils.DateUtils;
-import uit.thesis.assessment_mgnt.utils.survey.StatusForm;
 
 import javax.persistence.*;
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -40,7 +38,6 @@ public class Survey extends AbstractEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(referencedColumnName = "code")
-    @JsonIgnore
     private AssessmentCategory assessmentCategory;
 //
     @OneToMany(mappedBy = "survey", cascade = CascadeType.ALL)

@@ -11,10 +11,10 @@ import java.util.List;
 public interface RoleRepository extends JpaRepository<Role, Long> {
     Role findByName(String name);
 
-    @EntityGraph(
-            attributePaths = {"users", "roles"},
-            type = EntityGraph.EntityGraphType.FETCH
-    )
+//    @EntityGraph(
+//            attributePaths = {"users", "roles"},
+//            type = EntityGraph.EntityGraphType.FETCH
+//    )
     @Query(value = "SELECT r FROM Role r WHERE r.name = ?1")
     Role findUsersByRole(String roleName);
 

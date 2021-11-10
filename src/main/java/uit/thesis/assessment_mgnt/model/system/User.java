@@ -48,7 +48,7 @@ public class User extends AbstractEntity {
             , joinColumns = @JoinColumn(name = "user_id")
             , inverseJoinColumns = @JoinColumn(name = "role_id")
     )
-//    @JsonIgnore
+    @JsonIgnore
     private Set<Role> roles = new HashSet<>();
 
     @OneToOne(mappedBy = "user",cascade = CascadeType.ALL,
