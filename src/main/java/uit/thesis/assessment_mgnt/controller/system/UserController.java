@@ -13,18 +13,19 @@ import uit.thesis.assessment_mgnt.model.system.Role;
 import uit.thesis.assessment_mgnt.model.system.User;
 import uit.thesis.assessment_mgnt.service.system.UserService;
 import uit.thesis.assessment_mgnt.utils.ResponseMessage;
+import uit.thesis.assessment_mgnt.utils.domain.Domain;
 import uit.thesis.assessment_mgnt.utils.domain.UserDomain;
 
 import javax.validation.Valid;
 import java.util.List;
 
 @Controller
-@RequestMapping(UserDomain.USER_DOMAIN)
+@RequestMapping(Domain.API)
 @AllArgsConstructor
 public class UserController {
     private UserService userService;
 
-    @GetMapping("")
+    @GetMapping(UserDomain.USER_DOMAIN)
     public ResponseEntity<Object> getAllUser(){
         List<User> list = userService.findAll();
         if(list.isEmpty())
@@ -32,7 +33,7 @@ public class UserController {
         return ResponseObject.getResponse(list, HttpStatus.OK);
     }
 
-    @PostMapping("")
+    @PostMapping(Domain.API_ADMIN + UserDomain.USER_DOMAIN)
     public ResponseEntity<Object> createUser(@Valid @RequestBody CreateUserDto dto,
                                           BindingResult errors){
         if(errors.hasErrors())
@@ -47,7 +48,7 @@ public class UserController {
         }
     }
 
-    @PutMapping("{username}/{role_name}")
+    @PutMapping(Domain.API_ADMIN + UserDomain.USER_DOMAIN + "/{username}/{role_name}")
     public ResponseEntity<Object> addRole(@PathVariable("role_name") String roleName,
                                           @PathVariable("username") String username){
         if(roleName == null || roleName.equals(""))

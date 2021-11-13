@@ -16,17 +16,18 @@ import uit.thesis.assessment_mgnt.model.system.Department;
 import uit.thesis.assessment_mgnt.service.system.DepartmentService;
 import uit.thesis.assessment_mgnt.utils.ResponseMessage;
 import uit.thesis.assessment_mgnt.utils.domain.DepartmentDomain;
+import uit.thesis.assessment_mgnt.utils.domain.Domain;
 
 import javax.validation.Valid;
 import java.util.List;
 
 @Controller
-@RequestMapping(DepartmentDomain.DEPARTMENT_DOMAIN)
+@RequestMapping(Domain.API)
 @AllArgsConstructor
 public class DepartmentController {
     private DepartmentService departmentService;
 
-    @GetMapping("")
+    @GetMapping(DepartmentDomain.DEPARTMENT_DOMAIN)
     public ResponseEntity<Object> getAllDepartment(){
         List<Department> list = departmentService.findAll();
         if(list.isEmpty())
@@ -34,7 +35,7 @@ public class DepartmentController {
         return ResponseObject.getResponse(list, HttpStatus.OK);
     }
 
-    @PostMapping("")
+    @PostMapping(Domain.API_ADMIN + DepartmentDomain.DEPARTMENT_DOMAIN)
     public ResponseEntity<Object> addDepartment(@Valid @RequestBody CreateDepartmentDto dto,
                                                 BindingResult errors){
         if(errors.hasErrors())

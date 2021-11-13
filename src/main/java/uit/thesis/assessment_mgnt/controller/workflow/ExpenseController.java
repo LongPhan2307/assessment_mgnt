@@ -11,17 +11,18 @@ import uit.thesis.assessment_mgnt.dto.workflow.CreateExpenseDto;
 import uit.thesis.assessment_mgnt.model.workflow.Expense;
 import uit.thesis.assessment_mgnt.service.workflow.ExpenseService;
 import uit.thesis.assessment_mgnt.utils.ResponseMessage;
+import uit.thesis.assessment_mgnt.utils.domain.Domain;
 import uit.thesis.assessment_mgnt.utils.domain.workflow.ExpenseDomain;
 
 import java.util.List;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping(ExpenseDomain.EXPENSE_DOMAIN)
+@RequestMapping(Domain.API)
 public class ExpenseController {
     private ExpenseService expenseService;
 
-    @GetMapping("")
+    @GetMapping(ExpenseDomain.EXPENSE_DOMAIN)
     public ResponseEntity<Object> findAll(){
         List<Expense> list = expenseService.findAll();
         if(list.isEmpty())
@@ -29,7 +30,7 @@ public class ExpenseController {
         return ResponseObject.getResponse(list, HttpStatus.OK);
     }
 
-    @PostMapping("")
+    @PostMapping(ExpenseDomain.EXPENSE_DOMAIN)
     public ResponseEntity<Object> addNewExpense(@RequestBody CreateExpenseDto dto,
                                                 BindingResult errors){
         if(errors.hasErrors())

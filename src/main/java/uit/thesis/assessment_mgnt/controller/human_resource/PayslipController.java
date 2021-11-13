@@ -10,18 +10,19 @@ import uit.thesis.assessment_mgnt.dto.human_resource.CreatePayslipDto;
 import uit.thesis.assessment_mgnt.model.human_resource.Payslip;
 import uit.thesis.assessment_mgnt.service.human_resource.PayslipService;
 import uit.thesis.assessment_mgnt.utils.ResponseMessage;
+import uit.thesis.assessment_mgnt.utils.domain.Domain;
 import uit.thesis.assessment_mgnt.utils.domain.PayslipDomain;
 
 import javax.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping(PayslipDomain.PAYSLIP_DOMAIN)
+@RequestMapping(Domain.API)
 @AllArgsConstructor
 public class PayslipController {
     private PayslipService payslipService;
 
-    @GetMapping("")
+    @GetMapping(PayslipDomain.PAYSLIP_DOMAIN)
     public ResponseEntity<Object> getAllPayslip(){
         List<Payslip> list = payslipService.findAll();
         if(list.isEmpty())
@@ -29,7 +30,7 @@ public class PayslipController {
         return ResponseObject.getResponse(list, HttpStatus.OK);
     }
 
-    @PostMapping("")
+    @PostMapping(Domain.API_ACCOUNTANT + PayslipDomain.PAYSLIP_DOMAIN)
     public ResponseEntity<Object> createPayslip(@Valid @RequestBody CreatePayslipDto dto,
                                                 BindingResult errors){
         if(errors.hasErrors())
@@ -44,7 +45,7 @@ public class PayslipController {
 
     }
 
-    @PutMapping("/{code}")
+    @PutMapping(Domain.API_ACCOUNTANT + PayslipDomain.PAYSLIP_DOMAIN + "/{code}")
     public ResponseEntity<Object> updatePayslip(@Valid @RequestBody CreatePayslipDto dto,
                                                 BindingResult errors,
                                                 @PathVariable("code") String code){

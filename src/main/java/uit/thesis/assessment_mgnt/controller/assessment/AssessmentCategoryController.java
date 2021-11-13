@@ -11,17 +11,18 @@ import uit.thesis.assessment_mgnt.dto.assessment.CreateAssessmentCategoryDto;
 import uit.thesis.assessment_mgnt.model.assessment.AssessmentCategory;
 import uit.thesis.assessment_mgnt.service.assessment.AssessmentCategoryService;
 import uit.thesis.assessment_mgnt.utils.ResponseMessage;
+import uit.thesis.assessment_mgnt.utils.domain.Domain;
 import uit.thesis.assessment_mgnt.utils.domain.assessment.AssessmentCategoryDomain;
 
 import java.util.List;
 
 @Controller
-@RequestMapping(AssessmentCategoryDomain.ASSESSMENT_CATEGORY)
+@RequestMapping(Domain.API)
 @AllArgsConstructor
 public class AssessmentCategoryController {
     private AssessmentCategoryService assessmentCategoryService;
 
-    @GetMapping("")
+    @GetMapping(AssessmentCategoryDomain.ASSESSMENT_CATEGORY)
     public ResponseEntity<Object> findAll(){
         List<AssessmentCategory> list = assessmentCategoryService.findAll();
         if(list.isEmpty())
@@ -29,7 +30,7 @@ public class AssessmentCategoryController {
         return ResponseObject.getResponse(list, HttpStatus.OK);
     }
 
-    @PostMapping("")
+    @PostMapping(Domain.API_ADMIN + AssessmentCategoryDomain.ASSESSMENT_CATEGORY)
     public ResponseEntity<Object> addNewAssessmentCategory(@RequestBody CreateAssessmentCategoryDto dto,
                                                            BindingResult errors){
         if(errors.hasErrors())
@@ -38,7 +39,7 @@ public class AssessmentCategoryController {
         return ResponseObject.getResponse(assessmentCategory, HttpStatus.CREATED);
     }
 
-    @GetMapping("/search")
+    @GetMapping(AssessmentCategoryDomain.ASSESSMENT_CATEGORY + "/search")
     public ResponseEntity<Object> getByName( @RequestParam( value = "name") String name){
         try {
             AssessmentCategory assessmentCategory = assessmentCategoryService.findByName(name);

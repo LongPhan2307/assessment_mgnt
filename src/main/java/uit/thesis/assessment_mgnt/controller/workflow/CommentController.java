@@ -12,17 +12,18 @@ import uit.thesis.assessment_mgnt.dto.workflow.CreateCommentDto;
 import uit.thesis.assessment_mgnt.model.workflow.Comment;
 import uit.thesis.assessment_mgnt.service.workflow.CommentService;
 import uit.thesis.assessment_mgnt.utils.ResponseMessage;
+import uit.thesis.assessment_mgnt.utils.domain.Domain;
 import uit.thesis.assessment_mgnt.utils.domain.workflow.CommentDomain;
 
 import java.util.List;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping(CommentDomain.COMMENT_DOMAIN)
+@RequestMapping(Domain.API)
 public class CommentController {
     private CommentService commentService;
 
-    @GetMapping("")
+    @GetMapping(CommentDomain.COMMENT_DOMAIN)
     public ResponseEntity<Object> findAll(){
         List<Comment> comments = commentService.findAll();
         if(comments.isEmpty())
@@ -30,7 +31,7 @@ public class CommentController {
         return ResponseObject.getResponse(comments, HttpStatus.OK);
     }
 
-    @PostMapping("")
+    @PostMapping(CommentDomain.COMMENT_DOMAIN)
     public ResponseEntity<Object> addComment(@RequestBody CreateCommentDto dto,
                                              BindingResult errors){
         if(errors.hasErrors())

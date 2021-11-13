@@ -14,18 +14,19 @@ import uit.thesis.assessment_mgnt.dto.assessment.document.CreateDocumentDto;
 import uit.thesis.assessment_mgnt.model.assessment.Document;
 import uit.thesis.assessment_mgnt.service.assessment.DocumentService;
 import uit.thesis.assessment_mgnt.utils.ResponseMessage;
+import uit.thesis.assessment_mgnt.utils.domain.Domain;
 import uit.thesis.assessment_mgnt.utils.domain.assessment.DocumentDomain;
 
 import javax.validation.Valid;
 import java.util.List;
 
 @Controller
-@RequestMapping(DocumentDomain.DOCUMENT)
+@RequestMapping(Domain.API)
 @AllArgsConstructor
 public class DocumentController {
     private DocumentService documentService;
 
-    @GetMapping("")
+    @GetMapping(DocumentDomain.DOCUMENT)
     public ResponseEntity<Object> findAll(){
         List<Document> list = documentService.findAll();
         if(list.isEmpty())
@@ -33,7 +34,7 @@ public class DocumentController {
         return ResponseObject.getResponse(list, HttpStatus.OK);
     }
 
-    @PostMapping("")
+    @PostMapping(DocumentDomain.DOCUMENT)
     public ResponseEntity<Object> addDocument(@Valid @RequestBody CreateDocumentDto dto,
                                               BindingResult error){
         if(error.hasErrors())

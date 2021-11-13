@@ -11,17 +11,18 @@ import uit.thesis.assessment_mgnt.model.workflow.Confirmation;
 import uit.thesis.assessment_mgnt.model.workflow.Expense;
 import uit.thesis.assessment_mgnt.service.workflow.ConfirmationService;
 import uit.thesis.assessment_mgnt.utils.ResponseMessage;
+import uit.thesis.assessment_mgnt.utils.domain.Domain;
 import uit.thesis.assessment_mgnt.utils.domain.workflow.ConfirmationDomain;
 
 import java.util.List;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping(ConfirmationDomain.CONFIRMATION_DOMAIN)
+@RequestMapping(Domain.API)
 public class ConfirmationController {
     private ConfirmationService confirmationService;
 
-    @GetMapping("")
+    @GetMapping(ConfirmationDomain.CONFIRMATION_DOMAIN)
     public ResponseEntity<Object> findAll(){
         List<Confirmation> list = confirmationService.findAll();
         if(list.isEmpty())

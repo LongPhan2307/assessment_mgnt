@@ -11,17 +11,18 @@ import uit.thesis.assessment_mgnt.model.assessment.Customer;
 import uit.thesis.assessment_mgnt.model.workflow.Payment;
 import uit.thesis.assessment_mgnt.service.workflow.PaymentService;
 import uit.thesis.assessment_mgnt.utils.ResponseMessage;
+import uit.thesis.assessment_mgnt.utils.domain.Domain;
 import uit.thesis.assessment_mgnt.utils.domain.workflow.PaymentDomain;
 
 import java.util.List;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping(PaymentDomain.PAYMENT_DOMAIN)
+@RequestMapping(Domain.API)
 public class PaymentController {
     private PaymentService paymentService;
 
-    @GetMapping("")
+    @GetMapping(PaymentDomain.PAYMENT_DOMAIN)
     public ResponseEntity<Object> findAll(){
         List<Payment> list = paymentService.findAll();
         if(list.isEmpty())

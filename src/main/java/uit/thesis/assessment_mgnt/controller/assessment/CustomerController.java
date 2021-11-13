@@ -10,17 +10,18 @@ import uit.thesis.assessment_mgnt.dto.assessment.customer.CreateCustomerDto;
 import uit.thesis.assessment_mgnt.model.assessment.Customer;
 import uit.thesis.assessment_mgnt.service.assessment.CustomerService;
 import uit.thesis.assessment_mgnt.utils.ResponseMessage;
+import uit.thesis.assessment_mgnt.utils.domain.Domain;
 import uit.thesis.assessment_mgnt.utils.domain.assessment.CustomerDomain;
 
 import java.util.List;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping(CustomerDomain.CUSTOMER_DOMAIN)
+@RequestMapping(Domain.API)
 public class CustomerController {
     private CustomerService customerService;
 
-    @GetMapping("")
+    @GetMapping(CustomerDomain.CUSTOMER_DOMAIN)
     public ResponseEntity<Object> findAll(){
         List<Customer> list = customerService.findAll();
         if(list.isEmpty())
@@ -28,7 +29,7 @@ public class CustomerController {
         return ResponseObject.getResponse(list, HttpStatus.OK);
     }
 
-    @PostMapping("")
+    @PostMapping(CustomerDomain.CUSTOMER_DOMAIN)
     public ResponseEntity<Object> addNewCustomer(@RequestBody CreateCustomerDto dto,
                                                  BindingResult errors){
         if(errors.hasErrors())

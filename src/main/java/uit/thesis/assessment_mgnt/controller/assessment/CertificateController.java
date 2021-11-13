@@ -11,18 +11,19 @@ import uit.thesis.assessment_mgnt.dto.assessment.certificate.UpdatedCertificate;
 import uit.thesis.assessment_mgnt.model.assessment.Certificate;
 import uit.thesis.assessment_mgnt.service.assessment.CertificateService;
 import uit.thesis.assessment_mgnt.utils.ResponseMessage;
+import uit.thesis.assessment_mgnt.utils.domain.Domain;
 import uit.thesis.assessment_mgnt.utils.domain.assessment.CertificateDomain;
 
 import javax.validation.Valid;
 import java.util.List;
 
 @Controller
-@RequestMapping(CertificateDomain.CERTIFICATE)
+@RequestMapping(Domain.API)
 @AllArgsConstructor
 public class CertificateController {
     private CertificateService certificateService;
 
-    @GetMapping("")
+    @GetMapping(CertificateDomain.CERTIFICATE)
     public ResponseEntity<Object> findAll(){
         List<Certificate> list = certificateService.findAll();
         if(list.isEmpty())
@@ -30,7 +31,7 @@ public class CertificateController {
         return ResponseObject.getResponse(list, HttpStatus.OK);
     }
 
-    @PutMapping("")
+    @PutMapping(CertificateDomain.CERTIFICATE)
     public ResponseEntity<Object> updateCertificate(@RequestParam( value = "desc") String code,
                                                     @Valid @RequestBody UpdatedCertificate dto,
                                                     BindingResult error){

@@ -15,6 +15,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import uit.thesis.assessment_mgnt.security.jwt.JwtAuthorizationFilter;
 import uit.thesis.assessment_mgnt.utils.domain.Domain;
+import uit.thesis.assessment_mgnt.utils.domain.assessment.FileDBDomain;
 import uit.thesis.assessment_mgnt.utils.role.RoleName;
 
 @Configuration
@@ -44,7 +45,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         // configure authentication for apis
         http.antMatcher("/api/**").authorizeRequests()
                 .antMatchers("/swagger-ui.html").permitAll()
-//                .antMatchers("/api/**").permitAll()
+                .antMatchers(FileDBDomain.FILE + Domain.ALL).permitAll()
                 .antMatchers(Domain.API + Domain.API_ADMIN + Domain.ALL).hasAuthority(RoleName.ADMIN.toString())
                 .antMatchers(Domain.API + Domain.API_DIRECTOR + Domain.ALL).hasAuthority(RoleName.DIRECTOR.toString())
                 .antMatchers(Domain.API + Domain.API_MANAGER + Domain.ALL).hasAuthority(RoleName.MANAGER.toString())

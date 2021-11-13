@@ -11,18 +11,19 @@ import uit.thesis.assessment_mgnt.dto.system.CreateRoleDto;
 import uit.thesis.assessment_mgnt.model.system.Role;
 import uit.thesis.assessment_mgnt.service.system.RoleService;
 import uit.thesis.assessment_mgnt.utils.ResponseMessage;
+import uit.thesis.assessment_mgnt.utils.domain.Domain;
 import uit.thesis.assessment_mgnt.utils.domain.RoleDomain;
 
 import javax.validation.Valid;
 import java.util.List;
 
 @Controller
-@RequestMapping(RoleDomain.ROLE_DOMAIN)
+@RequestMapping(Domain.API)
 @AllArgsConstructor
 public class RoleController {
     private RoleService roleService;
 
-    @GetMapping("")
+    @GetMapping(RoleDomain.ROLE_DOMAIN)
     public ResponseEntity<Object> getAllRole(){
         List<Role> list = roleService.findAll();
         if(list.isEmpty())
@@ -30,7 +31,7 @@ public class RoleController {
         return ResponseObject.getResponse(list, HttpStatus.OK);
     }
 
-    @GetMapping("/search")
+    @GetMapping(RoleDomain.ROLE_DOMAIN + "/search")
     public ResponseEntity<Object> findUsersByRole(@RequestParam("role") String roleName){
         Role role = roleService.findUsersByRole(roleName);
         if(role == null)
@@ -38,7 +39,7 @@ public class RoleController {
         return ResponseObject.getResponse(role, HttpStatus.OK);
     }
 
-    @PostMapping("")
+    @PostMapping(Domain.API_ADMIN)
     public ResponseEntity<Object> addRole(@Valid @RequestBody CreateRoleDto dto,
                                           BindingResult errors){
         if(errors.hasErrors())

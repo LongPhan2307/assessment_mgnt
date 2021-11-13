@@ -12,17 +12,18 @@ import uit.thesis.assessment_mgnt.model.human_resource.DaysWorking;
 import uit.thesis.assessment_mgnt.service.human_resource.DaysWorkingService;
 import uit.thesis.assessment_mgnt.utils.ResponseMessage;
 import uit.thesis.assessment_mgnt.utils.domain.DaysWorkingDomain;
+import uit.thesis.assessment_mgnt.utils.domain.Domain;
 
 import javax.validation.Valid;
 import java.util.List;
 
 @Controller
 @AllArgsConstructor
-@RequestMapping(DaysWorkingDomain.DAYS_WORKING_DOMAIN)
+@RequestMapping(Domain.API)
 public class DaysWorkingController {
     private DaysWorkingService daysWorkingService;
 
-    @GetMapping("")
+    @GetMapping(Domain.API_ACCOUNTANT + DaysWorkingDomain.DAYS_WORKING_DOMAIN)
     public ResponseEntity<Object> getAllDaysWorking(){
         List<DaysWorking> list = daysWorkingService.findAll();
         if(list.isEmpty())
@@ -30,7 +31,7 @@ public class DaysWorkingController {
         return ResponseObject.getResponse(list, HttpStatus.OK);
     }
 
-    @GetMapping("/all")
+    @GetMapping(Domain.API_ACCOUNTANT + DaysWorkingDomain.DAYS_WORKING_DOMAIN + "/all")
     public ResponseEntity<Object> getAll(){
         List<DaysWorking> list = daysWorkingService.getAll();
         if(list.isEmpty())
@@ -39,7 +40,7 @@ public class DaysWorkingController {
     }
 
 
-    @PostMapping("")
+    @PostMapping(Domain.API_ACCOUNTANT + DaysWorkingDomain.DAYS_WORKING_DOMAIN)
     public ResponseEntity<Object> addDaysWorking(@Valid @RequestBody CreateDaysWorkingDto dto,
                                                  BindingResult errors){
         if(errors.hasErrors())
@@ -54,7 +55,7 @@ public class DaysWorkingController {
 
     }
 
-    @GetMapping("/{employee_id}")
+    @GetMapping(Domain.API_ACCOUNTANT + DaysWorkingDomain.DAYS_WORKING_DOMAIN + "/{employee_id}")
     public ResponseEntity<Object> getAllDaysWorkingFromEmployeeId(@PathVariable("employee_id") String employeeId){
         if(employeeId == null || employeeId.equals(""))
             return ResponseObject.getResponse(ResponseMessage.NOT_BLANK("EmployeeID"), HttpStatus.BAD_REQUEST);
@@ -64,7 +65,7 @@ public class DaysWorkingController {
         return ResponseObject.getResponse(list, HttpStatus.OK);
     }
 
-    @PutMapping("/{code}")
+    @PutMapping(Domain.API_ACCOUNTANT + DaysWorkingDomain.DAYS_WORKING_DOMAIN + "/{code}")
     public ResponseEntity<Object> update(@Valid @RequestBody CreateDaysWorkingDto dto,
                                                  BindingResult errors,
                                                  @PathVariable("code") String code){

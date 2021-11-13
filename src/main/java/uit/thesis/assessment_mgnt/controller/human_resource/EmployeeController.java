@@ -12,6 +12,7 @@ import uit.thesis.assessment_mgnt.model.human_resource.Employee;
 import uit.thesis.assessment_mgnt.service.human_resource.EmployeeService;
 import uit.thesis.assessment_mgnt.utils.EmployeeDegree;
 import uit.thesis.assessment_mgnt.utils.ResponseMessage;
+import uit.thesis.assessment_mgnt.utils.domain.Domain;
 import uit.thesis.assessment_mgnt.utils.domain.EmployeeDomain;
 
 import javax.validation.Valid;
@@ -19,12 +20,12 @@ import java.util.Arrays;
 import java.util.List;
 
 @Controller
-@RequestMapping(EmployeeDomain.EMPLOYEE_DOMAIN)
+@RequestMapping(Domain.API)
 @AllArgsConstructor
 public class EmployeeController {
     private EmployeeService employeeService;
 
-    @GetMapping("")
+    @GetMapping(EmployeeDomain.EMPLOYEE_DOMAIN)
     public ResponseEntity<Object> getAllEmployee(){
         List<Employee> list = employeeService.findAll();
         if(list.isEmpty())
@@ -32,7 +33,7 @@ public class EmployeeController {
         return ResponseObject.getResponse(list, HttpStatus.OK);
     }
 
-    @GetMapping("/degree")
+    @GetMapping( Domain.API_ACCOUNTANT + EmployeeDomain.EMPLOYEE_DOMAIN + "/degree")
     public ResponseEntity<Object> getAllEmployeeDegree(){
         List<EmployeeDegree> list = Arrays.asList(EmployeeDegree.values());
         if(list.isEmpty())
@@ -40,7 +41,7 @@ public class EmployeeController {
         return ResponseObject.getResponse(list, HttpStatus.OK);
     }
 
-    @PostMapping("")
+    @PostMapping(Domain.API_ACCOUNTANT + EmployeeDomain.EMPLOYEE_DOMAIN)
     public ResponseEntity<Object> createEmployee(@Valid @RequestBody CreateEmployeeDto dto,
                                                  BindingResult errors){
         if(errors.hasErrors())
@@ -54,7 +55,7 @@ public class EmployeeController {
         }
     }
 
-    @PutMapping("/{employee_id}")
+    @PutMapping(Domain.API_ACCOUNTANT + EmployeeDomain.EMPLOYEE_DOMAIN + "/{employee_id}")
     public ResponseEntity<Object> updateEmployee(@Valid @RequestBody CreateEmployeeDto dto,
                                                  BindingResult errors,
                                                  @PathVariable("employee_id") String employeeId){

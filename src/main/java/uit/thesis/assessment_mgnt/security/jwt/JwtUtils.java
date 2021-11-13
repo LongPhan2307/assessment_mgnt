@@ -5,11 +5,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
+import java.util.List;
+import java.util.Set;
 
 @Component
 public class JwtUtils {
@@ -23,9 +27,11 @@ public class JwtUtils {
 
     public String generateJwtToken(Authentication authentication) {
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        Set<GrantedAuthority> list = (Set<GrantedAuthority>) userDetails.getAuthorities();
+        String roleName = String.valueOf(list.stream().findFirst().get());
         Date now = new Date();
         return Jwts.builder()
-                .setSubject(userDetails.getUsername())
+                .setSubject(userDetails.getUsername() + "-" + roleName)
                 .setIssuedAt(now)
                 .setExpiration(new Date(now.getTime() + jwtDuration))
                 .signWith(SignatureAlgorithm.HS512, jwtSecret)

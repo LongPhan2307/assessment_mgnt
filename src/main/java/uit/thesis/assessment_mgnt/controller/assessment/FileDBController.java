@@ -17,6 +17,7 @@ import uit.thesis.assessment_mgnt.dto.assessment.ResponseFile;
 import uit.thesis.assessment_mgnt.model.assessment.FileDB;
 import uit.thesis.assessment_mgnt.service.assessment.FileDBService;
 import uit.thesis.assessment_mgnt.utils.ResponseMessage;
+import uit.thesis.assessment_mgnt.utils.domain.Domain;
 import uit.thesis.assessment_mgnt.utils.domain.assessment.FileDBDomain;
 
 import javax.servlet.ServletContext;
@@ -29,13 +30,13 @@ import java.util.stream.Collectors;
 
 @RestController
 @CrossOrigin("http://localhost:8080")
-@RequestMapping(FileDBDomain.FILE)
+@RequestMapping("")
 @AllArgsConstructor
 public class FileDBController implements ServletContextAware {
     private ServletContext servletContext;
     private FileDBService fileDBService;
 
-    @PostMapping(value = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(value = FileDBDomain.FILE + "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Object> uploads(@RequestParam MultipartFile[] files){
         try {
             for(MultipartFile file : files){
@@ -50,7 +51,7 @@ public class FileDBController implements ServletContextAware {
         return ResponseObject.getResponse("Bug", HttpStatus.BAD_REQUEST);
     }
 
-    @PostMapping(value = "", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(value = FileDBDomain.FILE + "/upload-files", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Object> uploadFile(
                                              @RequestParam("file") MultipartFile file
                                              ){
@@ -64,14 +65,12 @@ public class FileDBController implements ServletContextAware {
         }
     }
 
-    @PostMapping(value = "/files"
+    @PostMapping(value = FileDBDomain.FILE + "/files"
 //            ,consumes = {"multipart/form-data"}
 
             )
     public ResponseEntity<Object> uploadMultiFiles(@RequestBody List<MultipartFile> files
     ){
-//        if(errors.hasErrors())
-//            return ResponseObject.getResponse(errors, HttpStatus.BAD_REQUEST);
         List<FileDB> list = null;
         try {
             list = fileDBService.storeFiles(files);
@@ -82,26 +81,7 @@ public class FileDBController implements ServletContextAware {
         }
     }
 
-//    @PostMapping("/upload")
-//    public ResponseEntity<ResponseMessage> uploadFiles(@RequestParam("files") MultipartFile[] files) {
-//        String message = "";
-//        try {
-//            List<String> fileNames = new ArrayList<>();
-//
-//            Arrays.asList(files).stream().forEach(file -> {
-////                storageService.save(file);
-//                fileNames.add(file.getOriginalFilename());
-//            });
-//
-//            message = "Uploaded the files successfully: " + fileNames;
-//            return null;
-//        } catch (Exception e) {
-//            message = "Fail to upload files!";
-//            return null;
-//        }
-//    }
-
-    @GetMapping("")
+    @GetMapping(FileDBDomain.FILE)
     public ResponseEntity<Object> getAllFiles(){
         List<ResponseFile> list = fileDBService.getAllFiles().map(fileDB -> {
             String fileDownloadUri = ServletUriComponentsBuilder
@@ -114,14 +94,15 @@ public class FileDBController implements ServletContextAware {
                     fileDB.getName(),
                     fileDownloadUri,
                     fileDB.getType(),
-                    fileDB.getData().length);
+                    fileDB.getData().length
+                    );
         }).collect(Collectors.toList());
         if(list.isEmpty())
             return ResponseObject.getResponse(ResponseMessage.NO_DATA, HttpStatus.OK);
         return ResponseObject.getResponse(list, HttpStatus.OK);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping(FileDBDomain.FILE + "/{id}")
     public ResponseEntity<Object> getFile(@PathVariable("id") String id){
         FileDB fileDB = fileDBService.getFileById(id);
         if(fileDB == null)

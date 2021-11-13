@@ -30,7 +30,7 @@ import java.util.List;
 public class SurveyController {
     private SurveyService surveyService;
 
-    @GetMapping("")
+    @GetMapping(SurveyDomain.SURVEY)
     public ResponseEntity<Object> findAll(){
         List<Survey> list =  surveyService.findAll();
         if(list.isEmpty())
@@ -38,7 +38,7 @@ public class SurveyController {
         return ResponseObject.getResponse(list, HttpStatus.OK);
     }
 
-    @GetMapping("/fetch-survey-user")
+    @GetMapping(SurveyDomain.SURVEY + "/fetch-survey-user")
     public ResponseEntity<Object> getSurveyWithUsers(){
         List<SurveyWithUsers> list =  surveyService.getAll();
         if(list.isEmpty())
@@ -48,26 +48,9 @@ public class SurveyController {
 
 
 
-    @GetMapping("/search")
-    public ResponseEntity<Object> searchSurveysByDirectorName(@RequestParam("director") String directorName){
-        List<Survey> list =  surveyService.getSurveysByDirector(directorName);
-        if(list.isEmpty())
-            return ResponseObject.getResponse(ResponseMessage.NO_DATA, HttpStatus.OK);
-        return ResponseObject.getResponse(list, HttpStatus.OK);
-    }
-
-//        @GetMapping("")
-//        public ResponseEntity<Object> findAll(){
-//            List<ResponseSurvey> list =  surveyService.getAllSurveyCode();
-//            if(list.isEmpty())
-//                return ResponseObject.getResponse(ResponseMessage.NO_DATA, HttpStatus.OK);
-//            return ResponseObject.getResponse(list, HttpStatus.OK);
-//        }
-
-
-//    @GetMapping("/status-form")
-//    public ResponseEntity<Object> getAllStatusForm(){
-//        List<StatusForm> list = surveyService.getAllStatusForm();
+//    @GetMapping(SurveyDomain.SURVEY + "/search")
+//    public ResponseEntity<Object> searchSurveysByDirectorName(@RequestParam("director") String directorName){
+//        List<Survey> list =  surveyService.getSurveysByDirector(directorName);
 //        if(list.isEmpty())
 //            return ResponseObject.getResponse(ResponseMessage.NO_DATA, HttpStatus.OK);
 //        return ResponseObject.getResponse(list, HttpStatus.OK);
