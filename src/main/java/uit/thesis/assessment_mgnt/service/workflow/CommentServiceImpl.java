@@ -11,24 +11,31 @@ import uit.thesis.assessment_mgnt.model.assessment.FileDB;
 import uit.thesis.assessment_mgnt.model.assessment.Survey;
 import uit.thesis.assessment_mgnt.model.system.User;
 import uit.thesis.assessment_mgnt.model.workflow.Comment;
+import uit.thesis.assessment_mgnt.model.workflow.Confirmation;
 import uit.thesis.assessment_mgnt.model.workflow.Expense;
 import uit.thesis.assessment_mgnt.model.workflow.Payment;
 import uit.thesis.assessment_mgnt.repository.assessment.SurveyRepository;
 import uit.thesis.assessment_mgnt.repository.system.UserRepository;
 import uit.thesis.assessment_mgnt.repository.workflow.CommentRepository;
+import uit.thesis.assessment_mgnt.repository.workflow.ConfirmationRepository;
 import uit.thesis.assessment_mgnt.utils.ResponseMessage;
 import uit.thesis.assessment_mgnt.utils.survey.Const;
+
+import java.util.LinkedList;
+import java.util.List;
 
 @Service
 @AllArgsConstructor
 public class CommentServiceImpl extends GenericServiceImpl<Comment,Long> implements CommentService {
     private CommentRepository commentRepository;
     private UserRepository userRepository;
+    private ConfirmationService confirmationService;
     private SurveyRepository surveyRepository;
 
     @Override
     public Comment addComment(CreateCommentDto dto) throws NotFoundException {
         Survey survey = surveyRepository.findByCode(dto.getSurveyCode());
+        List<Confirmation> confirmations = new LinkedList<>();
         if(survey == null)
             throw new NotFoundException(ResponseMessage.UN_KNOWN("Survey "));
         User user = userRepository.findByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
@@ -36,7 +43,11 @@ public class CommentServiceImpl extends GenericServiceImpl<Comment,Long> impleme
             throw new NotFoundException(ResponseMessage.UN_KNOWN("User "));
         Comment comment = new Comment();
         comment.setContent(dto.getContent());
-        return commentRepository.save(comment);
+        comment.setSurvey(survey);
+        comment.setUser(user);
+        Comment res = commentRepository.save(comment);
+        confirmationService.createConfirmation(dto.getConfirmedUser(), res);
+        return res;
     }
 
     @Override

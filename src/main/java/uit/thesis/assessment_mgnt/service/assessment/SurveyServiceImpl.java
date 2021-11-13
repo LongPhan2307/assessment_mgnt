@@ -13,21 +13,25 @@ import uit.thesis.assessment_mgnt.dto.assessment.survey.CreateSurveyDto;
 import uit.thesis.assessment_mgnt.dto.assessment.survey.ResponseSurvey;
 import uit.thesis.assessment_mgnt.dto.assessment.survey.SurveyWithUsers;
 import uit.thesis.assessment_mgnt.dto.assessment.survey.UpdateSurveyDto;
+import uit.thesis.assessment_mgnt.dto.workflow.CreateCommentDto;
 import uit.thesis.assessment_mgnt.model.assessment.AssessmentCategory;
 import uit.thesis.assessment_mgnt.model.assessment.Certificate;
 import uit.thesis.assessment_mgnt.model.assessment.Customer;
 import uit.thesis.assessment_mgnt.model.assessment.Survey;
 import uit.thesis.assessment_mgnt.model.system.User;
 import uit.thesis.assessment_mgnt.model.workflow.Comment;
+import uit.thesis.assessment_mgnt.model.workflow.Confirmation;
 import uit.thesis.assessment_mgnt.model.workflow.Phase;
 import uit.thesis.assessment_mgnt.model.workflow.Workflow;
 import uit.thesis.assessment_mgnt.repository.assessment.AssessmentCategoryRepository;
 import uit.thesis.assessment_mgnt.repository.assessment.CustomerRepository;
 import uit.thesis.assessment_mgnt.repository.assessment.SurveyRepository;
 import uit.thesis.assessment_mgnt.repository.system.UserRepository;
+import uit.thesis.assessment_mgnt.repository.workflow.CommentRepository;
 import uit.thesis.assessment_mgnt.repository.workflow.PhaseRepository;
 import uit.thesis.assessment_mgnt.repository.workflow.WorkflowRepository;
 import uit.thesis.assessment_mgnt.service.workflow.CommentService;
+import uit.thesis.assessment_mgnt.service.workflow.ConfirmationService;
 import uit.thesis.assessment_mgnt.utils.MapDtoToModel;
 import uit.thesis.assessment_mgnt.utils.ResponseMessage;
 import uit.thesis.assessment_mgnt.utils.survey.Const;
@@ -50,6 +54,8 @@ public class SurveyServiceImpl extends GenericServiceImpl<Survey, Long> implemen
     private UserRepository userRepository;
     private CustomerRepository customerRepository;
     private CommentService commentService;
+    private CommentRepository commentRepository;
+    private ConfirmationService confirmationService;
 
     @Override
     public Survey addNewSurvey(CreateSurveyDto dto) throws NotFoundException {
@@ -165,6 +171,21 @@ public class SurveyServiceImpl extends GenericServiceImpl<Survey, Long> implemen
         throw new Exception("You can not change User of this Survey ");
     }
 
+    @Override
+    public Survey assignInspectors(String[] usernames, String surveyCode) throws NotFoundException {
+        Survey survey = surveyRepository.findByCode(surveyCode);
+        User currentUser = userRepository.findByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
+        if(survey == null)
+            throw new NotFoundException(ResponseMessage.UN_KNOWN("Survey "));
+        Comment comment = new Comment("Please go ahead !",
+                Const.ASSIGN_INSPECTORS,
+                currentUser,
+                survey);
+        commentRepository.save(comment);
+        confirmationService.createConfirmation(usernames, comment);
+        return surveyRepository.save(survey);
+    }
+
     private SurveyWithUsers mapSurveyToSurveyWithUsers(Survey survey){
         SurveyWithUsers surveyWithUsers = new SurveyWithUsers();
         surveyWithUsers.setId(survey.getId());
@@ -187,10 +208,21 @@ public class SurveyServiceImpl extends GenericServiceImpl<Survey, Long> implemen
 
 
     @Override
-    public Survey assignInspectors(String[] arrUsername, String surveyCode) throws NotFoundException {
+    public Survey assigneeApproval(String[] arrUsername, String surveyCode) throws NotFoundException {
         Survey survey = surveyRepository.findByCode(surveyCode);
+        User currentUser = userRepository.findByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
         if(survey == null)
             throw new NotFoundException(ResponseMessage.UN_KNOWN("Survey "));
+//        CreateCommentDto commentDto = new CreateCommentDto(
+//                "Please confirm if you can proceed next step !",
+//                surveyCode
+//        );
+//        Comment comment = commentService.addComment(commentDto);
+        Comment comment = new Comment("Please go ahead !",
+                Const.ASSIGNEE_APPROVAL,
+                currentUser,
+                survey);
+        commentRepository.save(comment);
         for(int i =0; i< arrUsername.length; i++){
             User user = userRepository.findByUsername(arrUsername[i]);
             if( user != null)

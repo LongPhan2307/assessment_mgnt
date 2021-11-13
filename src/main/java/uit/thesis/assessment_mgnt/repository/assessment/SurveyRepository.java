@@ -19,4 +19,7 @@ public interface SurveyRepository extends JpaRepository<Survey, Long> {
     @Query("SELECT s FROM Survey s WHERE s.director.username = ?1")
     List<Survey> findByDirectorName(String directorName);
 
+//    @Query("SELECT s FROM Survey s  WHERE ")
+//    List<Survey> findByUsernameAndRole(String username, String roleName);
+
 }

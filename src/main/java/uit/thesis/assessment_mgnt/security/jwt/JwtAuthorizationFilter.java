@@ -21,16 +21,22 @@ import java.io.IOException;
 public class JwtAuthorizationFilter extends OncePerRequestFilter {
     private static final Logger logger = LoggerFactory.getLogger(JwtAuthorizationFilter.class);
 
+
     private JwtUtils jwtUtils;
     private UserDetailsService userDetailsService;
+
+    private String parseToUsername(String username){
+       int idx = username.indexOf("-");
+        return username.substring(0, idx);
+    }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String token = jwtUtils.getTokenFromRequest(request);
         if(token != null && jwtUtils.validateJwtToken(token)){
             String username = jwtUtils.getUsernameFromToken(token);
-
-            UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+            String res = parseToUsername(username);
+            UserDetails userDetails = userDetailsService.loadUserByUsername(res);
             UsernamePasswordAuthenticationToken authenticationToken =
                     new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
 

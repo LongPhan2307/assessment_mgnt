@@ -2,6 +2,7 @@ package uit.thesis.assessment_mgnt.model.workflow;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import uit.thesis.assessment_mgnt.common.AbstractEntity;
 import uit.thesis.assessment_mgnt.model.assessment.Survey;
@@ -16,11 +17,11 @@ import java.util.Set;
 @Table(name = "assessment_comment")
 @Getter
 @Setter
+@NoArgsConstructor
 public class Comment extends AbstractEntity {
     @Lob
     private String content;
 
-    @NotBlank
     private String title;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -32,7 +33,13 @@ public class Comment extends AbstractEntity {
     private Survey survey;
 
     @OneToMany(mappedBy = "comment", cascade = CascadeType.ALL)
-    @JsonIgnore
     private Set<Confirmation> confirmations = new HashSet<>();
+
+    public Comment(String content, String title, User user, Survey survey){
+        this.content = content;
+        this.title = title;
+        this.user = user;
+        this.survey = survey;
+    }
 
 }

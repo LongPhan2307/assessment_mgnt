@@ -25,7 +25,7 @@ public class DocumentServiceImpl extends GenericServiceImpl<Document, Long> impl
             throw new Exception(ResponseMessage.UN_KNOWN("Survey Code"));
         Document document = new Document();
         document = modelMapper.map(dto, Document.class);
-//        document.setSurvey(survey);
+        document.setSurvey(survey);
         return documentRepository.save(document);
     }
 }
