@@ -1,5 +1,6 @@
 package uit.thesis.assessment_mgnt.controller.assessment;
 
+import javassist.NotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpHeaders;
@@ -22,9 +23,11 @@ import uit.thesis.assessment_mgnt.utils.domain.assessment.FileDBDomain;
 
 import javax.servlet.ServletContext;
 import javax.validation.Valid;
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -36,30 +39,52 @@ public class FileDBController implements ServletContextAware {
     private ServletContext servletContext;
     private FileDBService fileDBService;
 
-    @PostMapping(value = FileDBDomain.FILE + "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<Object> uploads(@RequestParam MultipartFile[] files){
+    @PostMapping(value = FileDBDomain.FILE + "/upload-files-document", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<Object> uploadFilesForDocument(@RequestParam MultipartFile[] files,
+                                                         @RequestParam("documentId") long documentId){
+        List<FileDB> list = new LinkedList<>();
         try {
             for(MultipartFile file : files){
-                String fileName = file.getOriginalFilename();
-                long fileSize = file.getSize();
-                String contentType = file.getContentType();
-                return ResponseObject.getResponse("OK", HttpStatus.OK);
+//                String fileName = file.getOriginalFilename();
+//                long fileSize = file.getSize();
+//                String contentType = file.getContentType();
+                FileDB fileDB = fileDBService.storeInDocument(file, documentId);
+                list.add(fileDB);
             }
+            if(list.isEmpty())
+                return ResponseObject.getResponse(ResponseMessage.NO_DATA, HttpStatus.OK);
+            return ResponseObject.getResponse(list, HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
         }
         return ResponseObject.getResponse("Bug", HttpStatus.BAD_REQUEST);
     }
 
-    @PostMapping(value = FileDBDomain.FILE + "/upload-files", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<Object> uploadFile(
-                                             @RequestParam("file") MultipartFile file
+    @PostMapping(value = FileDBDomain.FILE + "/upload-files-document", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<Object> uploadFileForDocument(
+                                             @RequestParam("file") MultipartFile file,
+                                             @RequestParam("documentId") long documentId
                                              ){
 
         try {
-            FileDB fileDB = fileDBService.store(file);
+            FileDB fileDB = fileDBService.storeInDocument(file, documentId);
             return ResponseObject.getResponse(fileDB, HttpStatus.CREATED);
-        } catch (IOException e) {
+        } catch (IOException | NotFoundException e) {
+            e.printStackTrace();
+            return ResponseObject.getResponse(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PostMapping(value = FileDBDomain.FILE + "/upload-files-certificate", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<Object> uploadFileForCertificate(
+            @RequestParam("file") MultipartFile file,
+            @RequestParam("certificate") String certificateCode
+    ){
+
+        try {
+            FileDB fileDB = fileDBService.storeInCertificate(file, certificateCode);
+            return ResponseObject.getResponse(fileDB, HttpStatus.CREATED);
+        } catch (IOException | NotFoundException e) {
             e.printStackTrace();
             return ResponseObject.getResponse(e.getMessage(), HttpStatus.BAD_REQUEST);
         }

@@ -1,11 +1,21 @@
 package uit.thesis.assessment_mgnt.service.assessment;
 
+import javassist.NotFoundException;
 import lombok.AllArgsConstructor;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
+import uit.thesis.assessment_mgnt.model.assessment.Certificate;
+import uit.thesis.assessment_mgnt.model.assessment.Document;
 import uit.thesis.assessment_mgnt.model.assessment.FileDB;
+import uit.thesis.assessment_mgnt.model.system.User;
+import uit.thesis.assessment_mgnt.repository.assessment.CertificateRepository;
+import uit.thesis.assessment_mgnt.repository.assessment.DocumentRepository;
 import uit.thesis.assessment_mgnt.repository.assessment.FileDBRepository;
+import uit.thesis.assessment_mgnt.repository.system.UserRepository;
+import uit.thesis.assessment_mgnt.service.workflow.CommentService;
+import uit.thesis.assessment_mgnt.utils.ResponseMessage;
 
 import java.io.IOException;
 import java.util.LinkedList;
@@ -17,11 +27,41 @@ import java.util.stream.Stream;
 @AllArgsConstructor
 public class FileDBServiceImpl implements FileDBService {
     private FileDBRepository fileDBRepository;
+    private DocumentRepository documentRepository;
+    private CertificateRepository certificateRepository;
+    private CommentService commentService;
+    private UserRepository userRepository;
 
     @Override
     public FileDB store(MultipartFile files) throws IOException {
         String fileName = StringUtils.cleanPath(files.getOriginalFilename());
         FileDB fileDB = new FileDB(fileName, files.getContentType(), files.getBytes());
+        return fileDBRepository.save(fileDB);
+    }
+
+    @Override
+    public FileDB storeInDocument(MultipartFile files, long documentId) throws IOException, NotFoundException {
+        Optional<Document> document = documentRepository.findById(documentId);
+        User user = userRepository.findByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
+        if(document.isEmpty())
+            throw new NotFoundException(ResponseMessage.UN_KNOWN("Document "));
+        String fileName = StringUtils.cleanPath(files.getOriginalFilename());
+        FileDB fileDB = new FileDB(fileName, files.getContentType(), files.getBytes());
+        fileDB.setDocument(document.get());
+        commentService.generateComment(fileDB, document.get().getSurvey(), user);
+        return fileDBRepository.save(fileDB);
+    }
+
+    @Override
+    public FileDB storeInCertificate(MultipartFile files, String certificateCode) throws IOException, NotFoundException {
+        Certificate certificate = certificateRepository.findByCode(certificateCode);
+        User user = userRepository.findByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
+        if(certificate == null)
+            throw new NotFoundException(ResponseMessage.UN_KNOWN("Certificate "));
+        String fileName = StringUtils.cleanPath(files.getOriginalFilename());
+        FileDB fileDB = new FileDB(fileName, files.getContentType(), files.getBytes());
+        fileDB.setCertificate(certificate);
+        commentService.generateComment(fileDB, certificate.getSurvey(), user);
         return fileDBRepository.save(fileDB);
     }
 

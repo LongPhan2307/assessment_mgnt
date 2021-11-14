@@ -10,4 +10,6 @@ public interface CertificateService extends GenericService<Certificate, Long> {
     public Certificate generateCertificateCode(Survey survey);
 
     public Certificate updateCertiface(UpdatedCertificate dto, String code) throws Exception;
+
+
 }

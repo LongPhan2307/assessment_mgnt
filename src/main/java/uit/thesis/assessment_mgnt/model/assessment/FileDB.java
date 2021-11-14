@@ -5,7 +5,9 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
+import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import uit.thesis.assessment_mgnt.utils.DateUtils;
@@ -37,13 +39,13 @@ public class FileDB {
     @JsonFormat(pattern = DateUtils.DATE_FORMAT)
     protected LocalDateTime updateAt;
 
-    //    @CreatedBy
-//    @Column(name = "created_by")
-//    protected String createdBy;
-//
-//    @LastModifiedBy
-//    @Column(name = "modified_by")
-//    protected String lastModifiedBy;
+    @CreatedBy
+    @Column(name = "created_by")
+    protected String createdBy;
+
+    @LastModifiedBy
+    @Column(name = "modified_by")
+    protected String lastModifiedBy;
 
     private String name;
 
@@ -59,13 +61,13 @@ public class FileDB {
     @JoinColumn(name = "document_id")
     private Document document;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "file_certificate_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(referencedColumnName = "code")
     @JsonIgnore
     private Certificate certificate;
 
-    @Column(name = "service_req_form_id", insertable = false, updatable = false)
-    private Long serviceReqFormId;
+//    @Column(name = "service_req_form_id", insertable = false, updatable = false)
+//    private Long serviceReqFormId;
 
 //    @ManyToOne(fetch = FetchType.LAZY)
 //    @JoinColumn(name = "service_req_form_id")

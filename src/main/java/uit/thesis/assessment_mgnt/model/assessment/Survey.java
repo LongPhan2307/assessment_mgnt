@@ -11,8 +11,11 @@ import uit.thesis.assessment_mgnt.model.workflow.Expense;
 import uit.thesis.assessment_mgnt.model.workflow.Payment;
 import uit.thesis.assessment_mgnt.model.workflow.Phase;
 import uit.thesis.assessment_mgnt.utils.DateUtils;
+import uit.thesis.assessment_mgnt.utils.survey.Status;
 
 import javax.persistence.*;
+import javax.validation.constraints.Min;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -35,6 +38,12 @@ public class Survey extends AbstractEntity {
     private LocalDateTime dueDate;
 
     private String contactPhone;
+
+    @Min(value = 0)
+    private BigDecimal estimatePrice;
+
+    @Enumerated(EnumType.STRING)
+    private Status status;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(referencedColumnName = "code")

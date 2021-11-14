@@ -6,7 +6,10 @@ import lombok.Setter;
 import uit.thesis.assessment_mgnt.common.AbstractEntity;
 
 import javax.persistence.*;
+import java.io.File;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Setter
 @Getter
@@ -28,8 +31,7 @@ public class Certificate extends AbstractEntity {
 //    @JsonIgnore
 //    private Survey survey;
 
-    @OneToOne(mappedBy = "certificate", cascade = CascadeType.ALL
-            ,fetch = FetchType.LAZY, optional = false)
+    @OneToMany(mappedBy = "certificate", cascade = CascadeType.ALL)
     @JsonIgnore
-    private FileDB file;
+    private Set<FileDB> files = new HashSet<>();
 }

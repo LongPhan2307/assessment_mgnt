@@ -35,6 +35,7 @@ import uit.thesis.assessment_mgnt.service.workflow.ConfirmationService;
 import uit.thesis.assessment_mgnt.utils.MapDtoToModel;
 import uit.thesis.assessment_mgnt.utils.ResponseMessage;
 import uit.thesis.assessment_mgnt.utils.survey.Const;
+import uit.thesis.assessment_mgnt.utils.survey.Status;
 import uit.thesis.assessment_mgnt.utils.survey.StatusForm;
 
 import javax.transaction.Transactional;
@@ -82,6 +83,7 @@ public class SurveyServiceImpl extends GenericServiceImpl<Survey, Long> implemen
         survey.setCode(RandomStringUtils.randomAlphanumeric(10));
         survey.setAssessmentCategory(assessmentCategory);
         survey.setCustomer(customer);
+        survey.setStatus(Status.PENDING);
         survey.setDirector(director);
         survey.setManager(manager);
         survey.setDueDate(dueDate);
@@ -94,8 +96,8 @@ public class SurveyServiceImpl extends GenericServiceImpl<Survey, Long> implemen
     }
 
     @Override
-    public List<StatusForm> getAllStatusForm() {
-        List<StatusForm> list = Arrays.asList(StatusForm.values());
+    public List<Status> getAllStatus() {
+        List<Status> list = Arrays.asList(Status.values());
         return list;
     }
 
