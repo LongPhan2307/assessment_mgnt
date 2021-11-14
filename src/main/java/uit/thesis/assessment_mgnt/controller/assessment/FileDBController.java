@@ -60,7 +60,7 @@ public class FileDBController implements ServletContextAware {
         return ResponseObject.getResponse("Bug", HttpStatus.BAD_REQUEST);
     }
 
-    @PostMapping(value = FileDBDomain.FILE + "/upload-files-document", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(value = FileDBDomain.FILE + "/upload-file-document", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Object> uploadFileForDocument(
                                              @RequestParam("file") MultipartFile file,
                                              @RequestParam("documentId") long documentId
