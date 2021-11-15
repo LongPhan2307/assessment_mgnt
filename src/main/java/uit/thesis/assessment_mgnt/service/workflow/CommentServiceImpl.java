@@ -35,7 +35,6 @@ public class CommentServiceImpl extends GenericServiceImpl<Comment,Long> impleme
     @Override
     public Comment addComment(CreateCommentDto dto) throws NotFoundException {
         Survey survey = surveyRepository.findByCode(dto.getSurveyCode());
-        List<Confirmation> confirmations = new LinkedList<>();
         if(survey == null)
             throw new NotFoundException(ResponseMessage.UN_KNOWN("Survey "));
         User user = userRepository.findByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
@@ -46,7 +45,8 @@ public class CommentServiceImpl extends GenericServiceImpl<Comment,Long> impleme
         comment.setSurvey(survey);
         comment.setUser(user);
         Comment res = commentRepository.save(comment);
-        confirmationService.createConfirmation(dto.getConfirmedUser(), res);
+        if(dto.getConfirmedUser().length != 0)
+            confirmationService.createConfirmation(dto.getConfirmedUser(), res);
         return res;
     }
 
