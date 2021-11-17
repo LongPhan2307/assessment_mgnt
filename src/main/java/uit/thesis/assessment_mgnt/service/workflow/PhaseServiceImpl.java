@@ -144,10 +144,10 @@ public class PhaseServiceImpl extends GenericServiceImpl<Phase, Long> implements
         List<Phase> list = new LinkedList<>();
         List<Role> roles = roleRepository.findAll();
         list.add(new Phase("REGISTER", 1, roles.get(2)));
-        list.add(new Phase("SURVEY CANCELLATION", 99, roles.get(0)));
+//        list.add(new Phase("SURVEY CANCELLATION", 99, roles.get(0)));
         list.add(new Phase("ASSIGN INSPECTORS", 2, roles.get(3)));
-        list.add(new Phase("IMPLEMENTS", 3, roles.get(3)));
-        list.add(new Phase("CONCLUDE SURVEY", 4, roles.get(3)));
+        list.add(new Phase("SOLVING", 3, roles.get(3)));
+        list.add(new Phase("CONCLUDING", 4, roles.get(3)));
         list.add(new Phase("MANAGE PAYMENT", 5, roles.get(2)));
         list.add(new Phase("FINISH", 6, roles.get(0)));
         return phaseRepository.saveAll(list);

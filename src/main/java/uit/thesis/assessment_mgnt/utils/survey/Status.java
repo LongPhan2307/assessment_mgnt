@@ -6,5 +6,6 @@ public enum Status {
     DONE,
     UNPAID,
     CANCLED,
-    OVERDATED
+    OVERDATED,
+    CLOSED
 }
