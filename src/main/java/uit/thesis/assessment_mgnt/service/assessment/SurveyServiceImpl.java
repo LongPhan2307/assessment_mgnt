@@ -40,6 +40,7 @@ import uit.thesis.assessment_mgnt.utils.survey.StatusForm;
 
 import javax.transaction.Transactional;
 import java.lang.reflect.Type;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -99,6 +100,21 @@ public class SurveyServiceImpl extends GenericServiceImpl<Survey, Long> implemen
     public List<Status> getAllStatus() {
         List<Status> list = Arrays.asList(Status.values());
         return list;
+    }
+
+    @Override
+    public Survey updateEsimatePrice(String surveyCode, BigDecimal esimatePrice) throws NotFoundException {
+        Survey survey = surveyRepository.findByCode(surveyCode);
+        if(survey == null)
+            throw new NotFoundException(ResponseMessage.UN_KNOWN("Survey "));
+        User currentUser = userRepository.findByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
+        if(currentUser == null)
+            throw new NotFoundException(ResponseMessage.ANONYMOUS_USER);
+        survey.setEstimatePrice(esimatePrice);
+        String content = currentUser.getUsername() + " has added Estimate Price = " + esimatePrice;
+        Comment comment = new Comment(content, Const.ADDING_ESTIMATE_PRICE, currentUser, survey);
+        commentRepository.save(comment);
+        return surveyRepository.save(survey);
     }
 
     @Override
@@ -236,11 +252,17 @@ public class SurveyServiceImpl extends GenericServiceImpl<Survey, Long> implemen
     @Override
     public Survey updateSurvey(UpdateSurveyDto dto, String code) throws Exception {
         Survey survey = surveyRepository.findByCode(code);
+        User currentUser = userRepository.findByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
+        if(currentUser == null)
+            throw new NotFoundException(ResponseMessage.ANONYMOUS_USER);
         if(code == null)
             throw new Exception(ResponseMessage.UN_KNOWN("Survey Code"));
         this.modelMapper.map(dto, survey);
 //        survey = this.surveyRepository.save(survey);
         survey.setCode(code);
+        String content = currentUser.getUsername() + " has changed content of survey ";
+        Comment comment = new Comment(content, Const.CHANGE_CONTENT, currentUser, survey);
+        commentRepository.save(comment);
         return this.surveyRepository.save(survey);
     }
 }

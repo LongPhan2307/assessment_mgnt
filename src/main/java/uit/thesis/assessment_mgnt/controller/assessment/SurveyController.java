@@ -22,6 +22,7 @@ import uit.thesis.assessment_mgnt.utils.domain.assessment.SurveyDomain;
 import uit.thesis.assessment_mgnt.utils.survey.StatusForm;
 
 import javax.validation.Valid;
+import java.math.BigDecimal;
 import java.util.List;
 
 @Controller
@@ -123,6 +124,19 @@ public class SurveyController {
             return ResponseObject.getResponse(errors, HttpStatus.BAD_REQUEST);
         try {
             Survey survey = surveyService.updateSurvey(dto, code);
+            return ResponseObject.getResponse(survey, HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseObject.getResponse(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PutMapping( Domain.API_ACCOUNTANT + SurveyDomain.SURVEY + "/update-estimate-price")
+    public ResponseEntity<Object> updateEstimatePrice(
+                @RequestParam(value = "survey") String surveyCode,
+                @RequestParam(value = "price") BigDecimal estimatePrice){
+        try {
+            Survey survey = surveyService.updateEsimatePrice(surveyCode, estimatePrice);
             return ResponseObject.getResponse(survey, HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
