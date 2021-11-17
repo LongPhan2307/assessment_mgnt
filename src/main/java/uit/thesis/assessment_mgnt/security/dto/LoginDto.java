@@ -8,9 +8,9 @@ import javax.validation.constraints.NotBlank;
 @Getter
 @Setter
 public class LoginDto {
-    @NotBlank
+    @NotBlank(message = "{user.username.not-blank}")
     private String username;
 
-    @NotBlank
+    @NotBlank(message = "{user.password.not-blank}")
     private String password;
 }

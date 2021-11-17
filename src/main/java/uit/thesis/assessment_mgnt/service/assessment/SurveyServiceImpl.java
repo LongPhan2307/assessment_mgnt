@@ -84,7 +84,7 @@ public class SurveyServiceImpl extends GenericServiceImpl<Survey, Long> implemen
         survey.setCode(RandomStringUtils.randomAlphanumeric(10));
         survey.setAssessmentCategory(assessmentCategory);
         survey.setCustomer(customer);
-        survey.setStatus(Status.PENDING);
+        survey.setStatus(Status.IN_PROGRESS);
         survey.setDirector(director);
         survey.setManager(manager);
         survey.setDueDate(dueDate);

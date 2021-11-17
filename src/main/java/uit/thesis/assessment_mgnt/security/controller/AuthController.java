@@ -29,7 +29,8 @@ public class AuthController {
     public ResponseEntity<Object> login(@Valid @RequestBody LoginDto dto,
                                         BindingResult errors){
         Authentication authentication = null;
-
+        if(errors.hasErrors())
+            return ResponseObject.getResponse(errors, HttpStatus.BAD_REQUEST);
         try {
             // authenticate
             authentication = authenticationManager.authenticate(
