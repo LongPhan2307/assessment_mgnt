@@ -10,13 +10,16 @@ import org.springframework.web.bind.annotation.RestController;
 import uit.thesis.assessment_mgnt.common.ResponseObject;
 import uit.thesis.assessment_mgnt.model.assessment.AssessmentCategory;
 import uit.thesis.assessment_mgnt.model.assessment.Customer;
+import uit.thesis.assessment_mgnt.model.assessment.Survey;
 import uit.thesis.assessment_mgnt.model.system.Company;
 import uit.thesis.assessment_mgnt.model.system.Department;
 import uit.thesis.assessment_mgnt.model.system.Role;
 import uit.thesis.assessment_mgnt.model.system.User;
 import uit.thesis.assessment_mgnt.model.workflow.Phase;
+import uit.thesis.assessment_mgnt.repository.assessment.SurveyRepository;
 import uit.thesis.assessment_mgnt.service.assessment.AssessmentCategoryService;
 import uit.thesis.assessment_mgnt.service.assessment.CustomerService;
+import uit.thesis.assessment_mgnt.service.assessment.SurveyService;
 import uit.thesis.assessment_mgnt.service.system.CompanyService;
 import uit.thesis.assessment_mgnt.service.system.DepartmentService;
 import uit.thesis.assessment_mgnt.service.system.RoleService;
@@ -36,11 +39,18 @@ public class MockupController {
     private AssessmentCategoryService assessmentCategoryService;
     private CustomerService customerService;
     private PhaseService phaseService;
+    private SurveyService surveyService;
 
     @PostMapping("/company")
     public ResponseEntity<Object> mockupCompany(){
         Company company = companyService.mockupCompanyData();
         return ResponseObject.getResponse(company, HttpStatus.OK);
+    }
+
+    @PostMapping("/survey")
+    public ResponseEntity<Object> mockupSurveys(){
+        List<Survey> list = surveyService.mockupData();
+        return ResponseObject.getResponse(list, HttpStatus.OK);
     }
 
     @PostMapping("/department")

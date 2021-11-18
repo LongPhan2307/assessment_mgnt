@@ -39,24 +39,6 @@ public class SurveyController {
         return ResponseObject.getResponse(list, HttpStatus.OK);
     }
 
-    @GetMapping(SurveyDomain.SURVEY + "/fetch-survey-user")
-    public ResponseEntity<Object> getSurveyWithUsers(){
-        List<SurveyWithUsers> list =  surveyService.getAll();
-        if(list.isEmpty())
-            return ResponseObject.getResponse(ResponseMessage.NO_DATA, HttpStatus.OK);
-        return ResponseObject.getResponse(list, HttpStatus.OK);
-    }
-
-
-
-//    @GetMapping(SurveyDomain.SURVEY + "/search")
-//    public ResponseEntity<Object> searchSurveysByDirectorName(@RequestParam("director") String directorName){
-//        List<Survey> list =  surveyService.getSurveysByDirector(directorName);
-//        if(list.isEmpty())
-//            return ResponseObject.getResponse(ResponseMessage.NO_DATA, HttpStatus.OK);
-//        return ResponseObject.getResponse(list, HttpStatus.OK);
-//    }
-
     @PostMapping(Domain.API_ACCOUNTANT + SurveyDomain.SURVEY)
     public ResponseEntity<Object> addNewSurvey(@Valid @RequestBody CreateSurveyDto dto,
                                                BindingResult error){
@@ -78,6 +60,30 @@ public class SurveyController {
         if(survey == null)
             return ResponseObject.getResponse(ResponseMessage.UN_KNOWN("Survey "), HttpStatus.BAD_REQUEST);
         return ResponseObject.getResponse(survey, HttpStatus.OK);
+    }
+
+//    @GetMapping(SurveyDomain.SURVEY + "/search/status/inprogress")
+//    public ResponseEntity<Object> getINPRGRESSSurvey(){
+//        List<Survey> list = surveyService.getSurveyWithCurrentUsername();
+//        if(list.isEmpty())
+//            return ResponseObject.getResponse(ResponseMessage.NO_DATA, HttpStatus.BAD_REQUEST);
+//        return ResponseObject.getResponse(list, HttpStatus.OK);
+//    }
+
+    @GetMapping(SurveyDomain.SURVEY + "/fetch/in-doing/survey")
+    public ResponseEntity<Object> getInDoingSurveysByUsername(@RequestParam("username") String username){
+        List<Survey> list = surveyService.getInDoingSurveysWithUsername(username);
+        if(list.isEmpty())
+            return ResponseObject.getResponse(ResponseMessage.NO_DATA, HttpStatus.BAD_REQUEST);
+        return ResponseObject.getResponse(list, HttpStatus.OK);
+    }
+
+    @GetMapping(SurveyDomain.SURVEY + "/fetch/done/survey")
+    public ResponseEntity<Object> getDoneSurveysByUsername(@RequestParam("username") String username){
+        List<Survey> list = surveyService.getDoneSurveysWithUsername(username);
+        if(list.isEmpty())
+            return ResponseObject.getResponse(ResponseMessage.NO_DATA, HttpStatus.BAD_REQUEST);
+        return ResponseObject.getResponse(list, HttpStatus.OK);
     }
 
     @PutMapping(SurveyDomain.SURVEY + "/change")
@@ -131,6 +137,19 @@ public class SurveyController {
         }
     }
 
+    @PutMapping( Domain.API_ACCOUNTANT + SurveyDomain.SURVEY + "/request-cancel-survey")
+    public ResponseEntity<Object> requestCancelation(
+                                                     @RequestParam(value = "code") String code){
+
+        try {
+            Survey survey = surveyService.requestCancelation(code);
+            return ResponseObject.getResponse(survey, HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseObject.getResponse(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
     @PutMapping( Domain.API_ACCOUNTANT + SurveyDomain.SURVEY + "/update-estimate-price")
     public ResponseEntity<Object> updateEstimatePrice(
                 @RequestParam(value = "survey") String surveyCode,
@@ -143,5 +162,6 @@ public class SurveyController {
             return ResponseObject.getResponse(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
+
 
 }

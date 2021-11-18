@@ -5,5 +5,6 @@ public enum RoleName {
     ADMIN,
     DIRECTOR,
     MANAGER,
-    ACCOUNTANT
+    ACCOUNTANT,
+    LEADER
 }

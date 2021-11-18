@@ -2,8 +2,11 @@ package uit.thesis.assessment_mgnt.model.assessment;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.apache.commons.lang3.RandomStringUtils;
 import uit.thesis.assessment_mgnt.common.AbstractEntity;
 import uit.thesis.assessment_mgnt.model.system.User;
 import uit.thesis.assessment_mgnt.model.workflow.Comment;
@@ -26,6 +29,8 @@ import java.util.Set;
 @Setter
 @Entity
 @Table(name = "assessment_survey")
+@NoArgsConstructor
+@AllArgsConstructor
 public class Survey extends AbstractEntity {
     @Column(unique = true)
     private String code;
@@ -108,6 +113,24 @@ public class Survey extends AbstractEntity {
     @OneToMany(mappedBy = "survey", cascade = CascadeType.ALL)
     @JsonIgnore
     private Set<Payment> payments = new HashSet<>();
+
+    public Survey(String name, String scene,long duration, String contactPhone, Phase registerPhase, Customer customer,
+                  User accountant, User director, User manager, AssessmentCategory assessmentCategory){
+        this.code = RandomStringUtils.randomAlphanumeric(10);
+        this.phase = registerPhase;
+        this.name = name;
+        this.scene = scene;
+        this.status = Status.IN_PROGRESS;
+        this.contactPhone = contactPhone;
+        LocalDateTime today = LocalDateTime.now();
+        LocalDateTime dueDate = today.plusDays(duration);
+        this.dueDate = dueDate;
+        this.customer = customer;
+        this.accountant =accountant;
+        this.director = director;
+        this.manager = manager;
+        this.assessmentCategory =assessmentCategory;
+    }
 
     public Survey addInspector(User user){
         this.getInspectors().add(user);

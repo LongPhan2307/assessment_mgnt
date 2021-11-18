@@ -5,7 +5,7 @@ public enum Status {
     IN_PROGRESS,
     DONE,
     UNPAID,
-    CANCLED,
+    CANCELED,
     OVERDATED,
     CLOSED
 }

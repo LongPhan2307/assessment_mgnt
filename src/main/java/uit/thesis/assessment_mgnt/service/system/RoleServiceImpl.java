@@ -35,6 +35,7 @@ public class RoleServiceImpl extends GenericServiceImpl<Role, Long> implements R
         list.add(new Role(RoleName.ACCOUNTANT.toString()));
         list.add(new Role(RoleName.MANAGER.toString()));
         list.add(new Role(RoleName.INSPECTOR.toString()));
+        list.add(new Role(RoleName.LEADER.toString()));
         return roleRepository.saveAll(list);
     }
 

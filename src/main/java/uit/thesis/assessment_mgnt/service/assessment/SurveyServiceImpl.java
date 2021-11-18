@@ -123,15 +123,83 @@ public class SurveyServiceImpl extends GenericServiceImpl<Survey, Long> implemen
     }
 
     @Override
-    public List<Survey> getSurveysByDirector(String directorName) {
-        List<Survey> list = surveyRepository.findByDirectorName(directorName);
-        return list;
+    public Survey requestCancelation(String surveyCode) throws NotFoundException {
+        Survey survey = surveyRepository.findByCode(surveyCode);
+        User currentUser = userRepository.findByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
+        if(currentUser == null)
+            throw new NotFoundException(ResponseMessage.ANONYMOUS_USER);
+        if(survey == null)
+            throw new NotFoundException(ResponseMessage.UN_KNOWN("Survey "));
+        User director = survey.getDirector();
+        String contentHeader = "Dear " + director.getUsername() + ", Please help to close this survey. ";
+        Comment comment = new Comment(contentHeader, Const.REQUEST_CANCEL, currentUser, survey);
+        commentRepository.save(comment);
+        Phase destination = phaseRepository.findByName("FINISH");
+        survey.setPhase(destination);
+        survey.setStatus(Status.PENDING);
+        return surveyRepository.save(survey);
+    }
+
+
+    @Override
+    public List<Survey> getSurveyWithCurrentUsername() {
+        return null;
+    }
+
+    @Override
+    public List<Survey> getInDoingSurveysWithUsername(String username) {
+        return surveyRepository.findInDoingSurveysWithUsername(username);
+    }
+
+    @Override
+    public List<Survey> getDoneSurveysWithUsername(String username) {
+        return surveyRepository.findDoneSurveysWithUsername(username);
     }
 
 
     @Override
     public List<ResponseSurvey> getAllSurveyCode() {
         return surveyRepository.getAll();
+    }
+
+    @Override
+    public List<Survey> mockupData() {
+        List<Survey> surveys = new LinkedList<>();
+        Customer customer = customerRepository.findByCode("TNHH0001");
+        Phase registerPhase = phaseRepository.findByName("REGISTER");
+        AssessmentCategory assessmentCategory = assessmentCategoryRepository.findByName("Giám định tổn thất");
+        AssessmentCategory assessmentCategory1 = assessmentCategoryRepository.findByName("Giám định hàng lỏng");
+        User accountant = userRepository.findByUsername("accountant");
+        User accountant1 = userRepository.findByUsername("accountant1");
+        User accountant2 = userRepository.findByUsername("accountant2");
+        User director = userRepository.findByUsername("director");
+        User manager = userRepository.findByUsername("manager");
+        Survey survey = new Survey("GIAM DINH SAT THEP NHAP KHAU", "HCM", 3, "0900221723"
+                , registerPhase, customer,
+                accountant, director, manager, assessmentCategory);
+        Survey survey1 = new Survey("GIAM DINH SAT THEP XUAT KHAU", "HCM", 3, "0900221723"
+                , registerPhase, customer,
+                accountant1, director, manager, assessmentCategory);
+        Survey survey2 = new Survey("GIAM DINH NUOC TRAI CAY", "HCM", 3, "0900221723"
+                , registerPhase, customer,
+                accountant2, director, manager, assessmentCategory1);
+        Certificate certificate = certificateService.generateCertificateCode(survey);
+        Certificate certificate1 = certificateService.generateCertificateCode(survey1);
+        Certificate certificate2 = certificateService.generateCertificateCode(survey2);
+        survey.setCertificate(certificate);
+        survey.setCreatedBy(accountant.getUsername());
+        survey.setLastModifiedBy(accountant.getUsername());
+        survey1.setCertificate(certificate1);
+        survey1.setCreatedBy(accountant1.getUsername());
+        survey1.setLastModifiedBy(accountant1.getUsername());
+        survey2.setCertificate(certificate2);
+        survey2.setCreatedBy(accountant2.getUsername());
+        survey2.setLastModifiedBy(accountant2.getUsername());
+        survey2.setStatus(Status.CANCELED);
+        surveys.add(survey);
+        surveys.add(survey2);
+        surveys.add(survey1);
+        return surveyRepository.saveAll(surveys);
     }
 
     @Override

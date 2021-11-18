@@ -41,6 +41,7 @@ public class User extends AbstractEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(referencedColumnName = "name")
     @NotNull
+    @JsonIgnore
     private Department department;
 
     @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST}, fetch = FetchType.EAGER)

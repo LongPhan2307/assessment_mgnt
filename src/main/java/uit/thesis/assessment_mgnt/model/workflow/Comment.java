@@ -30,6 +30,7 @@ public class Comment extends AbstractEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(referencedColumnName = "code")
+    @JsonIgnore
     private Survey survey;
 
     @OneToMany(mappedBy = "comment", cascade = CascadeType.ALL)

@@ -26,6 +26,7 @@ import uit.thesis.assessment_mgnt.utils.ResponseMessage;
 import uit.thesis.assessment_mgnt.utils.role.PhaseConst;
 import uit.thesis.assessment_mgnt.utils.role.RoleName;
 import uit.thesis.assessment_mgnt.utils.survey.Const;
+import uit.thesis.assessment_mgnt.utils.survey.Status;
 
 import javax.transaction.Transactional;
 import java.util.Iterator;
@@ -84,6 +85,12 @@ public class PhaseServiceImpl extends GenericServiceImpl<Phase, Long> implements
             throw new NotFoundException(ResponseMessage.UN_KNOWN("Phase "));
         if(source == null)
             throw new NotFoundException(ResponseMessage.UN_KNOWN("Phase "));
+        if(source.getName().equals("FINISH")){
+            if(survey.getStatus().toString().equals(Status.PENDING.toString())){
+                survey.setStatus(Status.CANCELED);
+            }
+            survey.setStatus(Status.CLOSED);
+        }
         survey.setPhase(destination);
         Comment comment = new Comment();
         comment.setTitle(Const.SUBMITTED_PHASE);

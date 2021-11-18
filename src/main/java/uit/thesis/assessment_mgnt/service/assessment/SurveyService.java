@@ -22,9 +22,17 @@ public interface SurveyService extends GenericService<Survey, Long> {
 
     public Survey findByCode(String code);
 
-    List<Survey> getSurveysByDirector(String directorName);
+    public Survey requestCancelation(String surveyCode) throws NotFoundException;
+
+    List<Survey> getSurveyWithCurrentUsername();
+
+    List<Survey> getInDoingSurveysWithUsername(String username);
+
+    List<Survey> getDoneSurveysWithUsername(String username);
 
     public List<ResponseSurvey> getAllSurveyCode();
+
+    public List<Survey> mockupData();
 
     public List<SurveyWithUsers> getAll();
 
