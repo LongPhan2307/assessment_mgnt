@@ -31,6 +31,20 @@ public class CommentController {
         return ResponseObject.getResponse(comments, HttpStatus.OK);
     }
 
+    @GetMapping(CommentDomain.COMMENT_DOMAIN + "/search/survey")
+    public ResponseEntity<Object> findBySurvey(@RequestParam("survey") String surveyCode){
+        List<Comment> comments = null;
+        try {
+            comments = commentService.findBySurvey(surveyCode);
+        } catch (NotFoundException e) {
+            e.printStackTrace();
+            return ResponseObject.getResponse(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+        if(comments.isEmpty())
+            return ResponseObject.getResponse(ResponseMessage.NO_DATA, HttpStatus.OK);
+        return ResponseObject.getResponse(comments, HttpStatus.OK);
+    }
+
     @PostMapping(CommentDomain.COMMENT_DOMAIN)
     public ResponseEntity<Object> addComment(@RequestBody CreateCommentDto dto,
                                              BindingResult errors){

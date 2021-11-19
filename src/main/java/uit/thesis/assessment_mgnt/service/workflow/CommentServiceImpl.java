@@ -21,6 +21,7 @@ import uit.thesis.assessment_mgnt.repository.workflow.ConfirmationRepository;
 import uit.thesis.assessment_mgnt.utils.ResponseMessage;
 import uit.thesis.assessment_mgnt.utils.survey.Const;
 
+import javax.transaction.Transactional;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -89,5 +90,15 @@ public class CommentServiceImpl extends GenericServiceImpl<Comment,Long> impleme
             comment.setContent(content);
         }
         return commentRepository.save(comment);
+    }
+
+    @Transactional
+    @Override
+    public List<Comment> findBySurvey(String surveyCode) throws NotFoundException {
+        Survey survey = surveyRepository.findByCode(surveyCode);
+        if(survey == null)
+            throw new NotFoundException(ResponseMessage.UN_KNOWN("Survey "));
+        List<Comment> comments = commentRepository.findBySurvey(surveyCode);
+        return comments;
     }
 }

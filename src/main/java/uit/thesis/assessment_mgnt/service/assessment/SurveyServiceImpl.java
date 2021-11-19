@@ -158,7 +158,14 @@ public class SurveyServiceImpl extends GenericServiceImpl<Survey, Long> implemen
             if(userRoleName.isEmpty())
                 throw new NotFoundException(ResponseMessage.UN_KNOWN("Role of User "));
             if(userRoleName.get().getName().equals(phaseRoleName)){
-                results.add(list.get(i));
+                LocalDateTime now = LocalDateTime.now();
+                if(now.isAfter(list.get(i).getDueDate())){
+                    list.get(i).setStatus(Status.OVERDATED);
+                    Survey updatedSurvey = surveyRepository.save(list.get(i));
+                    results.add(updatedSurvey);
+                } else {
+                    results.add(list.get(i));
+                }
             }
         }
         return results;
@@ -175,7 +182,14 @@ public class SurveyServiceImpl extends GenericServiceImpl<Survey, Long> implemen
             if(userRoleName.isEmpty())
                 throw new NotFoundException(ResponseMessage.UN_KNOWN("Role of User "));
             if(!userRoleName.get().getName().equals(phaseRoleName)){
-                results.add(list.get(i));
+                LocalDateTime now = LocalDateTime.now();
+                if(now.isAfter(list.get(i).getDueDate())){
+                    list.get(i).setStatus(Status.OVERDATED);
+                    Survey updatedSurvey = surveyRepository.save(list.get(i));
+                    results.add(updatedSurvey);
+                } else {
+                    results.add(list.get(i));
+                }
             }
         }
         return results;
@@ -288,12 +302,15 @@ public class SurveyServiceImpl extends GenericServiceImpl<Survey, Long> implemen
         User currentUser = userRepository.findByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
         if(survey == null)
             throw new NotFoundException(ResponseMessage.UN_KNOWN("Survey "));
-        Comment comment = new Comment("Please go ahead !",
+        Comment comment = new Comment("Please confirm if you agree !",
                 Const.ASSIGN_INSPECTORS,
                 currentUser,
                 survey);
         commentRepository.save(comment);
-        confirmationService.createConfirmation(usernames, comment);
+        ArrayList<String> arrayList = new ArrayList<>(Arrays.asList(usernames));
+        arrayList.add(survey.getDirector().getUsername());
+        String[] arr = new String[arrayList.size()];
+        confirmationService.createConfirmation(arrayList.toArray(arr), comment);
         return surveyRepository.save(survey);
     }
 
