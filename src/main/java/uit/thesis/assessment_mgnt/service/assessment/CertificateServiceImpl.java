@@ -23,6 +23,8 @@ public class CertificateServiceImpl extends GenericServiceImpl<Certificate, Long
         Certificate certificate = new Certificate();
         certificate.setCode(RandomStringUtils.randomAlphanumeric(10));
         certificate.setSurvey(survey);
+        String description = "Chứng thư " + survey.getName();
+        certificate.setDescription(description);
         return this.certificateRepository.save(certificate);
     }
 

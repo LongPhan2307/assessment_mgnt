@@ -18,6 +18,7 @@ import uit.thesis.assessment_mgnt.model.assessment.AssessmentCategory;
 import uit.thesis.assessment_mgnt.model.assessment.Certificate;
 import uit.thesis.assessment_mgnt.model.assessment.Customer;
 import uit.thesis.assessment_mgnt.model.assessment.Survey;
+import uit.thesis.assessment_mgnt.model.system.Role;
 import uit.thesis.assessment_mgnt.model.system.User;
 import uit.thesis.assessment_mgnt.model.workflow.Comment;
 import uit.thesis.assessment_mgnt.model.workflow.Confirmation;
@@ -147,13 +148,37 @@ public class SurveyServiceImpl extends GenericServiceImpl<Survey, Long> implemen
     }
 
     @Override
-    public List<Survey> getInDoingSurveysWithUsername(String username) {
-        return surveyRepository.findInDoingSurveysWithUsername(username);
+    public List<Survey> getInDoingSurveysWithUsername(String username) throws NotFoundException {
+        List<Survey> results = new LinkedList<>();
+        List<Survey> list = surveyRepository.findSurveysWithUsername(username);
+        User currentUser = userRepository.findByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
+        for (int i = 0; i < list.size(); i++) {
+            String phaseRoleName = list.get(i).getPhase().getRole().getName();
+            Optional<Role> userRoleName = currentUser.getRoles().stream().findFirst();
+            if(userRoleName.isEmpty())
+                throw new NotFoundException(ResponseMessage.UN_KNOWN("Role of User "));
+            if(userRoleName.get().getName().equals(phaseRoleName)){
+                results.add(list.get(i));
+            }
+        }
+        return results;
     }
 
     @Override
-    public List<Survey> getDoneSurveysWithUsername(String username) {
-        return surveyRepository.findDoneSurveysWithUsername(username);
+    public List<Survey> getDoneSurveysWithUsername(String username) throws NotFoundException {
+        List<Survey> results = new LinkedList<>();
+        List<Survey> list = surveyRepository.findSurveysWithUsername(username);
+        User currentUser = userRepository.findByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
+        for (int i = 0; i < list.size(); i++) {
+            String phaseRoleName = list.get(i).getPhase().getRole().getName();
+            Optional<Role> userRoleName = currentUser.getRoles().stream().findFirst();
+            if(userRoleName.isEmpty())
+                throw new NotFoundException(ResponseMessage.UN_KNOWN("Role of User "));
+            if(!userRoleName.get().getName().equals(phaseRoleName)){
+                results.add(list.get(i));
+            }
+        }
+        return results;
     }
 
 

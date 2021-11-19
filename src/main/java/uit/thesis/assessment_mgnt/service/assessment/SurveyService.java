@@ -26,9 +26,9 @@ public interface SurveyService extends GenericService<Survey, Long> {
 
     List<Survey> getSurveyWithCurrentUsername();
 
-    List<Survey> getInDoingSurveysWithUsername(String username);
+    List<Survey> getInDoingSurveysWithUsername(String username) throws NotFoundException;
 
-    List<Survey> getDoneSurveysWithUsername(String username);
+    List<Survey> getDoneSurveysWithUsername(String username) throws NotFoundException;
 
     public List<ResponseSurvey> getAllSurveyCode();
 

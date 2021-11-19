@@ -72,7 +72,13 @@ public class SurveyController {
 
     @GetMapping(SurveyDomain.SURVEY + "/fetch/in-doing/survey")
     public ResponseEntity<Object> getInDoingSurveysByUsername(@RequestParam("username") String username){
-        List<Survey> list = surveyService.getInDoingSurveysWithUsername(username);
+        List<Survey> list = null;
+        try {
+            list = surveyService.getInDoingSurveysWithUsername(username);
+        } catch (NotFoundException e) {
+            e.printStackTrace();
+            return ResponseObject.getResponse(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
         if(list.isEmpty())
             return ResponseObject.getResponse(ResponseMessage.NO_DATA, HttpStatus.BAD_REQUEST);
         return ResponseObject.getResponse(list, HttpStatus.OK);
@@ -80,7 +86,13 @@ public class SurveyController {
 
     @GetMapping(SurveyDomain.SURVEY + "/fetch/done/survey")
     public ResponseEntity<Object> getDoneSurveysByUsername(@RequestParam("username") String username){
-        List<Survey> list = surveyService.getDoneSurveysWithUsername(username);
+        List<Survey> list = null;
+        try {
+            list = surveyService.getDoneSurveysWithUsername(username);
+        } catch (NotFoundException e) {
+            e.printStackTrace();
+            return ResponseObject.getResponse(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
         if(list.isEmpty())
             return ResponseObject.getResponse(ResponseMessage.NO_DATA, HttpStatus.BAD_REQUEST);
         return ResponseObject.getResponse(list, HttpStatus.OK);
