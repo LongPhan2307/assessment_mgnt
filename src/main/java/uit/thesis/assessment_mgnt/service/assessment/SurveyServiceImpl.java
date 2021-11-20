@@ -150,7 +150,7 @@ public class SurveyServiceImpl extends GenericServiceImpl<Survey, Long> implemen
     @Override
     public List<Survey> getInDoingSurveysWithUsername(String username) throws NotFoundException {
         List<Survey> results = new LinkedList<>();
-        List<Survey> list = surveyRepository.findSurveysWithUsername(username);
+        List<Survey> list = surveyRepository.findByUsername(username);
         User currentUser = userRepository.findByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
         for (int i = 0; i < list.size(); i++) {
             String phaseRoleName = list.get(i).getPhase().getRole().getName();
@@ -174,7 +174,7 @@ public class SurveyServiceImpl extends GenericServiceImpl<Survey, Long> implemen
     @Override
     public List<Survey> getDoneSurveysWithUsername(String username) throws NotFoundException {
         List<Survey> results = new LinkedList<>();
-        List<Survey> list = surveyRepository.findSurveysWithUsername(username);
+        List<Survey> list = surveyRepository.findByUsername(username);
         User currentUser = userRepository.findByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
         for (int i = 0; i < list.size(); i++) {
             String phaseRoleName = list.get(i).getPhase().getRole().getName();

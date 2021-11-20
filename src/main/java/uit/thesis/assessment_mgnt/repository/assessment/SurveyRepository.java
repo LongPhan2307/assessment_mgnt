@@ -30,14 +30,26 @@ public interface SurveyRepository extends JpaRepository<Survey, Long> {
             "(\n" +
             "select s.id\n" +
             "from public.assessment_survey as s\n" +
-            "where s.director_username = 'manager' or\n" +
-            "s.accountant_username = 'manager' or\n" +
-            "s.manager_username = 'manager' or exists (\n" +
+            "where s.director_username = ?1 or\n" +
+            "s.accountant_username = ?1 or\n" +
+            "s.manager_username = ?1 or exists (\n" +
             "\tselect u.* from public.assessment_user as u\n" +
             "\tinner join public.assessment_survey_inspector_link as ins on u.id = ins.user_id\n" +
-            "\twhere s.id = ins.survey_id and u.username = 'manager'\n" +
+            "\twhere s.id = ins.survey_id and u.username = ?1\n" +
             "))", nativeQuery = true)
     List<Survey> findSurveysWithUsername(String username);
+
+
+    @Query(value = "" +
+            "select DISTINCT survey.* \n" +
+            "            from public.assessment_survey as survey\n" +
+            "            where survey.status <> 'CLOSED' and survey.status <> 'CANCELED' and survey.director_username = ?1\t\t\t\n" +
+            "\t\t\tor survey.manager_username = ?1 or survey.accountant_username = ?1\tor exists (\n" +
+            "\t\t\t\tselect u.* from public.assessment_user as u\n" +
+            "\t\t\t\tinner join public.assessment_survey_inspector_link as ins on u.id = ins.user_id\n" +
+            "\t\t\t\twhere survey.id = ins.survey_id and u.username = ?1\n" +
+            "            )", nativeQuery = true)
+    List<Survey> findByUsername(String username);
 
 //    @Query("SELECT s FROM Survey s  WHERE ")
 //    List<Survey> findByUsernameAndRole(String username, String roleName);

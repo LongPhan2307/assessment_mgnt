@@ -29,10 +29,7 @@ import uit.thesis.assessment_mgnt.utils.survey.Const;
 import uit.thesis.assessment_mgnt.utils.survey.Status;
 
 import javax.transaction.Transactional;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Service
 @AllArgsConstructor
@@ -72,32 +69,73 @@ public class PhaseServiceImpl extends GenericServiceImpl<Phase, Long> implements
     @Override
     public Survey submitPhase(UpdatePhaseDto dto) throws Exception {
         User currentUser = userRepository.findByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
+        Phase source = phaseRepository.findByName(dto.getPhaseName());
+        Survey survey = surveyRepository.findByCode(dto.getSurveyCode());
         if(currentUser == null)
             throw new NotFoundException(ResponseMessage.ANONYMOUS_USER);
-        Iterator iterator = currentUser.getRoles().iterator();
-        while (iterator.hasNext()){
-            Object ele = iterator.next();
-        }
-        Phase source = phaseRepository.findByName(dto.getPhaseName());
-        Phase destination = phaseRepository.findByNodeOrder(source.getNodeOrder() + 1);
-        Survey survey = surveyRepository.findByCode(dto.getSurveyCode());
-        if(survey == null)
-            throw new NotFoundException(ResponseMessage.UN_KNOWN("Phase "));
-        if(source == null)
-            throw new NotFoundException(ResponseMessage.UN_KNOWN("Phase "));
-        if(source.getName().equals("FINISH")){
-            if(survey.getStatus().toString().equals(Status.PENDING.toString())){
-                survey.setStatus(Status.CANCELED);
+        Optional<Role> roleFirst = currentUser.getRoles().stream().findFirst();
+//        Iterator iterator = currentUser.getRoles().iterator();
+//        while (iterator.hasNext()){
+//            Object ele = iterator.next();
+//        }
+        if(roleFirst.isPresent() && roleFirst.get().getName().equals(source.getRole().getName())){
+            if(source.getName().equals("SOLVING") || source.getName().equals("CONCLUDING")){
+                Iterator iterator = currentUser.getRoles().iterator();
+                boolean flag = false;
+                while (iterator.hasNext()){
+                    Role ele = (Role) iterator.next();
+                    if(ele.getName().equals("LEADER")){
+                        Phase destination = phaseRepository.findByNodeOrder(source.getNodeOrder() + 1);
+                        if(survey == null)
+                            throw new NotFoundException(ResponseMessage.UN_KNOWN("Phase "));
+                        if(source == null)
+                            throw new NotFoundException(ResponseMessage.UN_KNOWN("Phase "));
+                        if(source.getName().equals("FINISH")){
+                            if(survey.getStatus().toString().equals(Status.PENDING.toString())){
+                                survey.setStatus(Status.CANCELED);
+                            }
+                            survey.setStatus(Status.CLOSED);
+                        }
+                        survey.setPhase(destination);
+                        Comment comment = new Comment();
+                        comment.setTitle(Const.SUBMITTED_PHASE);
+                        comment.setContent(dto.getContent());
+                        comment.setUser(currentUser);
+                        comment.setSurvey(survey);
+                        commentRepository.save(comment);
+                        flag = !flag;
+                        break;
+                    }
+
+                }
+                if(!flag){
+                    throw new Exception("Only Leader can submit this Phase !!");
+                }
+            } else {
+                Phase destination = phaseRepository.findByNodeOrder(source.getNodeOrder() + 1);
+                if(survey == null)
+                    throw new NotFoundException(ResponseMessage.UN_KNOWN("Phase "));
+                if(source == null)
+                    throw new NotFoundException(ResponseMessage.UN_KNOWN("Phase "));
+                if(source.getName().equals("FINISH")){
+                    if(survey.getStatus().toString().equals(Status.PENDING.toString())){
+                        survey.setStatus(Status.CANCELED);
+                    }
+                    survey.setStatus(Status.CLOSED);
+                }
+                survey.setPhase(destination);
+                Comment comment = new Comment();
+                comment.setTitle(Const.SUBMITTED_PHASE);
+                comment.setContent(dto.getContent());
+                comment.setUser(currentUser);
+                comment.setSurvey(survey);
+                commentRepository.save(comment);
             }
-            survey.setStatus(Status.CLOSED);
+
+        } else {
+            throw new Exception("You can submit this phase !!");
         }
-        survey.setPhase(destination);
-        Comment comment = new Comment();
-        comment.setTitle(Const.SUBMITTED_PHASE);
-        comment.setContent(dto.getContent());
-        comment.setUser(currentUser);
-        comment.setSurvey(survey);
-        commentRepository.save(comment);
+
          return surveyRepository.save(survey);
     }
 
