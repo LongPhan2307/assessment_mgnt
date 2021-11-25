@@ -27,6 +27,7 @@ import uit.thesis.assessment_mgnt.model.workflow.Workflow;
 import uit.thesis.assessment_mgnt.repository.assessment.AssessmentCategoryRepository;
 import uit.thesis.assessment_mgnt.repository.assessment.CustomerRepository;
 import uit.thesis.assessment_mgnt.repository.assessment.SurveyRepository;
+import uit.thesis.assessment_mgnt.repository.system.RoleRepository;
 import uit.thesis.assessment_mgnt.repository.system.UserRepository;
 import uit.thesis.assessment_mgnt.repository.workflow.CommentRepository;
 import uit.thesis.assessment_mgnt.repository.workflow.PhaseRepository;
@@ -59,6 +60,7 @@ public class SurveyServiceImpl extends GenericServiceImpl<Survey, Long> implemen
     private CommentService commentService;
     private CommentRepository commentRepository;
     private ConfirmationService confirmationService;
+    private RoleRepository roleRepository;
 
     @Override
     public Survey addNewSurvey(CreateSurveyDto dto) throws NotFoundException {
@@ -154,10 +156,11 @@ public class SurveyServiceImpl extends GenericServiceImpl<Survey, Long> implemen
         User currentUser = userRepository.findByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
         for (int i = 0; i < list.size(); i++) {
             String phaseRoleName = list.get(i).getPhase().getRole().getName();
-            Optional<Role> userRoleName = currentUser.getRoles().stream().findFirst();
-            if(userRoleName.isEmpty())
-                throw new NotFoundException(ResponseMessage.UN_KNOWN("Role of User "));
-            if(userRoleName.get().getName().equals(phaseRoleName)){
+//            Optional<Role> userRoleName = currentUser.getRoles().stream().findFirst();
+            Role userRoleName = roleRepository.getFirstRoleByUsername(currentUser.getUsername());
+//            if(userRoleName.isEmpty())
+//                throw new NotFoundException(ResponseMessage.UN_KNOWN("Role of User "));
+            if(userRoleName.getName().equals(phaseRoleName)){
                 LocalDateTime now = LocalDateTime.now();
                 if(now.isAfter(list.get(i).getDueDate())){
                     list.get(i).setStatus(Status.OVERDATED);

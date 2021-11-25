@@ -1,11 +1,10 @@
 package uit.thesis.assessment_mgnt.controller.workflow;
 
+import javassist.NotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import uit.thesis.assessment_mgnt.common.ResponseObject;
 import uit.thesis.assessment_mgnt.model.assessment.Customer;
 import uit.thesis.assessment_mgnt.model.workflow.Payment;
@@ -14,6 +13,7 @@ import uit.thesis.assessment_mgnt.utils.ResponseMessage;
 import uit.thesis.assessment_mgnt.utils.domain.Domain;
 import uit.thesis.assessment_mgnt.utils.domain.workflow.PaymentDomain;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @RestController
@@ -28,6 +28,19 @@ public class PaymentController {
         if(list.isEmpty())
             return ResponseObject.getResponse(ResponseMessage.NO_DATA, HttpStatus.OK);
         return ResponseObject.getResponse(list, HttpStatus.OK);
+    }
+
+    @PostMapping(Domain.API_ACCOUNTANT + PaymentDomain.PAYMENT_DOMAIN + "/add")
+    public ResponseEntity<Object> addPayment(@RequestParam("surveyCode") String surveyCode,
+                                             @RequestParam("customerCode") String customerCode,
+                                             @RequestParam("paid") BigDecimal paid){
+        try {
+            Payment payment = paymentService.addPayment(surveyCode, customerCode, paid);
+            return ResponseObject.getResponse(payment, HttpStatus.OK);
+        } catch (NotFoundException e) {
+            e.printStackTrace();
+            return ResponseObject.getResponse(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
     }
 
 }

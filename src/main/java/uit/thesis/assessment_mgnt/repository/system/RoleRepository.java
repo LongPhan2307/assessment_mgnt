@@ -18,4 +18,13 @@ public interface RoleRepository extends JpaRepository<Role, Long> {
     @Query(value = "SELECT r FROM Role r WHERE r.name = ?1")
     Role findUsersByRole(String roleName);
 
+    @Query(value = "select r.*\n" +
+            "from public.assessment_user_role_link as l inner join public.assessment_role as r on l.role_id = r.id \n" +
+            "inner join public.assessment_user as u on l.user_id = u.id\n" +
+            "where u.username = ?1\n" +
+            "order by r.created_at asc\n" +
+            "FETCH first 1 rows only"
+    ,nativeQuery = true)
+    Role getFirstRoleByUsername(String username);
+
 }
