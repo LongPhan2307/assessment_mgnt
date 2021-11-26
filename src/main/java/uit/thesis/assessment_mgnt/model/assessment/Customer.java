@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import uit.thesis.assessment_mgnt.common.AbstractEntity;
+import uit.thesis.assessment_mgnt.model.workflow.Invoice;
 import uit.thesis.assessment_mgnt.model.workflow.Payment;
 
 import javax.persistence.*;
@@ -35,6 +36,10 @@ public class Customer extends AbstractEntity {
     @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)
     @JsonIgnore
     private Set<Payment> payments = new HashSet<>();
+
+    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)
+    @JsonIgnore
+    private Set<Invoice> invoices = new HashSet<>();
 
     public Customer(String code, String custNameVN, String custNameIT, String address, String phone){
         this.code = code;

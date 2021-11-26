@@ -4,8 +4,10 @@ import javassist.NotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import uit.thesis.assessment_mgnt.common.ResponseObject;
+import uit.thesis.assessment_mgnt.dto.workflow.payment.CreatePaymentDto;
 import uit.thesis.assessment_mgnt.model.assessment.Customer;
 import uit.thesis.assessment_mgnt.model.workflow.Payment;
 import uit.thesis.assessment_mgnt.service.workflow.PaymentService;
@@ -31,11 +33,12 @@ public class PaymentController {
     }
 
     @PostMapping(Domain.API_ACCOUNTANT + PaymentDomain.PAYMENT_DOMAIN + "/add")
-    public ResponseEntity<Object> addPayment(@RequestParam("surveyCode") String surveyCode,
-                                             @RequestParam("customerCode") String customerCode,
-                                             @RequestParam("paid") BigDecimal paid){
+    public ResponseEntity<Object> addPayment(@RequestBody CreatePaymentDto dto,
+                                             BindingResult errors){
+        if(errors.hasErrors())
+            return ResponseObject.getResponse(errors, HttpStatus.BAD_REQUEST);
         try {
-            Payment payment = paymentService.addPayment(surveyCode, customerCode, paid);
+            Payment payment = paymentService.addPayment(dto);
             return ResponseObject.getResponse(payment, HttpStatus.OK);
         } catch (NotFoundException e) {
             e.printStackTrace();

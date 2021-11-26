@@ -9,10 +9,7 @@ import lombok.Setter;
 import org.apache.commons.lang3.RandomStringUtils;
 import uit.thesis.assessment_mgnt.common.AbstractEntity;
 import uit.thesis.assessment_mgnt.model.system.User;
-import uit.thesis.assessment_mgnt.model.workflow.Comment;
-import uit.thesis.assessment_mgnt.model.workflow.Expense;
-import uit.thesis.assessment_mgnt.model.workflow.Payment;
-import uit.thesis.assessment_mgnt.model.workflow.Phase;
+import uit.thesis.assessment_mgnt.model.workflow.*;
 import uit.thesis.assessment_mgnt.utils.DateUtils;
 import uit.thesis.assessment_mgnt.utils.survey.Status;
 
@@ -113,6 +110,10 @@ public class Survey extends AbstractEntity {
     @OneToMany(mappedBy = "survey", cascade = CascadeType.ALL)
     @JsonIgnore
     private Set<Payment> payments = new HashSet<>();
+
+    @OneToMany(mappedBy = "survey", cascade = CascadeType.ALL)
+    @JsonIgnore
+    private Set<Invoice> invoices = new HashSet<>();
 
     public Survey(String name, String scene,long duration, String contactPhone, Phase registerPhase, Customer customer,
                   User accountant, User director, User manager, AssessmentCategory assessmentCategory){

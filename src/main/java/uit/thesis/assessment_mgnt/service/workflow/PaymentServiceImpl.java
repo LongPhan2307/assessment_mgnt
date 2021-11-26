@@ -4,6 +4,7 @@ import javassist.NotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import uit.thesis.assessment_mgnt.common.GenericServiceImpl;
+import uit.thesis.assessment_mgnt.dto.workflow.payment.CreatePaymentDto;
 import uit.thesis.assessment_mgnt.model.assessment.Customer;
 import uit.thesis.assessment_mgnt.model.assessment.Survey;
 import uit.thesis.assessment_mgnt.model.workflow.Payment;
@@ -25,10 +26,10 @@ public class PaymentServiceImpl extends GenericServiceImpl<Payment, Long> implem
 
 
     @Override
-    public Payment addPayment(String surveyCode, String customerCode, BigDecimal amountPaid) throws NotFoundException {
-        Survey survey = surveyRepository.findByCode(surveyCode);
+    public Payment addPayment(CreatePaymentDto dto) throws NotFoundException {
+        Survey survey = surveyRepository.findByCode(dto.getSurveyCode());
         Payment payment = new Payment();
-        Customer customer = customerRepository.findByCode(customerCode);
+        Customer customer = customerRepository.findByCode(dto.getCustomerCode());
         BigDecimal estimatePrice = new BigDecimal("0");
         BigDecimal expenseTotal = new BigDecimal("0");
         BigDecimal totalPaid = new BigDecimal("0");
@@ -41,14 +42,15 @@ public class PaymentServiceImpl extends GenericServiceImpl<Payment, Long> implem
             estimatePrice = survey.getEstimatePrice();
         if(expenseRepository.ExpenseTotal(survey.getCode()) != null)
             expenseTotal = expenseRepository.ExpenseTotal(survey.getCode());
-        if(paymentRepository.getTotalPaid(customerCode, surveyCode) != null){
-            totalPaid = paymentRepository.getTotalPaid(customerCode, surveyCode);
+        if(paymentRepository.getTotalPaid(dto.getCustomerCode(), dto.getSurveyCode()) != null){
+            totalPaid = paymentRepository.getTotalPaid(dto.getCustomerCode(), dto.getSurveyCode());
             debt = debt.add(totalPaid.subtract(estimatePrice).subtract(expenseTotal));
         } else {
-            debt = debt.add(amountPaid.subtract(estimatePrice).subtract(expenseTotal));
+            debt = debt.add(dto.getAmountPaid().subtract(estimatePrice).subtract(expenseTotal));
         }
+        payment.setName(dto.getName());
         payment.setSurvey(survey);
-        payment.setAmountPaid(amountPaid);
+        payment.setAmountPaid(dto.getAmountPaid());
         payment.setDebt(debt);
         payment.setCustomer(customer);
         return paymentRepository.save(payment);

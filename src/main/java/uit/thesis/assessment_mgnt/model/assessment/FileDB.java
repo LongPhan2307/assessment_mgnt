@@ -10,6 +10,7 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import uit.thesis.assessment_mgnt.model.workflow.Invoice;
 import uit.thesis.assessment_mgnt.utils.DateUtils;
 
 import javax.persistence.*;
@@ -59,12 +60,18 @@ public class FileDB {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "document_id")
+    @JsonIgnore
     private Document document;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(referencedColumnName = "code")
     @JsonIgnore
     private Certificate certificate;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(referencedColumnName = "id")
+    @JsonIgnore
+    private Invoice invoice;
 
 //    @Column(name = "service_req_form_id", insertable = false, updatable = false)
 //    private Long serviceReqFormId;
