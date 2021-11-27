@@ -15,6 +15,7 @@ public class Const {
     public static final String CHANGE_ASSIGNEE = "CHANGE ASSIGNEE";
     public static final String CHANGE_CONTENT = "CHANGE CONTENT";
     public static final String REQUEST_CANCEL = "REQUEST CANCELATION";
+    public static final String ADDING_INVOICE = "ADDING INVOICE";
     public static final String RETURNED_PHASE = "FEEDBACK";
     public static final String ASSIGNEE_APPROVAL = "ASSIGNEE APPROVAL";
     public static final String ASSIGN_INSPECTORS = "ASSIGN INSPECTORS";

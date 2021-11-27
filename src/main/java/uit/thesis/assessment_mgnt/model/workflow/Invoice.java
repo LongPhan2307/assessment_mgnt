@@ -1,5 +1,6 @@
 package uit.thesis.assessment_mgnt.model.workflow;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 import uit.thesis.assessment_mgnt.common.AbstractEntity;
@@ -23,10 +24,12 @@ public class Invoice extends AbstractEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(referencedColumnName = "code")
+    @JsonIgnore
     private Survey survey;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(referencedColumnName = "code")
+    @JsonIgnore
     private Customer customer;
 
     @OneToMany(mappedBy = "invoice", cascade = CascadeType.ALL)
