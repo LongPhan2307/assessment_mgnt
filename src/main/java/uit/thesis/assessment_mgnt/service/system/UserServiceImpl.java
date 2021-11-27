@@ -1,11 +1,13 @@
 package uit.thesis.assessment_mgnt.service.system;
 
+import javassist.NotFoundException;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import uit.thesis.assessment_mgnt.common.GenericServiceImpl;
 import uit.thesis.assessment_mgnt.dto.system.CreateUserDto;
+import uit.thesis.assessment_mgnt.dto.system.ResponseUserDto;
 import uit.thesis.assessment_mgnt.model.system.Department;
 import uit.thesis.assessment_mgnt.model.system.Role;
 import uit.thesis.assessment_mgnt.model.system.User;
@@ -58,6 +60,18 @@ public class UserServiceImpl extends GenericServiceImpl<User, Long> implements U
         user.addRole(role);
 
         return userRepository.save(user);
+    }
+
+    @Override
+    public ResponseUserDto getUserByUsername(String username) throws NotFoundException {
+        User user = userRepository.findByUsername(username);
+        if(user == null)
+            throw new NotFoundException(ResponseMessage.ANONYMOUS_USER);
+        Role role = roleRepository.getFirstRoleByUsername(username);
+        ResponseUserDto userDto = new ResponseUserDto();
+        userDto.setUserInfo(user);
+        userDto.setRoleName(role.getName());
+        return userDto;
     }
 
     @Override

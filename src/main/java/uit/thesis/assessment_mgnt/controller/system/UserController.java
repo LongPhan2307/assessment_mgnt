@@ -1,5 +1,7 @@
 package uit.thesis.assessment_mgnt.controller.system;
 
+import io.swagger.models.Response;
+import javassist.NotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -9,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import uit.thesis.assessment_mgnt.common.ResponseObject;
 import uit.thesis.assessment_mgnt.dto.system.CreateRoleDto;
 import uit.thesis.assessment_mgnt.dto.system.CreateUserDto;
+import uit.thesis.assessment_mgnt.dto.system.ResponseUserDto;
 import uit.thesis.assessment_mgnt.model.system.Role;
 import uit.thesis.assessment_mgnt.model.system.User;
 import uit.thesis.assessment_mgnt.service.system.UserService;
@@ -31,6 +34,18 @@ public class UserController {
         if(list.isEmpty())
             return ResponseObject.getResponse(ResponseMessage.NO_DATA, HttpStatus.OK);
         return ResponseObject.getResponse(list, HttpStatus.OK);
+    }
+
+    @GetMapping(UserDomain.USER_DOMAIN + "/fetch")
+    public ResponseEntity<Object> getUserInfoByUsername(@RequestParam("username") String username){
+        try {
+            ResponseUserDto user = userService.getUserByUsername(username);
+            return ResponseObject.getResponse(user, HttpStatus.OK);
+        } catch (NotFoundException e) {
+            e.printStackTrace();
+            return ResponseObject.getResponse(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+
     }
 
     @PostMapping(Domain.API_ADMIN + UserDomain.USER_DOMAIN)
