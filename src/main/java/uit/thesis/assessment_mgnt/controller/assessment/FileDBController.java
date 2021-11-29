@@ -127,6 +127,29 @@ public class FileDBController implements ServletContextAware {
         return ResponseObject.getResponse(list, HttpStatus.OK);
     }
 
+    @GetMapping(FileDBDomain.FILE + "/search")
+    public ResponseEntity<Object> getAllFilesByCondition(@RequestParam(name = "documentId", required = false) Long documentId,
+                                                         @RequestParam(name = "invoiceId", required = false) Long invoiceId,
+                                                         @RequestParam(name = "certificateId", required = false) Long certificateId){
+        List<ResponseFile> list = fileDBService.getAllFilesByCondition(documentId, invoiceId, certificateId).map(fileDB -> {
+            String fileDownloadUri = ServletUriComponentsBuilder
+                    .fromCurrentContextPath()
+                    .path(FileDBDomain.FILE + "/")
+                    .path(fileDB.getId())
+                    .toUriString();
+
+            return new ResponseFile(
+                    fileDB.getName(),
+                    fileDownloadUri,
+                    fileDB.getType(),
+                    fileDB.getData().length
+            );
+        }).collect(Collectors.toList());
+        if(list.isEmpty())
+            return ResponseObject.getResponse(ResponseMessage.NO_DATA, HttpStatus.OK);
+        return ResponseObject.getResponse(list, HttpStatus.OK);
+    }
+
     @GetMapping(FileDBDomain.FILE + "/{id}")
     public ResponseEntity<Object> getFile(@PathVariable("id") String id){
         FileDB fileDB = fileDBService.getFileById(id);

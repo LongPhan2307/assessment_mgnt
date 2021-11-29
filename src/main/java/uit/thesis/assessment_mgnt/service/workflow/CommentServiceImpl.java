@@ -10,10 +10,7 @@ import uit.thesis.assessment_mgnt.model.assessment.Document;
 import uit.thesis.assessment_mgnt.model.assessment.FileDB;
 import uit.thesis.assessment_mgnt.model.assessment.Survey;
 import uit.thesis.assessment_mgnt.model.system.User;
-import uit.thesis.assessment_mgnt.model.workflow.Comment;
-import uit.thesis.assessment_mgnt.model.workflow.Confirmation;
-import uit.thesis.assessment_mgnt.model.workflow.Expense;
-import uit.thesis.assessment_mgnt.model.workflow.Payment;
+import uit.thesis.assessment_mgnt.model.workflow.*;
 import uit.thesis.assessment_mgnt.repository.assessment.SurveyRepository;
 import uit.thesis.assessment_mgnt.repository.system.UserRepository;
 import uit.thesis.assessment_mgnt.repository.workflow.CommentRepository;
@@ -59,6 +56,13 @@ public class CommentServiceImpl extends GenericServiceImpl<Comment,Long> impleme
             comment.setSurvey(survey);
             comment.setUser(user);
             comment.setTitle(Const.ADDING_EXPENSE);
+            comment.setContent(content);
+        }
+        if(obj instanceof Invoice){
+            String content = user.getUsername() + " has added invoice form to " + ((Invoice) obj).getName();
+            comment.setSurvey(survey);
+            comment.setUser(user);
+            comment.setTitle(Const.ADDING_FILES);
             comment.setContent(content);
         }
         if(obj instanceof Document){

@@ -8,6 +8,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import uit.thesis.assessment_mgnt.common.ResponseObject;
 import uit.thesis.assessment_mgnt.dto.workflow.invoice.CreateInvoiceDto;
+import uit.thesis.assessment_mgnt.dto.workflow.invoice.CreateSurchargeDto;
 import uit.thesis.assessment_mgnt.model.workflow.Invoice;
 import uit.thesis.assessment_mgnt.service.workflow.InvoiceService;
 import uit.thesis.assessment_mgnt.utils.ResponseMessage;
@@ -36,6 +37,23 @@ public class InvoiceController {
             return ResponseObject.getResponse(errors, HttpStatus.BAD_REQUEST);
         try {
             Invoice invoice = invoiceService.createInvoice(dto);
+            return ResponseObject.getResponse(invoice, HttpStatus.CREATED);
+        } catch (NotFoundException e) {
+            e.printStackTrace();
+            return ResponseObject.getResponse(e.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseObject.getResponse(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PostMapping(Domain.API_ACCOUNTANT + "/surcharge")
+    public ResponseEntity<Object> addNewSurcharge(@RequestBody CreateSurchargeDto dto,
+                                                BindingResult errors){
+        if(errors.hasErrors())
+            return ResponseObject.getResponse(errors, HttpStatus.BAD_REQUEST);
+        try {
+            Invoice invoice = invoiceService.addNewSurcharge(dto);
             return ResponseObject.getResponse(invoice, HttpStatus.CREATED);
         } catch (NotFoundException e) {
             e.printStackTrace();

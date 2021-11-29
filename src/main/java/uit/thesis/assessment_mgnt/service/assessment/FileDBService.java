@@ -16,6 +16,8 @@ public interface FileDBService{
 
     FileDB storeInDocument(MultipartFile files, long documentId) throws IOException, NotFoundException;
 
+    FileDB storeInInvoice(MultipartFile files, long invoiceId) throws NotFoundException, IOException;
+
     FileDB storeInCertificate(MultipartFile files, String certificateCode) throws IOException, NotFoundException;
 
     List<FileDB> storeFiles(List<MultipartFile> files) throws IOException;
@@ -23,4 +25,6 @@ public interface FileDBService{
     public FileDB getFileById(String id);
 
     public Stream<FileDB> getAllFiles();
+
+    public Stream<FileDB> getAllFilesByCondition(Long documentId, Long invoiceId, Long certificateId);
 }

@@ -10,13 +10,17 @@ import uit.thesis.assessment_mgnt.model.assessment.Certificate;
 import uit.thesis.assessment_mgnt.model.assessment.Document;
 import uit.thesis.assessment_mgnt.model.assessment.FileDB;
 import uit.thesis.assessment_mgnt.model.system.User;
+import uit.thesis.assessment_mgnt.model.workflow.Comment;
+import uit.thesis.assessment_mgnt.model.workflow.Invoice;
 import uit.thesis.assessment_mgnt.repository.assessment.CertificateRepository;
 import uit.thesis.assessment_mgnt.repository.assessment.DocumentRepository;
 import uit.thesis.assessment_mgnt.repository.assessment.FileDBRepository;
 import uit.thesis.assessment_mgnt.repository.system.UserRepository;
+import uit.thesis.assessment_mgnt.repository.workflow.InvoiceRepository;
 import uit.thesis.assessment_mgnt.service.workflow.CommentService;
 import uit.thesis.assessment_mgnt.utils.ResponseMessage;
 
+import javax.transaction.Transactional;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
@@ -31,6 +35,7 @@ public class FileDBServiceImpl implements FileDBService {
     private CertificateRepository certificateRepository;
     private CommentService commentService;
     private UserRepository userRepository;
+    private InvoiceRepository invoiceRepository;
 
     @Override
     public FileDB store(MultipartFile files) throws IOException {
@@ -49,6 +54,19 @@ public class FileDBServiceImpl implements FileDBService {
         FileDB fileDB = new FileDB(fileName, files.getContentType(), files.getBytes());
         fileDB.setDocument(document.get());
         commentService.generateComment(fileDB, document.get().getSurvey(), user);
+        return fileDBRepository.save(fileDB);
+    }
+
+    @Override
+    public FileDB storeInInvoice(MultipartFile files, long invoiceId) throws NotFoundException, IOException {
+        Optional<Invoice> invoice = invoiceRepository.findById(invoiceId);
+        User user = userRepository.findByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
+        if(invoice.isEmpty())
+            throw new NotFoundException(ResponseMessage.UN_KNOWN("Invoice "));
+        String fileName = StringUtils.cleanPath(files.getOriginalFilename());
+        FileDB fileDB = new FileDB(fileName, files.getContentType(), files.getBytes());
+        fileDB.setInvoice(invoice.get());
+        commentService.generateComment(invoice, invoice.get().getSurvey(), user);
         return fileDBRepository.save(fileDB);
     }
 
@@ -94,5 +112,18 @@ public class FileDBServiceImpl implements FileDBService {
     @Override
     public Stream<FileDB> getAllFiles() {
         return fileDBRepository.findAll().stream();
+    }
+
+    @Transactional
+    @Override
+    public Stream<FileDB> getAllFilesByCondition(Long documentId, Long invoiceId, Long certificateId) {
+        if( documentId != null){
+            return fileDBRepository.findByDocumentId(documentId).stream();
+        }
+        if(invoiceId != null)
+            return fileDBRepository.findByInvoice(invoiceId).stream();
+        if(certificateId != null)
+            return fileDBRepository.findByCertificate(certificateId).stream();
+        return null;
     }
 }

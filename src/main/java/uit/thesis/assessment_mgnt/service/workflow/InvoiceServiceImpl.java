@@ -7,6 +7,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import uit.thesis.assessment_mgnt.common.GenericServiceImpl;
 import uit.thesis.assessment_mgnt.dto.workflow.invoice.CreateInvoiceDto;
+import uit.thesis.assessment_mgnt.dto.workflow.invoice.CreateSurchargeDto;
 import uit.thesis.assessment_mgnt.model.assessment.Customer;
 import uit.thesis.assessment_mgnt.model.assessment.Survey;
 import uit.thesis.assessment_mgnt.model.system.User;
@@ -36,7 +37,7 @@ public class InvoiceServiceImpl extends GenericServiceImpl<Invoice, Long> implem
     private CommentRepository commentRepository;
 
     @Override
-    public Invoice createInvoice(CreateInvoiceDto dto) throws NotFoundException {
+    public Invoice createInvoice(CreateInvoiceDto dto) throws Exception {
         Survey survey = surveyRepository.findByCode(dto.getSurveyCode());
         Customer customer = customerRepository.findByCode(dto.getCustomerCode());
         BigDecimal price = new BigDecimal("0");
@@ -49,6 +50,8 @@ public class InvoiceServiceImpl extends GenericServiceImpl<Invoice, Long> implem
             throw new NotFoundException(ResponseMessage.UN_KNOWN("Survey "));
         if(customer == null)
             throw new NotFoundException(ResponseMessage.UN_KNOWN("Customer "));
+        if(survey.getEstimatePrice() == null)
+            throw new Exception("Estimate Price is null. Please update !");
         Invoice invoice = new Invoice();
         invoice.setName(dto.getName());
         invoice.setCustomer(customer);
@@ -58,6 +61,28 @@ public class InvoiceServiceImpl extends GenericServiceImpl<Invoice, Long> implem
         price = price.add(survey.getEstimatePrice()).add(expensePrice).add(recentDebt);
         invoice.setPrice(price);
         String content = "Export invoice for " + customer.getCustNameVN();
+        Comment comment = new Comment(content, Const.ADDING_INVOICE, currentUser, survey);
+        commentRepository.save(comment);
+        return invoiceRepository.save(invoice);
+    }
+
+    @Override
+    public Invoice addNewSurcharge(CreateSurchargeDto dto) throws NotFoundException {
+        Survey survey = surveyRepository.findByCode(dto.getSurveyCode());
+        Customer customer = customerRepository.findByCode(dto.getCustomerCode());
+        User currentUser = userRepository.findByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
+        if(currentUser == null)
+            throw new NotFoundException(ResponseMessage.ANONYMOUS_USER);
+        if(survey == null)
+            throw new NotFoundException(ResponseMessage.UN_KNOWN("Survey "));
+        if(customer == null)
+            throw new NotFoundException(ResponseMessage.UN_KNOWN("Customer "));
+        Invoice invoice = new Invoice();
+        invoice.setPrice(dto.getSurcharge());
+        invoice.setName(dto.getName());
+        invoice.setCustomer(customer);
+        invoice.setSurvey(survey);
+        String content = "Export surcharge for " + customer.getCustNameVN();
         Comment comment = new Comment(content, Const.ADDING_INVOICE, currentUser, survey);
         commentRepository.save(comment);
         return invoiceRepository.save(invoice);
