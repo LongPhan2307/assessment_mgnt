@@ -34,18 +34,18 @@ public class DocumentController {
         return ResponseObject.getResponse(list, HttpStatus.OK);
     }
 
-    @PostMapping(DocumentDomain.DOCUMENT)
-    public ResponseEntity<Object> addDocument(@Valid @RequestBody CreateDocumentDto dto,
-                                              BindingResult error){
-        if(error.hasErrors())
-            return ResponseObject.getResponse(error, HttpStatus.BAD_REQUEST);
-        try {
-            Document document = documentService.addNew(dto);
-            return ResponseObject.getResponse(document, HttpStatus.CREATED);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseObject.getResponse(e.getMessage(), HttpStatus.BAD_REQUEST);
-        }
-
-    }
+//    @PostMapping(DocumentDomain.DOCUMENT)
+//    public ResponseEntity<Object> addDocument(@Valid @RequestBody CreateDocumentDto dto,
+//                                              BindingResult error){
+//        if(error.hasErrors())
+//            return ResponseObject.getResponse(error, HttpStatus.BAD_REQUEST);
+//        try {
+//            Document document = documentService.addNew(dto);
+//            return ResponseObject.getResponse(document, HttpStatus.CREATED);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            return ResponseObject.getResponse(e.getMessage(), HttpStatus.BAD_REQUEST);
+//        }
+//
+//    }
 }

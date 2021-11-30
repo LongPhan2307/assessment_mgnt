@@ -30,34 +30,34 @@ public class InvoiceController {
         return ResponseObject.getResponse(list, HttpStatus.OK);
     }
 
-    @PostMapping(Domain.API_ACCOUNTANT)
-    public ResponseEntity<Object> createInvoice(@RequestBody CreateInvoiceDto dto,
-                                                BindingResult errors){
-        if(errors.hasErrors())
-            return ResponseObject.getResponse(errors, HttpStatus.BAD_REQUEST);
-        try {
-            Invoice invoice = invoiceService.createInvoice(dto);
-            return ResponseObject.getResponse(invoice, HttpStatus.CREATED);
-        } catch (NotFoundException e) {
-            e.printStackTrace();
-            return ResponseObject.getResponse(e.getMessage(), HttpStatus.BAD_REQUEST);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseObject.getResponse(e.getMessage(), HttpStatus.BAD_REQUEST);
-        }
-    }
-
-    @PostMapping(Domain.API_ACCOUNTANT + "/surcharge")
-    public ResponseEntity<Object> addNewSurcharge(@RequestBody CreateSurchargeDto dto,
-                                                BindingResult errors){
-        if(errors.hasErrors())
-            return ResponseObject.getResponse(errors, HttpStatus.BAD_REQUEST);
-        try {
-            Invoice invoice = invoiceService.addNewSurcharge(dto);
-            return ResponseObject.getResponse(invoice, HttpStatus.CREATED);
-        } catch (NotFoundException e) {
-            e.printStackTrace();
-            return ResponseObject.getResponse(e.getMessage(), HttpStatus.BAD_REQUEST);
-        }
-    }
+//    @PostMapping(Domain.API_ACCOUNTANT)
+//    public ResponseEntity<Object> createInvoice(@RequestBody CreateInvoiceDto dto,
+//                                                BindingResult errors){
+//        if(errors.hasErrors())
+//            return ResponseObject.getResponse(errors, HttpStatus.BAD_REQUEST);
+//        try {
+//            Invoice invoice = invoiceService.createInvoice(dto);
+//            return ResponseObject.getResponse(invoice, HttpStatus.CREATED);
+//        } catch (NotFoundException e) {
+//            e.printStackTrace();
+//            return ResponseObject.getResponse(e.getMessage(), HttpStatus.BAD_REQUEST);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            return ResponseObject.getResponse(e.getMessage(), HttpStatus.BAD_REQUEST);
+//        }
+//    }
+//
+//    @PostMapping(Domain.API_ACCOUNTANT + "/surcharge")
+//    public ResponseEntity<Object> addNewSurcharge(@RequestBody CreateSurchargeDto dto,
+//                                                BindingResult errors){
+//        if(errors.hasErrors())
+//            return ResponseObject.getResponse(errors, HttpStatus.BAD_REQUEST);
+//        try {
+//            Invoice invoice = invoiceService.addNewSurcharge(dto);
+//            return ResponseObject.getResponse(invoice, HttpStatus.CREATED);
+//        } catch (NotFoundException e) {
+//            e.printStackTrace();
+//            return ResponseObject.getResponse(e.getMessage(), HttpStatus.BAD_REQUEST);
+//        }
+//    }
 }

@@ -92,34 +92,34 @@ public class PhaseController {
 
     }
 
-    @PutMapping("/submit-phase")
-    public ResponseEntity<Object> submitPhase(@RequestBody UpdatePhaseDto dto,
-                                              BindingResult errors){
-        if(errors.hasErrors())
-            return ResponseObject.getResponse(errors, HttpStatus.BAD_REQUEST);
-        try {
-            Survey res = phaseService.submitPhase(dto);
-            return ResponseObject.getResponse(res, HttpStatus.OK);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseObject.getResponse(e.getMessage(), HttpStatus.BAD_REQUEST);
-        }
-
-    }
-
-    @PutMapping("/return-phase")
-    public ResponseEntity<Object> returnPhase(@RequestBody UpdatePhaseDto dto,
-                                              BindingResult errors){
-        if(errors.hasErrors())
-            return ResponseObject.getResponse(errors, HttpStatus.BAD_REQUEST);
-        try {
-            Survey res = phaseService.returnPhase(dto);
-            return ResponseObject.getResponse(res, HttpStatus.OK);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseObject.getResponse(e.getMessage(), HttpStatus.BAD_REQUEST);
-        }
-
-    }
+//    @PutMapping("/submit-phase")
+//    public ResponseEntity<Object> submitPhase(@RequestBody UpdatePhaseDto dto,
+//                                              BindingResult errors){
+//        if(errors.hasErrors())
+//            return ResponseObject.getResponse(errors, HttpStatus.BAD_REQUEST);
+//        try {
+//            Survey res = phaseService.submitPhase(dto);
+//            return ResponseObject.getResponse(res, HttpStatus.OK);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            return ResponseObject.getResponse(e.getMessage(), HttpStatus.BAD_REQUEST);
+//        }
+//
+//    }
+//
+//    @PutMapping("/return-phase")
+//    public ResponseEntity<Object> returnPhase(@RequestBody UpdatePhaseDto dto,
+//                                              BindingResult errors){
+//        if(errors.hasErrors())
+//            return ResponseObject.getResponse(errors, HttpStatus.BAD_REQUEST);
+//        try {
+//            Survey res = phaseService.returnPhase(dto);
+//            return ResponseObject.getResponse(res, HttpStatus.OK);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            return ResponseObject.getResponse(e.getMessage(), HttpStatus.BAD_REQUEST);
+//        }
+//
+//    }
 
 }

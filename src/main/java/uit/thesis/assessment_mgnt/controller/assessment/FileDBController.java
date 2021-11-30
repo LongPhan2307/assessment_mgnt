@@ -60,20 +60,20 @@ public class FileDBController implements ServletContextAware {
         return ResponseObject.getResponse("Bug", HttpStatus.BAD_REQUEST);
     }
 
-    @PostMapping(value = FileDBDomain.FILE + "/upload-file-document", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<Object> uploadFileForDocument(
-                                             @RequestParam("file") MultipartFile file,
-                                             @RequestParam("documentId") long documentId
-                                             ){
-
-        try {
-            FileDB fileDB = fileDBService.storeInDocument(file, documentId);
-            return ResponseObject.getResponse(fileDB, HttpStatus.CREATED);
-        } catch (IOException | NotFoundException e) {
-            e.printStackTrace();
-            return ResponseObject.getResponse(e.getMessage(), HttpStatus.BAD_REQUEST);
-        }
-    }
+//    @PostMapping(value = FileDBDomain.FILE + "/upload-file-document", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+//    public ResponseEntity<Object> uploadFileForDocument(
+//                                             @RequestParam("file") MultipartFile file,
+//                                             @RequestParam("documentId") long documentId
+//                                             ){
+//
+//        try {
+//            FileDB fileDB = fileDBService.storeInDocument(file, documentId);
+//            return ResponseObject.getResponse(fileDB, HttpStatus.CREATED);
+//        } catch (IOException | NotFoundException e) {
+//            e.printStackTrace();
+//            return ResponseObject.getResponse(e.getMessage(), HttpStatus.BAD_REQUEST);
+//        }
+//    }
 
     @PostMapping(value = FileDBDomain.FILE + "/upload-files-certificate", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Object> uploadFileForCertificate(

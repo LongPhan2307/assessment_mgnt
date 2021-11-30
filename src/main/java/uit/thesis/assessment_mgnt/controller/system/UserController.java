@@ -1,5 +1,6 @@
 package uit.thesis.assessment_mgnt.controller.system;
 
+import io.swagger.annotations.Api;
 import io.swagger.models.Response;
 import javassist.NotFoundException;
 import lombok.AllArgsConstructor;
@@ -36,17 +37,17 @@ public class UserController {
         return ResponseObject.getResponse(list, HttpStatus.OK);
     }
 
-    @GetMapping(UserDomain.USER_DOMAIN + "/fetch")
-    public ResponseEntity<Object> getUserInfoByUsername(@RequestParam("username") String username){
-        try {
-            ResponseUserDto user = userService.getUserByUsername(username);
-            return ResponseObject.getResponse(user, HttpStatus.OK);
-        } catch (NotFoundException e) {
-            e.printStackTrace();
-            return ResponseObject.getResponse(e.getMessage(), HttpStatus.BAD_REQUEST);
-        }
-
-    }
+//    @GetMapping(UserDomain.USER_DOMAIN + "/fetch")
+//    public ResponseEntity<Object> getUserInfoByUsername(@RequestParam("username") String username){
+//        try {
+//            ResponseUserDto user = userService.getUserByUsername(username);
+//            return ResponseObject.getResponse(user, HttpStatus.OK);
+//        } catch (NotFoundException e) {
+//            e.printStackTrace();
+//            return ResponseObject.getResponse(e.getMessage(), HttpStatus.BAD_REQUEST);
+//        }
+//
+//    }
 
     @PostMapping(Domain.API_ADMIN + UserDomain.USER_DOMAIN)
     public ResponseEntity<Object> createUser(@Valid @RequestBody CreateUserDto dto,

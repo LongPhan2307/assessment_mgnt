@@ -30,23 +30,23 @@ public class ConfirmationController {
         return ResponseObject.getResponse(list, HttpStatus.OK);
     }
 
-    @GetMapping(ConfirmationDomain.CONFIRMATION_DOMAIN + "/search")
-    public ResponseEntity<Object> findByCommentId(@RequestParam("comment") long commentId){
-        List<Confirmation> list = confirmationService.findByCommentId(commentId);
-        if(list.isEmpty())
-            return ResponseObject.getResponse(ResponseMessage.NO_DATA, HttpStatus.OK);
-        return ResponseObject.getResponse(list, HttpStatus.OK);
-    }
-
-    @PutMapping(ConfirmationDomain.CONFIRMATION_DOMAIN + "/change-status")
-    public ResponseEntity<Object> changeStatusConfirm(@RequestParam("comment") long commentId
-                                                      ){
-        try {
-            Comment comment = confirmationService.changeStatusConfirmation(commentId);
-            return ResponseObject.getResponse(comment, HttpStatus.OK);
-        } catch (NotFoundException e) {
-            e.printStackTrace();
-            return ResponseObject.getResponse(e.getMessage(), HttpStatus.BAD_REQUEST);
-        }
-    }
+//    @GetMapping(ConfirmationDomain.CONFIRMATION_DOMAIN + "/search")
+//    public ResponseEntity<Object> findByCommentId(@RequestParam("comment") long commentId){
+//        List<Confirmation> list = confirmationService.findByCommentId(commentId);
+//        if(list.isEmpty())
+//            return ResponseObject.getResponse(ResponseMessage.NO_DATA, HttpStatus.OK);
+//        return ResponseObject.getResponse(list, HttpStatus.OK);
+//    }
+//
+//    @PutMapping(ConfirmationDomain.CONFIRMATION_DOMAIN + "/change-status")
+//    public ResponseEntity<Object> changeStatusConfirm(@RequestParam("comment") long commentId
+//                                                      ){
+//        try {
+//            Comment comment = confirmationService.changeStatusConfirmation(commentId);
+//            return ResponseObject.getResponse(comment, HttpStatus.OK);
+//        } catch (NotFoundException e) {
+//            e.printStackTrace();
+//            return ResponseObject.getResponse(e.getMessage(), HttpStatus.BAD_REQUEST);
+//        }
+//    }
 }
