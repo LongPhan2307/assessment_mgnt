@@ -40,24 +40,31 @@ public class FileDBController implements ServletContextAware {
     private FileDBService fileDBService;
 
     @PostMapping(value = FileDBDomain.FILE + "/upload-files-document", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<Object> uploadFilesForDocument(@RequestParam MultipartFile[] files,
+    public ResponseEntity<Object> uploadFilesForDocument(@RequestParam MultipartFile files,
                                                          @RequestParam("documentId") long documentId){
-        List<FileDB> list = new LinkedList<>();
-        try {
-            for(MultipartFile file : files){
+//        List<FileDB> list = new LinkedList<>();
+//        try {
+//            for(MultipartFile file : files){
 //                String fileName = file.getOriginalFilename();
 //                long fileSize = file.getSize();
 //                String contentType = file.getContentType();
-                FileDB fileDB = fileDBService.storeInDocument(file, documentId);
-                list.add(fileDB);
-            }
-            if(list.isEmpty())
-                return ResponseObject.getResponse(ResponseMessage.NO_DATA, HttpStatus.OK);
-            return ResponseObject.getResponse(list, HttpStatus.OK);
-        } catch (Exception e) {
+//                FileDB fileDB = fileDBService.storeInDocument(file, documentId);
+//                list.add(fileDB);
+//            }
+//            if(list.isEmpty())
+//                return ResponseObject.getResponse(ResponseMessage.NO_DATA, HttpStatus.OK);
+//            return ResponseObject.getResponse(list, HttpStatus.OK);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//        return ResponseObject.getResponse("Bug", HttpStatus.BAD_REQUEST);
+        try {
+            FileDB fileDB = fileDBService.storeInDocument(files, documentId);
+            return ResponseObject.getResponse(fileDB, HttpStatus.CREATED);
+        } catch (IOException | NotFoundException e) {
             e.printStackTrace();
+            return ResponseObject.getResponse(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
-        return ResponseObject.getResponse("Bug", HttpStatus.BAD_REQUEST);
     }
 
 //    @PostMapping(value = FileDBDomain.FILE + "/upload-file-document", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)

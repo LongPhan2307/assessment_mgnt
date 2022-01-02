@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import uit.thesis.assessment_mgnt.common.ResponseObject;
+import uit.thesis.assessment_mgnt.controller.assessment.JwtDto;
 import uit.thesis.assessment_mgnt.security.dto.LoginDto;
 import uit.thesis.assessment_mgnt.security.jwt.JwtUtils;
 
@@ -39,7 +40,9 @@ public class AuthController {
             // set authentication into SecurityContext
             SecurityContextHolder.getContext().setAuthentication(authentication);
             String jwtToken = jwtUtils.generateJwtToken(authentication);
-            return ResponseObject.getResponse(jwtToken, HttpStatus.OK);
+            JwtDto jwt = new JwtDto();
+            jwt.setJwt(jwtToken);
+            return ResponseObject.getResponse(jwt, HttpStatus.OK);
         } catch (AuthenticationException e) {
             e.printStackTrace();
         }

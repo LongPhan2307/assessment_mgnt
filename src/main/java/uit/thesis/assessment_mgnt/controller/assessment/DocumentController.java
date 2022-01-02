@@ -5,10 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import uit.thesis.assessment_mgnt.common.ResponseObject;
 import uit.thesis.assessment_mgnt.dto.assessment.document.CreateDocumentDto;
 import uit.thesis.assessment_mgnt.model.assessment.Document;
@@ -34,6 +31,13 @@ public class DocumentController {
         return ResponseObject.getResponse(list, HttpStatus.OK);
     }
 
+    @GetMapping(DocumentDomain.DOCUMENT + "/search")
+    public ResponseEntity<Object> getDocumentBySurveyCode(@RequestParam("survey") String surveyCode){
+        List<Document> list = documentService.getDocumentBySurveyCode(surveyCode);
+        if(list.isEmpty())
+            return ResponseObject.getResponse(ResponseMessage.NO_DATA, HttpStatus.OK);
+        return ResponseObject.getResponse(list, HttpStatus.OK);
+    }
 //    @PostMapping(DocumentDomain.DOCUMENT)
 //    public ResponseEntity<Object> addDocument(@Valid @RequestBody CreateDocumentDto dto,
 //                                              BindingResult error){

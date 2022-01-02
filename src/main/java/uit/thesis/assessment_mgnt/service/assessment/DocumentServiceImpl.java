@@ -15,6 +15,8 @@ import uit.thesis.assessment_mgnt.repository.system.UserRepository;
 import uit.thesis.assessment_mgnt.service.workflow.CommentService;
 import uit.thesis.assessment_mgnt.utils.ResponseMessage;
 
+import java.util.List;
+
 @Service
 @AllArgsConstructor
 public class DocumentServiceImpl extends GenericServiceImpl<Document, Long> implements DocumentService {
@@ -35,5 +37,10 @@ public class DocumentServiceImpl extends GenericServiceImpl<Document, Long> impl
         document.setSurvey(survey);
         commentService.generateComment(document, survey, user);
         return documentRepository.save(document);
+    }
+
+    @Override
+    public List<Document> getDocumentBySurveyCode(String surveyCode) {
+        return documentRepository.getDocumentBySurveyCode(surveyCode);
     }
 }

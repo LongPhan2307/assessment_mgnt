@@ -14,10 +14,7 @@ import uit.thesis.assessment_mgnt.dto.assessment.survey.ResponseSurvey;
 import uit.thesis.assessment_mgnt.dto.assessment.survey.SurveyWithUsers;
 import uit.thesis.assessment_mgnt.dto.assessment.survey.UpdateSurveyDto;
 import uit.thesis.assessment_mgnt.dto.workflow.CreateCommentDto;
-import uit.thesis.assessment_mgnt.model.assessment.AssessmentCategory;
-import uit.thesis.assessment_mgnt.model.assessment.Certificate;
-import uit.thesis.assessment_mgnt.model.assessment.Customer;
-import uit.thesis.assessment_mgnt.model.assessment.Survey;
+import uit.thesis.assessment_mgnt.model.assessment.*;
 import uit.thesis.assessment_mgnt.model.system.Role;
 import uit.thesis.assessment_mgnt.model.system.User;
 import uit.thesis.assessment_mgnt.model.workflow.Comment;
@@ -26,6 +23,7 @@ import uit.thesis.assessment_mgnt.model.workflow.Phase;
 import uit.thesis.assessment_mgnt.model.workflow.Workflow;
 import uit.thesis.assessment_mgnt.repository.assessment.AssessmentCategoryRepository;
 import uit.thesis.assessment_mgnt.repository.assessment.CustomerRepository;
+import uit.thesis.assessment_mgnt.repository.assessment.DocumentRepository;
 import uit.thesis.assessment_mgnt.repository.assessment.SurveyRepository;
 import uit.thesis.assessment_mgnt.repository.system.RoleRepository;
 import uit.thesis.assessment_mgnt.repository.system.UserRepository;
@@ -61,6 +59,7 @@ public class SurveyServiceImpl extends GenericServiceImpl<Survey, Long> implemen
     private CommentRepository commentRepository;
     private ConfirmationService confirmationService;
     private RoleRepository roleRepository;
+    private DocumentRepository documentRepository;
 
     @Override
     public Survey addNewSurvey(CreateSurveyDto dto) throws NotFoundException {
@@ -90,12 +89,15 @@ public class SurveyServiceImpl extends GenericServiceImpl<Survey, Long> implemen
         survey.setStatus(Status.IN_PROGRESS);
         survey.setDirector(director);
         survey.setManager(manager);
+        survey.setEstimatePrice(dto.getEstimatePrice());
         survey.setDueDate(dueDate);
         survey.setPhase(phase);
         survey.setAccountant(accountant);
         Survey createdSurvey = surveyRepository.save(survey);
         Certificate certificate = certificateService.generateCertificateCode(createdSurvey);
         survey.setCertificate(certificate);
+        Document document = new Document("Bao cao giam dinh", "Cac tai lieu bao cao", survey);
+        documentRepository.save(document);
         return createdSurvey;
     }
 
@@ -114,7 +116,7 @@ public class SurveyServiceImpl extends GenericServiceImpl<Survey, Long> implemen
         if(currentUser == null)
             throw new NotFoundException(ResponseMessage.ANONYMOUS_USER);
         survey.setEstimatePrice(esimatePrice);
-        String content = currentUser.getUsername() + " has added Estimate Price = " + esimatePrice;
+        String content = currentUser.getUsername() + " has updated Estimate Price = " + esimatePrice;
         Comment comment = new Comment(content, Const.ADDING_ESTIMATE_PRICE, currentUser, survey);
         commentRepository.save(comment);
         return surveyRepository.save(survey);
@@ -314,6 +316,11 @@ public class SurveyServiceImpl extends GenericServiceImpl<Survey, Long> implemen
         arrayList.add(survey.getDirector().getUsername());
         String[] arr = new String[arrayList.size()];
         confirmationService.createConfirmation(arrayList.toArray(arr), comment);
+        for(int i =0; i< usernames.length; i++){
+            User user = userRepository.findByUsername(usernames[i]);
+            if( user != null)
+                survey.addInspector(user);
+        }
         return surveyRepository.save(survey);
     }
 

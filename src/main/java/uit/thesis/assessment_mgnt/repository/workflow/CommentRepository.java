@@ -11,6 +11,6 @@ import java.util.List;
 @Repository
 public interface CommentRepository extends JpaRepository<Comment, Long> {
 
-    @Query(value = "select comment from Comment comment where comment.survey.code = ?1")
+    @Query(value = "select comment from Comment comment where comment.survey.code = ?1 order by comment.createAt desc")
     List<Comment> findBySurvey(String surveyCode);
 }

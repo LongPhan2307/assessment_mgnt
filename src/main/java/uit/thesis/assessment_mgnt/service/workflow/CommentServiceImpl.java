@@ -42,6 +42,10 @@ public class CommentServiceImpl extends GenericServiceImpl<Comment,Long> impleme
         comment.setContent(dto.getContent());
         comment.setSurvey(survey);
         comment.setUser(user);
+        if(dto.getConfirmedUser() == null){
+            return commentRepository.save(comment);
+        }
+
         Comment res = commentRepository.save(comment);
         if(dto.getConfirmedUser().length != 0)
             confirmationService.createConfirmation(dto.getConfirmedUser(), res);

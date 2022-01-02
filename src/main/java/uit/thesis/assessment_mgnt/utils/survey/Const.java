@@ -11,7 +11,7 @@ public class Const {
     public static final String ADDING_EXPENSE = "ADDING EXPENSE";
     public static final String ADDING_FOLDER = "ADDING FOLDER";
     public static final String ADDING_FILES = "ADDING FILES";
-    public static final String ADDING_ESTIMATE_PRICE = "ADDING ESTIMATE PRICE";
+    public static final String ADDING_ESTIMATE_PRICE = "UPDATE ESTIMATE PRICE";
     public static final String CHANGE_ASSIGNEE = "CHANGE ASSIGNEE";
     public static final String CHANGE_CONTENT = "CHANGE CONTENT";
     public static final String REQUEST_CANCEL = "REQUEST CANCELATION";
