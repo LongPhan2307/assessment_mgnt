@@ -49,6 +49,15 @@ public class UserController {
 //
 //    }
 
+        @GetMapping(UserDomain.USER_DOMAIN + "/inspectors")
+    public ResponseEntity<Object> getAllInspectors(){
+        List<User> list = userService.getAllInspectors();
+        if(list.isEmpty())
+            return ResponseObject.getResponse(ResponseMessage.NO_DATA, HttpStatus.OK);
+        return ResponseObject.getResponse(list, HttpStatus.OK);
+
+    }
+
     @PostMapping(Domain.API_ADMIN + UserDomain.USER_DOMAIN)
     public ResponseEntity<Object> createUser(@Valid @RequestBody CreateUserDto dto,
                                           BindingResult errors){

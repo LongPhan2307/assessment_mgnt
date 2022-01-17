@@ -116,7 +116,7 @@ public class Survey extends AbstractEntity {
     private Set<Invoice> invoices = new HashSet<>();
 
     public Survey(String name, String scene,long duration, String contactPhone, Phase registerPhase, Customer customer,
-                  User accountant, User director, User manager, AssessmentCategory assessmentCategory){
+                  User accountant, User director, User manager, AssessmentCategory assessmentCategory, BigDecimal estimatePrice){
         this.code = RandomStringUtils.randomAlphanumeric(10);
         this.phase = registerPhase;
         this.name = name;
@@ -131,6 +131,7 @@ public class Survey extends AbstractEntity {
         this.director = director;
         this.manager = manager;
         this.assessmentCategory =assessmentCategory;
+        this.estimatePrice = estimatePrice;
     }
 
     public Survey addInspector(User user){

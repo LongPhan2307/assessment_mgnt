@@ -110,17 +110,17 @@ public class SurveyController {
         }
     }
 
-    @PutMapping(Domain.API_MANAGER + SurveyDomain.SURVEY + "/assign-approval")
-    public ResponseEntity<Object> assigneeAprroval(@RequestParam("username") String[] arrUsername,
-                                                   @RequestParam("surveyCode") String surveyCode){
-        try {
-            Survey survey = surveyService.assigneeApproval(arrUsername, surveyCode);
-            return ResponseObject.getResponse(survey, HttpStatus.OK);
-        } catch (NotFoundException e) {
-            e.printStackTrace();
-            return ResponseObject.getResponse(e.getMessage(), HttpStatus.OK);
-        }
-    }
+//    @PutMapping(Domain.API_MANAGER + SurveyDomain.SURVEY + "/assign-approval")
+//    public ResponseEntity<Object> assigneeAprroval(@RequestParam("username") String[] arrUsername,
+//                                                   @RequestParam("surveyCode") String surveyCode){
+//        try {
+//            Survey survey = surveyService.assigneeApproval(arrUsername, surveyCode);
+//            return ResponseObject.getResponse(survey, HttpStatus.OK);
+//        } catch (NotFoundException e) {
+//            e.printStackTrace();
+//            return ResponseObject.getResponse(e.getMessage(), HttpStatus.OK);
+//        }
+//    }
 
     @PutMapping(Domain.API_MANAGER + SurveyDomain.SURVEY + "/assign")
     public ResponseEntity<Object> assignInspectors(@RequestParam("username") String[] arrUsername,

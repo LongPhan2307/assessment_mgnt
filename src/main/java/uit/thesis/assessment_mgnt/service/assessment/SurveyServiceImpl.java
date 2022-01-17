@@ -160,8 +160,8 @@ public class SurveyServiceImpl extends GenericServiceImpl<Survey, Long> implemen
             String phaseRoleName = list.get(i).getPhase().getRole().getName();
 //            Optional<Role> userRoleName = currentUser.getRoles().stream().findFirst();
             Role userRoleName = roleRepository.getFirstRoleByUsername(currentUser.getUsername());
-//            if(userRoleName.isEmpty())
-//                throw new NotFoundException(ResponseMessage.UN_KNOWN("Role of User "));
+            if(userRoleName == null)
+                throw new NotFoundException(ResponseMessage.UN_KNOWN("Role of User "));
             if(userRoleName.getName().equals(phaseRoleName)){
                 LocalDateTime now = LocalDateTime.now();
                 if(now.isAfter(list.get(i).getDueDate())){
@@ -183,10 +183,13 @@ public class SurveyServiceImpl extends GenericServiceImpl<Survey, Long> implemen
         User currentUser = userRepository.findByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
         for (int i = 0; i < list.size(); i++) {
             String phaseRoleName = list.get(i).getPhase().getRole().getName();
-            Optional<Role> userRoleName = currentUser.getRoles().stream().findFirst();
-            if(userRoleName.isEmpty())
+//            Optional<Role> userRoleName = currentUser.getRoles().stream().findFirst();
+//            if(userRoleName.isEmpty())
+//                throw new NotFoundException(ResponseMessage.UN_KNOWN("Role of User "));
+            Role userRoleName = roleRepository.getFirstRoleByUsername(currentUser.getUsername());
+            if(userRoleName == null)
                 throw new NotFoundException(ResponseMessage.UN_KNOWN("Role of User "));
-            if(!userRoleName.get().getName().equals(phaseRoleName)){
+            if(!userRoleName.getName().equals(phaseRoleName)){
                 LocalDateTime now = LocalDateTime.now();
                 if(now.isAfter(list.get(i).getDueDate())){
                     list.get(i).setStatus(Status.OVERDATED);
@@ -220,21 +223,25 @@ public class SurveyServiceImpl extends GenericServiceImpl<Survey, Long> implemen
         User manager = userRepository.findByUsername("manager");
         Survey survey = new Survey("GIAM DINH SAT THEP NHAP KHAU", "HCM", 3, "0900221723"
                 , registerPhase, customer,
-                accountant, director, manager, assessmentCategory);
-        Survey survey1 = new Survey("GIAM DINH SAT THEP XUAT KHAU", "HCM", 3, "0900221723"
+                accountant, director, manager, assessmentCategory, BigDecimal.valueOf(100000000));
+        Survey survey1 = new Survey("GIAM DINH SAT THEP XUAT KHAU", "HCM", 5, "0900221723"
                 , registerPhase, customer,
-                accountant1, director, manager, assessmentCategory);
-        Survey survey2 = new Survey("GIAM DINH NUOC TRAI CAY", "HCM", 3, "0900221723"
+                accountant, director, manager, assessmentCategory, BigDecimal.valueOf(120000000));
+        Survey survey2 = new Survey("GIAM DINH HANG", "HCM", 5, "0900221723"
                 , registerPhase, customer,
-                accountant2, director, manager, assessmentCategory1);
+                accountant2, director, manager, assessmentCategory1, BigDecimal.valueOf(150000000));
         Certificate certificate = certificateService.generateCertificateCode(survey);
         Certificate certificate1 = certificateService.generateCertificateCode(survey1);
         Certificate certificate2 = certificateService.generateCertificateCode(survey2);
+//        Document document = new Document("Bao cao lan 1", "Tai lieu lien quan", survey);
+//        Document document1 = new Document("Bao cao lan 1", "Tai lieu lien quan", survey1);
+//        Document document2= new Document("Bao cao lan 1", "Tai lieu lien quan", survey2);
+//
         survey.setCertificate(certificate);
         survey.setCreatedBy(accountant.getUsername());
         survey.setLastModifiedBy(accountant.getUsername());
         survey1.setCertificate(certificate1);
-        survey1.setCreatedBy(accountant1.getUsername());
+        survey1.setCreatedBy(accountant.getUsername());
         survey1.setLastModifiedBy(accountant1.getUsername());
         survey2.setCertificate(certificate2);
         survey2.setCreatedBy(accountant2.getUsername());
@@ -312,6 +319,9 @@ public class SurveyServiceImpl extends GenericServiceImpl<Survey, Long> implemen
                 currentUser,
                 survey);
         commentRepository.save(comment);
+        if(survey.getInspectors() != null){
+            survey.getInspectors().clear();
+        }
         ArrayList<String> arrayList = new ArrayList<>(Arrays.asList(usernames));
         arrayList.add(survey.getDirector().getUsername());
         String[] arr = new String[arrayList.size()];

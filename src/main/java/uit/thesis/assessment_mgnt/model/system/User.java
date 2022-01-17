@@ -97,4 +97,15 @@ public class User extends AbstractEntity {
         role.getUsers().add(this);
     }
 
+    public User(String username, String email,String password, Department department,Role role, Role role1){
+        this.username = username;
+        this.email = email;
+        this.password = password;
+        this.status = UserStatus.ACTIVE;
+        this.department = department;
+        this.roles.add(role);
+        this.roles.add(role1);
+        role.getUsers().add(this);
+    }
+
 }

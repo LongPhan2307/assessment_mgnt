@@ -16,5 +16,7 @@ public interface UserService extends GenericService<User, Long> {
 
     ResponseUserDto getUserByUsername(String username) throws NotFoundException;
 
+    List<User> getAllInspectors();
+
     List<User> mockupData();
 }

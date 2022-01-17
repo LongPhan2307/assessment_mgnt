@@ -75,6 +75,11 @@ public class UserServiceImpl extends GenericServiceImpl<User, Long> implements U
     }
 
     @Override
+    public List<User> getAllInspectors() {
+        return userRepository.getAllInspectors();
+    }
+
+    @Override
     public List<User> mockupData() {
         List<User> list = new LinkedList<>();
         List<Role> roles = roleRepository.findAll();
@@ -92,9 +97,9 @@ public class UserServiceImpl extends GenericServiceImpl<User, Long> implements U
         list.add(new User("manager", "manager@gmail.com",passwordEncoder.encode("123"), assessmentDepartment, roles.get(3)));
         list.add(new User("manager2", "manager2@gmail.com",passwordEncoder.encode("123"), assessmentDepartment, roles.get(3)));
         list.add(new User("manager1", "manager1@gmail.com",passwordEncoder.encode("123"), assessmentDepartment, roles.get(3)));
-        list.add(new User("anh", "anh@gmail.com",passwordEncoder.encode("123"), assessmentDepartment, roles.get(4)));
+        list.add(new User("anh", "anh@gmail.com",passwordEncoder.encode("123"), assessmentDepartment, roles.get(4), roles.get(5)));
         list.add(new User("anh1", "anh1@gmail.com",passwordEncoder.encode("123"), assessmentDepartment, roles.get(4)));
-        list.add(new User("boi", "boi@gmail.com",passwordEncoder.encode("123"), assessmentDepartment, roles.get(4)));
+        list.add(new User("boi", "boi@gmail.com",passwordEncoder.encode("123"), assessmentDepartment, roles.get(4), roles.get(5)));
         list.add(new User("boi1", "boi1@gmail.com",passwordEncoder.encode("123"), assessmentDepartment, roles.get(4)));
         return userRepository.saveAll(list);
     }
