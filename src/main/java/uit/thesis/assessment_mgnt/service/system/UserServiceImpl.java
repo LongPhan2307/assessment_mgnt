@@ -80,6 +80,21 @@ public class UserServiceImpl extends GenericServiceImpl<User, Long> implements U
     }
 
     @Override
+    public List<User> getAllManager() {
+        return userRepository.getAllManager();
+    }
+
+    @Override
+    public List<User> getAllDirector() {
+        return userRepository.getAllDirector();
+    }
+
+    @Override
+    public List<User> getAllAccountant() {
+        return userRepository.getAllAccountant();
+    }
+
+    @Override
     public List<User> mockupData() {
         List<User> list = new LinkedList<>();
         List<Role> roles = roleRepository.findAll();

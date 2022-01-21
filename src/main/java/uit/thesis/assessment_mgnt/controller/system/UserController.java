@@ -58,6 +58,33 @@ public class UserController {
 
     }
 
+    @GetMapping(UserDomain.USER_DOMAIN + "/managers")
+    public ResponseEntity<Object> getAllManager(){
+        List<User> list = userService.getAllManager();
+        if(list.isEmpty())
+            return ResponseObject.getResponse(ResponseMessage.NO_DATA, HttpStatus.OK);
+        return ResponseObject.getResponse(list, HttpStatus.OK);
+
+    }
+
+    @GetMapping(UserDomain.USER_DOMAIN + "/directors")
+    public ResponseEntity<Object> getAllDirectors(){
+        List<User> list = userService.getAllDirector();
+        if(list.isEmpty())
+            return ResponseObject.getResponse(ResponseMessage.NO_DATA, HttpStatus.OK);
+        return ResponseObject.getResponse(list, HttpStatus.OK);
+
+    }
+
+    @GetMapping(UserDomain.USER_DOMAIN + "/accountants")
+    public ResponseEntity<Object> getAllAccountants(){
+        List<User> list = userService.getAllAccountant();
+        if(list.isEmpty())
+            return ResponseObject.getResponse(ResponseMessage.NO_DATA, HttpStatus.OK);
+        return ResponseObject.getResponse(list, HttpStatus.OK);
+
+    }
+
     @PostMapping(Domain.API_ADMIN + UserDomain.USER_DOMAIN)
     public ResponseEntity<Object> createUser(@Valid @RequestBody CreateUserDto dto,
                                           BindingResult errors){

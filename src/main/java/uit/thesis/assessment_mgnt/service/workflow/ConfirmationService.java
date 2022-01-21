@@ -12,7 +12,7 @@ import java.util.List;
 public interface ConfirmationService extends GenericService<Confirmation, Long> {
     List<Confirmation> createConfirmation(String[] confirmedUsers, Comment comment) throws NotFoundException;
 
-    Comment changeStatusConfirmation(long commentId) throws NotFoundException;
+    Comment changeStatusConfirmation(long commentId) throws Exception;
 
     List<Confirmation> findByCommentId(long commentId);
 }

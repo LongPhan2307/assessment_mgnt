@@ -9,10 +9,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.ModelMap;
 import uit.thesis.assessment_mgnt.common.GenericServiceImpl;
-import uit.thesis.assessment_mgnt.dto.assessment.survey.CreateSurveyDto;
-import uit.thesis.assessment_mgnt.dto.assessment.survey.ResponseSurvey;
-import uit.thesis.assessment_mgnt.dto.assessment.survey.SurveyWithUsers;
-import uit.thesis.assessment_mgnt.dto.assessment.survey.UpdateSurveyDto;
+import uit.thesis.assessment_mgnt.dto.assessment.survey.*;
 import uit.thesis.assessment_mgnt.dto.workflow.CreateCommentDto;
 import uit.thesis.assessment_mgnt.model.assessment.*;
 import uit.thesis.assessment_mgnt.model.system.Role;
@@ -269,43 +266,61 @@ public class SurveyServiceImpl extends GenericServiceImpl<Survey, Long> implemen
     }
 
     @Override
-    public Survey changeUserOfSurvey(String username, String surveyCode) throws Exception {
+    public Survey changeUserOfSurvey(String fromUser ,String toUser, String surveyCode) throws Exception {
         Survey survey = surveyRepository.findByCode(surveyCode);
         if(survey == null)
             throw new NotFoundException(ResponseMessage.UN_KNOWN("Survey "));
-        User currentUser = userRepository.findByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
+        User currentUser = userRepository.findByUsername(fromUser);
+        User userChanged = userRepository.findByUsername(toUser);
         if(currentUser == null)
             throw new NotFoundException(ResponseMessage.ANONYMOUS_USER);
-        if(currentUser.getUsername().equals(survey.getAccountant().getUsername())){
-
-            User userChanged = userRepository.findByUsername(username);
-            if(userChanged == null)
-                throw new NotFoundException(ResponseMessage.UN_KNOWN("User "));
-
-            survey.setAccountant(userChanged);
+        if(userChanged == null)
+            throw new NotFoundException(ResponseMessage.ANONYMOUS_USER);
+        Role fromUserRoleName = roleRepository.getFirstRoleByUsername(currentUser.getUsername());
+        Role toUserRoleName = roleRepository.getFirstRoleByUsername(userChanged.getUsername());
+        if(fromUserRoleName.getName().equals(toUserRoleName.getName())){
+            if(fromUserRoleName.getName().equals("ACCOUNTANT")){
+                survey.setAccountant(userChanged);
+            } else if (fromUserRoleName.getName().equals("DIRECTOR")){
+                survey.setDirector(userChanged);
+            } else {
+                survey.setManager(userChanged);
+            }
             commentService.generateComment(userChanged, survey, currentUser);
             return surveyRepository.save(survey);
-        } else if(currentUser.getUsername().equals(survey.getDirector().getUsername())){
-
-            User userChanged = userRepository.findByUsername(username);
-            if(userChanged == null)
-                throw new NotFoundException(ResponseMessage.UN_KNOWN("User "));
-
-            survey.setDirector(userChanged);
-            commentService.generateComment(userChanged, survey, currentUser);
-            return surveyRepository.save(survey);
-        } else if(currentUser.getUsername().equals(survey.getManager().getUsername())){
-
-            User userChanged = userRepository.findByUsername(username);
-            if(userChanged == null)
-                throw new NotFoundException(ResponseMessage.UN_KNOWN("User "));
-
-            survey.setManager(userChanged);
-            commentService.generateComment(userChanged, survey, currentUser);
-            return surveyRepository.save(survey);
+        } else {
+            throw new Exception("fromUser transfer toUser has not the same role !");
         }
-
-        throw new Exception("You can not change User of this Survey ");
+//        if(currentUser.getUsername().equals(survey.getAccountant().getUsername())){
+//
+//            User userChanged = userRepository.findByUsername(username);
+//            if(userChanged == null)
+//                throw new NotFoundException(ResponseMessage.UN_KNOWN("User "));
+//
+//            survey.setAccountant(userChanged);
+//            commentService.generateComment(userChanged, survey, currentUser);
+//            return surveyRepository.save(survey);
+//        } else if(currentUser.getUsername().equals(survey.getDirector().getUsername())){
+//
+//            User userChanged = userRepository.findByUsername(username);
+//            if(userChanged == null)
+//                throw new NotFoundException(ResponseMessage.UN_KNOWN("User "));
+//
+//            survey.setDirector(userChanged);
+//            commentService.generateComment(userChanged, survey, currentUser);
+//            return surveyRepository.save(survey);
+//        } else if(currentUser.getUsername().equals(survey.getManager().getUsername())){
+//
+//            User userChanged = userRepository.findByUsername(username);
+//            if(userChanged == null)
+//                throw new NotFoundException(ResponseMessage.UN_KNOWN("User "));
+//
+//            survey.setManager(userChanged);
+//            commentService.generateComment(userChanged, survey, currentUser);
+//            return surveyRepository.save(survey);
+//        }
+//
+//        throw new Exception("You can not change User of this Survey ");
     }
 
     @Override
@@ -394,5 +409,10 @@ public class SurveyServiceImpl extends GenericServiceImpl<Survey, Long> implemen
         Comment comment = new Comment(content, Const.CHANGE_CONTENT, currentUser, survey);
         commentRepository.save(comment);
         return this.surveyRepository.save(survey);
+    }
+
+    @Override
+    public List<ReportSurveyStatus> reportByStatus() {
+        return surveyRepository.reportByStatus();
     }
 }

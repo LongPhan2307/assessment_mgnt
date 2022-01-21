@@ -9,10 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import uit.thesis.assessment_mgnt.common.ResponseObject;
-import uit.thesis.assessment_mgnt.dto.assessment.survey.CreateSurveyDto;
-import uit.thesis.assessment_mgnt.dto.assessment.survey.ResponseSurvey;
-import uit.thesis.assessment_mgnt.dto.assessment.survey.SurveyWithUsers;
-import uit.thesis.assessment_mgnt.dto.assessment.survey.UpdateSurveyDto;
+import uit.thesis.assessment_mgnt.dto.assessment.survey.*;
 import uit.thesis.assessment_mgnt.model.assessment.Survey;
 import uit.thesis.assessment_mgnt.repository.assessment.SurveyRepository;
 import uit.thesis.assessment_mgnt.service.assessment.SurveyService;
@@ -98,16 +95,25 @@ public class SurveyController {
         return ResponseObject.getResponse(list, HttpStatus.OK);
     }
 
-    @PutMapping(SurveyDomain.SURVEY + "/change")
-    public ResponseEntity<Object> changeUserOfSurvey(@RequestParam(name = "accountant") String username,
+    @PutMapping(Domain.API_MANAGER + SurveyDomain.SURVEY + "/change")
+    public ResponseEntity<Object> changeUserOfSurvey(@RequestParam(name = "fromUser") String fromUser,
+                                                     @RequestParam(name = "toUser") String toUser,
                                                    @RequestParam("surveyCode") String surveyCode){
         try {
-            Survey survey = surveyService.changeUserOfSurvey(username, surveyCode);
+            Survey survey = surveyService.changeUserOfSurvey(fromUser, toUser, surveyCode);
             return ResponseObject.getResponse(survey, HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseObject.getResponse(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
+    }
+
+    @GetMapping(SurveyDomain.SURVEY + Domain.API_DIRECTOR + "/report-by-status")
+    public ResponseEntity<Object> reportByStatus(){
+        List<ReportSurveyStatus> list = surveyService.reportByStatus();
+        if(list.isEmpty())
+            return ResponseObject.getResponse(ResponseMessage.NO_DATA, HttpStatus.OK);
+        return ResponseObject.getResponse(list, HttpStatus.OK);
     }
 
 //    @PutMapping(Domain.API_MANAGER + SurveyDomain.SURVEY + "/assign-approval")

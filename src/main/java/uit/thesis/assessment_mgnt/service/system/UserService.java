@@ -18,5 +18,11 @@ public interface UserService extends GenericService<User, Long> {
 
     List<User> getAllInspectors();
 
+    List<User> getAllManager();
+
+    List<User> getAllDirector();
+
+    List<User> getAllAccountant();
+
     List<User> mockupData();
 }

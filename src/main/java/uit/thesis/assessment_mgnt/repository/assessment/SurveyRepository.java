@@ -3,6 +3,7 @@ package uit.thesis.assessment_mgnt.repository.assessment;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
+import uit.thesis.assessment_mgnt.dto.assessment.survey.ReportSurveyStatus;
 import uit.thesis.assessment_mgnt.dto.assessment.survey.ResponseSurvey;
 import uit.thesis.assessment_mgnt.model.assessment.Survey;
 
@@ -53,5 +54,8 @@ public interface SurveyRepository extends JpaRepository<Survey, Long> {
 
 //    @Query("SELECT s FROM Survey s  WHERE ")
 //    List<Survey> findByUsernameAndRole(String username, String roleName);
+
+    @Query(value = "select COUNT(s) as count, s.status as status from public.assessment_survey as s group by s.status ", nativeQuery = true)
+    List<ReportSurveyStatus> reportByStatus();
 
 }

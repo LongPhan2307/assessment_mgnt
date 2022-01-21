@@ -74,6 +74,7 @@ public class PhaseServiceImpl extends GenericServiceImpl<Phase, Long> implements
         if(currentUser == null)
             throw new NotFoundException(ResponseMessage.ANONYMOUS_USER);
         Optional<Role> roleFirst = currentUser.getRoles().stream().findFirst();
+
 //        Iterator iterator = currentUser.getRoles().iterator();
 //        while (iterator.hasNext()){
 //            Object ele = iterator.next();
@@ -93,10 +94,15 @@ public class PhaseServiceImpl extends GenericServiceImpl<Phase, Long> implements
                         if(source.getName().equals("FINISH")){
                             if(survey.getStatus().toString().equals(Status.PENDING.toString())){
                                 survey.setStatus(Status.CANCELED);
+                            }else {
+                                survey.setStatus(Status.CLOSED);
                             }
-                            survey.setStatus(Status.CLOSED);
                         }
-                        survey.setPhase(destination);
+                        if(source.getName().equals("FINISH")){
+                            survey.setPhase(source);
+                        } else {
+                            survey.setPhase(destination);
+                        }
                         Comment comment = new Comment();
                         comment.setTitle(Const.SUBMITTED_PHASE);
                         comment.setContent(dto.getContent());
@@ -120,10 +126,15 @@ public class PhaseServiceImpl extends GenericServiceImpl<Phase, Long> implements
                 if(source.getName().equals("FINISH")){
                     if(survey.getStatus().toString().equals(Status.PENDING.toString())){
                         survey.setStatus(Status.CANCELED);
+                    } else {
+                        survey.setStatus(Status.CLOSED);
                     }
-                    survey.setStatus(Status.CLOSED);
                 }
-                survey.setPhase(destination);
+                if(source.getName().equals("FINISH")){
+                    survey.setPhase(source);
+                } else {
+                    survey.setPhase(destination);
+                }
                 Comment comment = new Comment();
                 comment.setTitle(Const.SUBMITTED_PHASE);
                 comment.setContent(dto.getContent());

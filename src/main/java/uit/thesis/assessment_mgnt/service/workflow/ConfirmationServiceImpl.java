@@ -37,7 +37,8 @@ public class ConfirmationServiceImpl extends GenericServiceImpl<Confirmation, Lo
     }
 
     @Override
-    public Comment changeStatusConfirmation(long commentId) throws NotFoundException {
+    public Comment changeStatusConfirmation(long commentId) throws Exception {
+        boolean flag = false;
         Optional<Comment> comment = commentRepository.findById(commentId);
         User confirmedUser = userRepository.findByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
         if(confirmedUser == null)
@@ -49,9 +50,12 @@ public class ConfirmationServiceImpl extends GenericServiceImpl<Confirmation, Lo
             Confirmation confirmation = (Confirmation) iterator.next();
             if(confirmation.getUser().getUsername().equals(confirmedUser.getUsername())){
                 confirmation.setStatus(!confirmation.isStatus());
+                flag = !flag;
                 confirmationRepository.save(confirmation);
             }
         }
+        if(!flag)
+            throw new Exception("You can not confirm !!");
         return comment.get();
     }
 

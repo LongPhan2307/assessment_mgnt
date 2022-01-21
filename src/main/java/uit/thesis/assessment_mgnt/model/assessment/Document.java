@@ -22,7 +22,7 @@ public class Document extends AbstractEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(referencedColumnName = "code")
-    @JsonIgnore
+//    @JsonIgnore
     private Survey survey;
 
     @OneToMany(mappedBy = "document", cascade = CascadeType.ALL)
